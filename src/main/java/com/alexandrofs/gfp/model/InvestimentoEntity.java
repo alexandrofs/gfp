@@ -2,14 +2,20 @@ package com.alexandrofs.gfp.model;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "TB_INVESTIMENTO")
@@ -27,11 +33,36 @@ public class InvestimentoEntity {
 	@Column(name = "DATA_APLICACAO", nullable = false)
 	private Date dataAplicacao;
 
-	@Column(name = "QTDE_COTA", nullable = false, precision = 14, scale = 8)
+	@NotNull
+	@Column(name = "QTDE_COTA", precision = 14, scale = 8)
 	private BigDecimal qtdeCota;
 
-	@Column(name = "VLR_COTA", nullable = false, precision = 14, scale = 8)
+	@NotNull
+	@Column(name = "VLR_COTA", precision = 14, scale = 8)
 	private BigDecimal vlrCota;
+	
+	@NotNull
+	@ManyToOne
+	@JoinColumn(name="ID_TIPO_IMPOSTO_RENDA")
+	private TipoImpostoRenda tipoImpostoRenda;
+
+	@Transient
+	private BigDecimal rendimentoLiquido;
+
+	@Transient
+	private BigDecimal saldo;
+
+	@Transient
+	private BigDecimal rendimentoUltMes;
+
+	@Transient
+	private BigDecimal rendimentoMedio;
+
+	@Transient
+	private BigDecimal rendimentoTotal;
+
+	@OneToMany(mappedBy = "investimento")
+	private List<HistoricoCotasEntity> historicoCotas;
 
 	public Long getId() {
 		return id;
@@ -73,4 +104,61 @@ public class InvestimentoEntity {
 		this.vlrCota = vlrCota;
 	}
 
+	public BigDecimal getRendimentoLiquido() {
+		return rendimentoLiquido;
+	}
+
+	public void setRendimentoLiquido(BigDecimal rendimentoLiquido) {
+		this.rendimentoLiquido = rendimentoLiquido;
+	}
+
+	public BigDecimal getSaldo() {
+		return saldo;
+	}
+
+	public void setSaldo(BigDecimal saldo) {
+		this.saldo = saldo;
+	}
+
+	public BigDecimal getRendimentoUltMes() {
+		return rendimentoUltMes;
+	}
+
+	public void setRendimentoUltMes(BigDecimal rendimentoUltMes) {
+		this.rendimentoUltMes = rendimentoUltMes;
+	}
+
+	public BigDecimal getRendimentoMedio() {
+		return rendimentoMedio;
+	}
+
+	public void setRendimentoMedio(BigDecimal rendimentoMedio) {
+		this.rendimentoMedio = rendimentoMedio;
+	}
+
+	public BigDecimal getRendimentoTotal() {
+		return rendimentoTotal;
+	}
+
+	public void setRendimentoTotal(BigDecimal rendimentoTotal) {
+		this.rendimentoTotal = rendimentoTotal;
+	}
+
+	public TipoImpostoRenda getTipoImpostoRenda() {
+		return tipoImpostoRenda;
+	}
+
+	public void setTipoImpostoRenda(TipoImpostoRenda tipoImpostoRenda) {
+		this.tipoImpostoRenda = tipoImpostoRenda;
+	}
+
+	public List<HistoricoCotasEntity> getHistoricoCotas() {
+		return historicoCotas;
+	}
+
+	public void setHistoricoCotas(List<HistoricoCotasEntity> historicoCotas) {
+		this.historicoCotas = historicoCotas;
+	}
+
+	
 }
