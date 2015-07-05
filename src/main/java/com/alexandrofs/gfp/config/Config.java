@@ -25,7 +25,7 @@ public class Config {
     @Bean
     public DataSource dataSource() {
         EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
-        EmbeddedDatabase db = builder.setType(EmbeddedDatabaseType.HSQL).build();
+        EmbeddedDatabase db = builder.setType(EmbeddedDatabaseType.HSQL).addScript("fixed_domain.sql").build();
         return db;
     }
 

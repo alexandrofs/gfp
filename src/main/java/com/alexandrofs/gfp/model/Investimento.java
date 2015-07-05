@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "TB_INVESTIMENTO")
-public class InvestimentoEntity {
+public class Investimento {
 
 	@Id
 	@GeneratedValue
@@ -43,9 +43,14 @@ public class InvestimentoEntity {
 	
 	@NotNull
 	@ManyToOne
-	@JoinColumn(name="ID_TIPO_IMPOSTO_RENDA")
-	private TipoImpostoRenda tipoImpostoRenda;
+	@JoinColumn(name="ID_CARTEIRA")
+	private Carteira carteira;
 
+	@NotNull
+	@ManyToOne
+	@JoinColumn(name="ID_TIPO_INVESTIMENTO")
+	private TipoInvestimento tipoInvestimento;
+	
 	@Transient
 	private BigDecimal rendimentoLiquido;
 
@@ -62,7 +67,7 @@ public class InvestimentoEntity {
 	private BigDecimal rendimentoTotal;
 
 	@OneToMany(mappedBy = "investimento")
-	private List<HistoricoCotasEntity> historicoCotas;
+	private List<HistoricoCotas> historicoCotas;
 
 	public Long getId() {
 		return id;
@@ -143,21 +148,29 @@ public class InvestimentoEntity {
 	public void setRendimentoTotal(BigDecimal rendimentoTotal) {
 		this.rendimentoTotal = rendimentoTotal;
 	}
-
-	public TipoImpostoRenda getTipoImpostoRenda() {
-		return tipoImpostoRenda;
-	}
-
-	public void setTipoImpostoRenda(TipoImpostoRenda tipoImpostoRenda) {
-		this.tipoImpostoRenda = tipoImpostoRenda;
-	}
-
-	public List<HistoricoCotasEntity> getHistoricoCotas() {
+	
+	public List<HistoricoCotas> getHistoricoCotas() {
 		return historicoCotas;
 	}
 
-	public void setHistoricoCotas(List<HistoricoCotasEntity> historicoCotas) {
+	public void setHistoricoCotas(List<HistoricoCotas> historicoCotas) {
 		this.historicoCotas = historicoCotas;
+	}
+
+	public Carteira getCarteira() {
+		return carteira;
+	}
+
+	public void setCarteira(Carteira carteira) {
+		this.carteira = carteira;
+	}
+
+	public TipoInvestimento getTipoInvestimento() {
+		return tipoInvestimento;
+	}
+
+	public void setTipoInvestimento(TipoInvestimento tipoInvestimento) {
+		this.tipoInvestimento = tipoInvestimento;
 	}
 
 	

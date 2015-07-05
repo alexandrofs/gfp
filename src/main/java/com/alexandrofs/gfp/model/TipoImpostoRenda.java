@@ -1,5 +1,6 @@
 package com.alexandrofs.gfp.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -30,6 +31,10 @@ public class TipoImpostoRenda {
 	@OneToMany(mappedBy = "tipoImpostoRenda")
 	private List<TabelaImpostoRenda> tabelaImposto;
 
+	public TipoImpostoRenda(){
+		tabelaImposto = new ArrayList<>();
+	}
+	
 	public Long getId() {
 		return id;
 	}

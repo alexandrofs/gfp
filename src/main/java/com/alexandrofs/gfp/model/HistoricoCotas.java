@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name="TB_HISTORICO_COTAS")
-public class HistoricoCotasEntity {
+public class HistoricoCotas {
 
 	@Id
 	@GeneratedValue
@@ -35,7 +35,7 @@ public class HistoricoCotasEntity {
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name="ID_INVESTIMENTO")
-	private InvestimentoEntity investimento;
+	private Investimento investimento;
 
 	public Long getId() {
 		return id;
@@ -61,11 +61,11 @@ public class HistoricoCotasEntity {
 		this.vlrCota = vlrCota;
 	}
 
-	public InvestimentoEntity getInvestimento() {
+	public Investimento getInvestimento() {
 		return investimento;
 	}
 
-	public void setInvestimento(InvestimentoEntity investimento) {
+	public void setInvestimento(Investimento investimento) {
 		this.investimento = investimento;
 	}
 
