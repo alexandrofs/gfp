@@ -10,11 +10,13 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.alexandrofs.gfp.model.TabelaImpostoRenda;
 import com.alexandrofs.gfp.model.TipoImpostoRenda;
 
 @Service
+@Transactional
 public class CalculoImpostoService {
 
 	private static Logger LOG = Logger.getLogger(CalculoImpostoService.class);
