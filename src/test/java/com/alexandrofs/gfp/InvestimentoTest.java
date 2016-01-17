@@ -8,10 +8,12 @@ import java.text.SimpleDateFormat;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.alexandrofs.gfp.model.Carteira;
 import com.alexandrofs.gfp.model.HistoricoCotas;
 import com.alexandrofs.gfp.model.Investimento;
 import com.alexandrofs.gfp.model.TipoImpostoRenda;
 import com.alexandrofs.gfp.model.TipoInvestimento;
+import com.alexandrofs.gfp.persist.repository.CarteiraRepository;
 import com.alexandrofs.gfp.persist.repository.HistoricoCotasRepository;
 import com.alexandrofs.gfp.persist.repository.InvestimentoRepository;
 import com.alexandrofs.gfp.persist.repository.TipoImpostoRendaRepository;
@@ -35,6 +37,9 @@ public class InvestimentoTest extends AbstractTest {
 	@Autowired
 	private TipoImpostoRendaRepository tipoIr;
 
+	@Autowired
+	private CarteiraRepository carteiraRepo;
+	
 	@Test
 	public void testaInsert() throws ParseException {
 		Investimento entity = new Investimento();
@@ -50,6 +55,11 @@ public class InvestimentoTest extends AbstractTest {
 		entity.setTipoInvestimento(tipoInvestimento);
 		tipoInvestimento.setTipoImpostoRenda(ir);
 		tipoInvestimentoRepo.save(tipoInvestimento);
+		Carteira c = new Carteira();
+		c.setNome("PREV");
+		c.setDescricao("Previdencia");
+		carteiraRepo.save(c);
+		entity.setCarteira(c);
 		investimentoRepo.saveAndFlush(entity);
 		HistoricoCotas historicoCotasEntity = new HistoricoCotas();
 		historicoCotasEntity.setDataCota(f.parse("19/12/2011"));
