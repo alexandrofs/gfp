@@ -13,11 +13,11 @@ import com.alexandrofs.gfp.model.HistoricoCotas;
 import com.alexandrofs.gfp.model.Investimento;
 import com.alexandrofs.gfp.model.TipoImpostoRenda;
 import com.alexandrofs.gfp.model.TipoInvestimento;
-import com.alexandrofs.gfp.persist.repository.CarteiraRepository;
-import com.alexandrofs.gfp.persist.repository.HistoricoCotasRepository;
-import com.alexandrofs.gfp.persist.repository.InvestimentoRepository;
-import com.alexandrofs.gfp.persist.repository.TipoImpostoRendaRepository;
-import com.alexandrofs.gfp.persist.repository.TipoInvestimentoRepository;
+import com.alexandrofs.gfp.repository.CarteiraRepository;
+import com.alexandrofs.gfp.repository.HistoricoCotasRepository;
+import com.alexandrofs.gfp.repository.InvestimentoRepository;
+import com.alexandrofs.gfp.repository.TipoImpostoRendaRepository;
+import com.alexandrofs.gfp.repository.TipoInvestimentoRepository;
 import com.alexandrofs.gfp.service.InvestimentoService;
 
 public class InvestimentoTest extends AbstractTest {
@@ -49,8 +49,8 @@ public class InvestimentoTest extends AbstractTest {
 		entity.setQtdeCota(new BigDecimal(2.85));
 		entity.setVlrCota(new BigDecimal(21.30));
 		TipoInvestimento tipoInvestimento = new TipoInvestimento();
-		tipoInvestimento.setNome("Ações");
-		tipoInvestimento.setDescricao("Ações");
+		tipoInvestimento.setNome("Aï¿½ï¿½es");
+		tipoInvestimento.setDescricao("Aï¿½ï¿½es");
 		TipoImpostoRenda ir = tipoIr.findByCodigo("RF");
 		entity.setTipoInvestimento(tipoInvestimento);
 		tipoInvestimento.setTipoImpostoRenda(ir);

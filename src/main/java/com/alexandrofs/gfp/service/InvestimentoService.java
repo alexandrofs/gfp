@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.alexandrofs.gfp.model.HistoricoCotas;
 import com.alexandrofs.gfp.model.Investimento;
-import com.alexandrofs.gfp.persist.repository.HistoricoCotasRepository;
+import com.alexandrofs.gfp.repository.HistoricoCotasRepository;
 
 @Service
 public class InvestimentoService {
