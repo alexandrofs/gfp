@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    <!--
+        Added the constraints for entity TabelaImpostoRenda.
+    -->
+    <changeSet id="20160713030900-2" author="jhipster">
+        
+        <addForeignKeyConstraint baseColumnNames="tipo_imposto_renda_id"
+                                 baseTableName="tb_tabela_imposto_renda"
+                                 constraintName="fk_tabelaimpostorenda_tipoimpostorenda_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="tb_tipo_imposto_renda"/>
+
+    </changeSet>
+</databaseChangeLog>

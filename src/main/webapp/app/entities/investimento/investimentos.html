@@ -1,0 +1,70 @@
+<div>
+    <h2 translate="gfpApp.investimento.home.title">Investimentos</h2>
+    <jhi-alert></jhi-alert>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-4 no-padding-left">
+                <button class="btn btn-primary" ui-sref="investimento.new" >
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <span  translate="gfpApp.investimento.home.createLabel">
+                        Create new Investimento
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive">
+        <table class="jh-table table table-striped">
+            <thead>
+                <tr>
+                    <th><span translate="global.field.id">ID</span></th>
+                    <th><span translate="gfpApp.investimento.nome">Nome</span></th>
+                    <th><span translate="gfpApp.investimento.dataAplicacao">Data Aplicacao</span></th>
+                    <th><span translate="gfpApp.investimento.qtdeCota">Qtde Cota</span></th>
+                    <th><span translate="gfpApp.investimento.vlrCota">Vlr Cota</span></th>
+                    <th><span translate="gfpApp.investimento.carteira">Carteira</span></th>
+                    <th><span translate="gfpApp.investimento.tipoInvestimento">Tipo Investimento</span></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="investimento in vm.investimentos track by investimento.id">
+                    <td><a ui-sref="investimento-detail({id:investimento.id})">{{investimento.id}}</a></td>
+                    <td>{{investimento.nome}}</td>
+                        <td>{{investimento.dataAplicacao | date:'mediumDate'}}</td>
+                    <td>{{investimento.qtdeCota}}</td>
+                    <td>{{investimento.vlrCota}}</td>
+                    <td>
+                        <a ui-sref="carteira-detail({id:investimento.carteira.id})">{{investimento.carteira.id}}</a>
+                    </td>
+                    <td>
+                        <a ui-sref="tipo-investimento-detail({id:investimento.tipoInvestimento.id})">{{investimento.tipoInvestimento.id}}</a>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group flex-btn-group-container">
+                            <button type="submit"
+                                    ui-sref="investimento-detail({id:investimento.id})"
+                                    class="btn btn-info btn-sm">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                                <span class="hidden-xs hidden-sm" translate="entity.action.view"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="investimento.edit({id:investimento.id})"
+                                    class="btn btn-primary btn-sm">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="hidden-xs hidden-sm" translate="entity.action.edit"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="investimento.delete({id:investimento.id})"
+                                    class="btn btn-danger btn-sm">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                                <span class="hidden-xs hidden-sm" translate="entity.action.delete"></span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

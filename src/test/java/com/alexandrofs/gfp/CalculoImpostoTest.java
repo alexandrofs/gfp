@@ -1,19 +1,24 @@
 package com.alexandrofs.gfp;
 
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.transaction.Transactional;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.alexandrofs.gfp.model.TipoImpostoRenda;
+import com.alexandrofs.gfp.domain.TabelaImpostoRenda;
+import com.alexandrofs.gfp.domain.TipoImpostoRenda;
 import com.alexandrofs.gfp.repository.TipoImpostoRendaRepository;
 import com.alexandrofs.gfp.service.CalculoImpostoService;
 
+@Transactional
 public class CalculoImpostoTest extends AbstractTest {
 	
 	@Autowired
@@ -21,6 +26,40 @@ public class CalculoImpostoTest extends AbstractTest {
 	
 	@Autowired
 	private TipoImpostoRendaRepository tipoImpostoRepo;
+	
+	@Before
+	public void setup() {
+		TipoImpostoRenda tipoImpostoRenda = new TipoImpostoRenda();
+		tipoImpostoRenda.setCodigo("RF");
+		tipoImpostoRenda.setDescricao("RF");
+
+		Set<TabelaImpostoRenda> tabela = new HashSet<>();
+		
+		TabelaImpostoRenda tabelaImpostoRenda1 = new TabelaImpostoRenda();
+		tabelaImpostoRenda1.setNumDias(Long.valueOf(180));
+		tabelaImpostoRenda1.setPctAliquota(BigDecimal.valueOf(22.5));
+		tabelaImpostoRenda1.setTipoImpostoRenda(tipoImpostoRenda);
+		tabela.add(tabelaImpostoRenda1);
+		TabelaImpostoRenda tabelaImpostoRenda2 = new TabelaImpostoRenda();
+		tabelaImpostoRenda2.setNumDias(Long.valueOf(360));
+		tabelaImpostoRenda2.setPctAliquota(BigDecimal.valueOf(20));
+		tabelaImpostoRenda2.setTipoImpostoRenda(tipoImpostoRenda);
+		tabela.add(tabelaImpostoRenda2);
+		TabelaImpostoRenda tabelaImpostoRenda3 = new TabelaImpostoRenda();
+		tabelaImpostoRenda3.setNumDias(Long.valueOf(720));
+		tabelaImpostoRenda3.setPctAliquota(BigDecimal.valueOf(17.5));
+		tabelaImpostoRenda3.setTipoImpostoRenda(tipoImpostoRenda);
+		tabela.add(tabelaImpostoRenda3);		
+		TabelaImpostoRenda tabelaImpostoRenda4 = new TabelaImpostoRenda();
+		tabelaImpostoRenda4.setNumDias(Long.valueOf(721));
+		tabelaImpostoRenda4.setPctAliquota(BigDecimal.valueOf(17.5));
+		tabelaImpostoRenda4.setTipoImpostoRenda(tipoImpostoRenda);
+		tabela.add(tabelaImpostoRenda4);
+		
+		tipoImpostoRenda.setTabelaImpostoRendas(tabela);
+		
+		tipoImpostoRepo.saveAndFlush(tipoImpostoRenda);
+	}
 	
 	@Test
 	public void testaCalculoImpostoRendaFixa100dias(){
@@ -46,7 +85,7 @@ public class CalculoImpostoTest extends AbstractTest {
 		long diasCorridos = 181;
 		double valor = 500;
 		BigDecimal result = calculaImposto(codImposto, diasCorridos, valor);
-		Assert.assertEquals(new BigDecimal("100.00"), result);
+		Assert.assertEquals(new BigDecimal("100.0"), result);
 	}
 
 	@Test
@@ -95,10 +134,8 @@ public class CalculoImpostoTest extends AbstractTest {
 	}
 
 	private BigDecimal calculaImposto(String codImposto, long diasCorridos, double valor) {
-		Instant instant = LocalDate.now().minusDays(diasCorridos).atStartOfDay(ZoneId.systemDefault()).toInstant();
-		Date data = Date.from(instant);
 		TipoImpostoRenda tipoImp = tipoImpostoRepo.findByCodigo(codImposto);
-		BigDecimal result = calculoService.calculaImposto(tipoImp, new BigDecimal(valor), data);
+		BigDecimal result = calculoService.calculaImposto(tipoImp, new BigDecimal(valor), LocalDate.now().minusDays(diasCorridos).atStartOfDay(ZoneId.systemDefault()).toLocalDate());
 		return result;
 	}
 }

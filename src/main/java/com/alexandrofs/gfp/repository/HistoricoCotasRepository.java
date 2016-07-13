@@ -4,11 +4,15 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.alexandrofs.gfp.model.HistoricoCotas;
-import com.alexandrofs.gfp.model.Investimento;
+import com.alexandrofs.gfp.domain.HistoricoCotas;
+import com.alexandrofs.gfp.domain.Investimento;
 
-public interface HistoricoCotasRepository extends JpaRepository<HistoricoCotas, Long>{
-	
-	public List<HistoricoCotas> findByInvestimentoOrderByDataCotaDesc(Investimento entity);
+/**
+ * Spring Data JPA repository for the HistoricoCotas entity.
+ */
+@SuppressWarnings("unused")
+public interface HistoricoCotasRepository extends JpaRepository<HistoricoCotas,Long> {
+
+	List<HistoricoCotas> findByInvestimentoOrderByDataCotaDesc(Investimento investimento);
 
 }

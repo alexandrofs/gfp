@@ -1,9 +1,15 @@
 package com.alexandrofs.gfp.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.alexandrofs.gfp.domain.Carteira;
 
-import com.alexandrofs.gfp.model.Carteira;
+import org.springframework.data.jpa.repository.*;
 
-public interface CarteiraRepository extends JpaRepository<Carteira, Long> {
+import java.util.List;
+
+/**
+ * Spring Data JPA repository for the Carteira entity.
+ */
+@SuppressWarnings("unused")
+public interface CarteiraRepository extends JpaRepository<Carteira,Long> {
 
 }

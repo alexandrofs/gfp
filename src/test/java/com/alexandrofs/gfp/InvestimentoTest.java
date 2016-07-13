@@ -4,15 +4,16 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.alexandrofs.gfp.model.Carteira;
-import com.alexandrofs.gfp.model.HistoricoCotas;
-import com.alexandrofs.gfp.model.Investimento;
-import com.alexandrofs.gfp.model.TipoImpostoRenda;
-import com.alexandrofs.gfp.model.TipoInvestimento;
+import com.alexandrofs.gfp.domain.Carteira;
+import com.alexandrofs.gfp.domain.HistoricoCotas;
+import com.alexandrofs.gfp.domain.Investimento;
+import com.alexandrofs.gfp.domain.TipoImpostoRenda;
+import com.alexandrofs.gfp.domain.TipoInvestimento;
 import com.alexandrofs.gfp.repository.CarteiraRepository;
 import com.alexandrofs.gfp.repository.HistoricoCotasRepository;
 import com.alexandrofs.gfp.repository.InvestimentoRepository;
@@ -45,7 +46,7 @@ public class InvestimentoTest extends AbstractTest {
 		Investimento entity = new Investimento();
 		entity.setNome("PETR4");
 		SimpleDateFormat f = new SimpleDateFormat("dd/mm/yyyy");
-		entity.setDataAplicacao(f.parse("19/12/2011"));
+		entity.setDataAplicacao(LocalDate.of(2011, 12, 19));
 		entity.setQtdeCota(new BigDecimal(2.85));
 		entity.setVlrCota(new BigDecimal(21.30));
 		TipoInvestimento tipoInvestimento = new TipoInvestimento();
@@ -62,13 +63,13 @@ public class InvestimentoTest extends AbstractTest {
 		entity.setCarteira(c);
 		investimentoRepo.saveAndFlush(entity);
 		HistoricoCotas historicoCotasEntity = new HistoricoCotas();
-		historicoCotasEntity.setDataCota(f.parse("19/12/2011"));
+		historicoCotasEntity.setDataCota(LocalDate.of(2011, 12, 19));
 		historicoCotasEntity.setVlrCota(new BigDecimal(22));
 		historicoCotasEntity.setInvestimento(entity);
 		historicoRepo.saveAndFlush(historicoCotasEntity);
-		investimetoService.calculaRendimento(entity);
+/*		investimetoService.calculaRendimento(entity);
 		System.out.printf("Valor aplicado %s, rendimento %s, saldo %s",
 				entity.getQtdeCota().multiply(entity.getVlrCota()).setScale(2, RoundingMode.HALF_DOWN),
-				entity.getRendimentoLiquido(), entity.getSaldo());
+				entity.getRendimentoLiquido(), entity.getSaldo());*/
 	}
 }
