@@ -36,23 +36,23 @@ public class CalculoImpostoTest extends AbstractTest {
 		Set<TabelaImpostoRenda> tabela = new HashSet<>();
 		
 		TabelaImpostoRenda tabelaImpostoRenda1 = new TabelaImpostoRenda();
-		tabelaImpostoRenda1.setNumDias(Long.valueOf(180));
+		tabelaImpostoRenda1.setNumDias(Long.valueOf(0));
 		tabelaImpostoRenda1.setPctAliquota(BigDecimal.valueOf(22.5));
 		tabelaImpostoRenda1.setTipoImpostoRenda(tipoImpostoRenda);
 		tabela.add(tabelaImpostoRenda1);
 		TabelaImpostoRenda tabelaImpostoRenda2 = new TabelaImpostoRenda();
-		tabelaImpostoRenda2.setNumDias(Long.valueOf(360));
+		tabelaImpostoRenda2.setNumDias(Long.valueOf(180));
 		tabelaImpostoRenda2.setPctAliquota(BigDecimal.valueOf(20));
 		tabelaImpostoRenda2.setTipoImpostoRenda(tipoImpostoRenda);
 		tabela.add(tabelaImpostoRenda2);
 		TabelaImpostoRenda tabelaImpostoRenda3 = new TabelaImpostoRenda();
-		tabelaImpostoRenda3.setNumDias(Long.valueOf(720));
+		tabelaImpostoRenda3.setNumDias(Long.valueOf(360));
 		tabelaImpostoRenda3.setPctAliquota(BigDecimal.valueOf(17.5));
 		tabelaImpostoRenda3.setTipoImpostoRenda(tipoImpostoRenda);
 		tabela.add(tabelaImpostoRenda3);		
 		TabelaImpostoRenda tabelaImpostoRenda4 = new TabelaImpostoRenda();
-		tabelaImpostoRenda4.setNumDias(Long.valueOf(721));
-		tabelaImpostoRenda4.setPctAliquota(BigDecimal.valueOf(17.5));
+		tabelaImpostoRenda4.setNumDias(Long.valueOf(720));
+		tabelaImpostoRenda4.setPctAliquota(BigDecimal.valueOf(15.0));
 		tabelaImpostoRenda4.setTipoImpostoRenda(tipoImpostoRenda);
 		tabela.add(tabelaImpostoRenda4);
 		
@@ -94,7 +94,7 @@ public class CalculoImpostoTest extends AbstractTest {
 		long diasCorridos = 360;
 		double valor = 500;
 		BigDecimal result = calculaImposto(codImposto, diasCorridos, valor);
-		Assert.assertEquals(new BigDecimal("100.00"), result);
+		Assert.assertEquals(new BigDecimal("100.0"), result);
 	}
 
 	@Test
