@@ -11,7 +11,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alexandrofs.gfp.model.TipoImpostoRenda;
-import com.alexandrofs.gfp.persist.repository.TipoImpostoRendaRepository;
+import com.alexandrofs.gfp.repository.TipoImpostoRendaRepository;
 import com.alexandrofs.gfp.service.CalculoImpostoService;
 
 public class CalculoImpostoTest extends AbstractTest {
