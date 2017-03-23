@@ -5,9 +5,9 @@
         .module('gfpApp')
         .controller('InvestimentoDetailController', InvestimentoDetailController);
 
-    InvestimentoDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'entity', 'Investimento', 'Carteira', 'TipoInvestimento', 'HistoricoCotas'];
+    InvestimentoDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'entity', 'Investimento', 'Carteira', 'TipoInvestimento'];
 
-    function InvestimentoDetailController($scope, $rootScope, $stateParams, entity, Investimento, Carteira, TipoInvestimento, HistoricoCotas) {
+    function InvestimentoDetailController($scope, $rootScope, $stateParams, entity, Investimento, Carteira, TipoInvestimento) {
         var vm = this;
 
         vm.investimento = entity;

@@ -32,6 +32,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.alexandrofs.gfp.AbstractTest;
 import com.alexandrofs.gfp.GfpApp;
 import com.alexandrofs.gfp.domain.TabelaImpostoRenda;
 import com.alexandrofs.gfp.repository.TabelaImpostoRendaRepository;
@@ -42,11 +43,7 @@ import com.alexandrofs.gfp.repository.TabelaImpostoRendaRepository;
  *
  * @see TabelaImpostoRendaResource
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = GfpApp.class)
-@WebAppConfiguration
-@IntegrationTest
-public class TabelaImpostoRendaResourceIntTest {
+public class TabelaImpostoRendaResourceIntTest extends AbstractTest {
 
 
     private static final Long DEFAULT_NUM_DIAS = 0L;
@@ -83,6 +80,7 @@ public class TabelaImpostoRendaResourceIntTest {
         tabelaImpostoRenda = new TabelaImpostoRenda();
         tabelaImpostoRenda.setNumDias(DEFAULT_NUM_DIAS);
         tabelaImpostoRenda.setPctAliquota(DEFAULT_PCT_ALIQUOTA);
+        tabelaImpostoRenda.setTipoImpostoRenda(dsl.dado().tipoImpostoRenda().salva());
     }
 
     @Test
@@ -191,6 +189,7 @@ public class TabelaImpostoRendaResourceIntTest {
         updatedTabelaImpostoRenda.setId(tabelaImpostoRenda.getId());
         updatedTabelaImpostoRenda.setNumDias(UPDATED_NUM_DIAS);
         updatedTabelaImpostoRenda.setPctAliquota(UPDATED_PCT_ALIQUOTA);
+        updatedTabelaImpostoRenda.setTipoImpostoRenda(tabelaImpostoRenda.getTipoImpostoRenda());
 
         restTabelaImpostoRendaMockMvc.perform(put("/api/tabela-imposto-rendas")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)

@@ -56,7 +56,7 @@
 
         <div class="form-group">
             <label translate="gfpApp.tabelaImpostoRenda.tipoImpostoRenda" for="field_tipoImpostoRenda">Tipo Imposto Renda</label>
-            <select class="form-control" id="field_tipoImpostoRenda" name="tipoImpostoRenda" ng-model="vm.tabelaImpostoRenda.tipoImpostoRenda" ng-options="tipoImpostoRenda as tipoImpostoRenda.id for tipoImpostoRenda in vm.tipoimpostorendas track by tipoImpostoRenda.id" required>
+            <select class="form-control" id="field_tipoImpostoRenda" name="tipoImpostoRenda" ng-model="vm.tabelaImpostoRenda.tipoImpostoRenda" ng-options="tipoImpostoRenda as tipoImpostoRenda.codigo for tipoImpostoRenda in vm.tipoimpostorendas track by tipoImpostoRenda.id" required>
                 <option value=""></option>
             </select>
         </div>

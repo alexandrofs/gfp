@@ -1,5 +1,6 @@
 package com.alexandrofs.gfp.web.rest;
 
+import com.alexandrofs.gfp.AbstractTest;
 import com.alexandrofs.gfp.GfpApp;
 import com.alexandrofs.gfp.domain.User;
 import com.alexandrofs.gfp.repository.UserRepository;
@@ -28,11 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @see UserResource
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = GfpApp.class)
-@WebAppConfiguration
-@IntegrationTest
-public class UserResourceIntTest {
+public class UserResourceIntTest extends AbstractTest {
 
     @Inject
     private UserRepository userRepository;

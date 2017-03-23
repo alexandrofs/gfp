@@ -1,37 +1,41 @@
 package com.alexandrofs.gfp.web.rest;
 
-import com.alexandrofs.gfp.GfpApp;
-import com.alexandrofs.gfp.domain.Investimento;
-import com.alexandrofs.gfp.repository.InvestimentoRepository;
-import com.alexandrofs.gfp.service.InvestimentoService;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.http.MediaType;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.math.BigDecimal;
-import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.MockitoAnnotations;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.http.MediaType;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.alexandrofs.gfp.AbstractTest;
+import com.alexandrofs.gfp.domain.Carteira;
+import com.alexandrofs.gfp.domain.Investimento;
+import com.alexandrofs.gfp.repository.CarteiraRepository;
+import com.alexandrofs.gfp.repository.InvestimentoRepository;
+import com.alexandrofs.gfp.service.InvestimentoService;
 
 
 /**
@@ -39,11 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  *
  * @see InvestimentoResource
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = GfpApp.class)
-@WebAppConfiguration
-@IntegrationTest
-public class InvestimentoResourceIntTest {
+public class InvestimentoResourceIntTest extends AbstractTest {
 
     private static final String DEFAULT_NOME = "AAAAA";
     private static final String UPDATED_NOME = "BBBBB";
@@ -59,6 +59,9 @@ public class InvestimentoResourceIntTest {
 
     @Inject
     private InvestimentoRepository investimentoRepository;
+    
+    @Inject
+    private CarteiraRepository carteiraRepository;
 
     @Inject
     private InvestimentoService investimentoService;
@@ -72,7 +75,7 @@ public class InvestimentoResourceIntTest {
     private MockMvc restInvestimentoMockMvc;
 
     private Investimento investimento;
-
+    
     @PostConstruct
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -90,6 +93,12 @@ public class InvestimentoResourceIntTest {
         investimento.setDataAplicacao(DEFAULT_DATA_APLICACAO);
         investimento.setQtdeCota(DEFAULT_QTDE_COTA);
         investimento.setVlrCota(DEFAULT_VLR_COTA);
+        Carteira cart = new Carteira();
+        cart.setNome("AAA");
+        cart.setDescricao("BBB");
+        carteiraRepository.saveAndFlush(cart);
+        investimento.setCarteira(cart);
+        investimento.setTipoInvestimento(dsl.dado().tipoInvestimento().salva());
     }
 
     @Test
@@ -225,11 +234,13 @@ public class InvestimentoResourceIntTest {
         updatedInvestimento.setDataAplicacao(UPDATED_DATA_APLICACAO);
         updatedInvestimento.setQtdeCota(UPDATED_QTDE_COTA);
         updatedInvestimento.setVlrCota(UPDATED_VLR_COTA);
+        updatedInvestimento.setCarteira(investimento.getCarteira());
+        updatedInvestimento.setTipoInvestimento(investimento.getTipoInvestimento());
 
-        restInvestimentoMockMvc.perform(put("/api/investimentos")
+        ResultActions perform = restInvestimentoMockMvc.perform(put("/api/investimentos")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(updatedInvestimento)))
-                .andExpect(status().isOk());
+                .content(TestUtil.convertObjectToJsonBytes(updatedInvestimento)));
+		perform.andExpect(status().isOk());
 
         // Validate the Investimento in the database
         List<Investimento> investimentos = investimentoRepository.findAll();
