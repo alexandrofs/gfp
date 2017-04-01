@@ -1,0 +1,22 @@
+
+<div>
+    <h2><span translate="gfpApp.tipoImpostoRenda.detail.title">Tipo Imposto Renda</span> {{vm.tipoImpostoRenda.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="dl-horizontal jh-entity-details">
+        <dt><span translate="gfpApp.tipoImpostoRenda.codigo">Codigo</span></dt>
+        <dd>
+            <span>{{vm.tipoImpostoRenda.codigo}}</span>
+        </dd>
+        <dt><span translate="gfpApp.tipoImpostoRenda.descricao">Descricao</span></dt>
+        <dd>
+            <span>{{vm.tipoImpostoRenda.descricao}}</span>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            onclick="window.history.back()"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span translate="entity.action.back"> Back</span>
+    </button>
+</div>

@@ -1,0 +1,38 @@
+
+<div>
+    <h2><span translate="gfpApp.investimento.detail.title">Investimento</span> {{vm.investimento.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="dl-horizontal jh-entity-details">
+        <dt><span translate="gfpApp.investimento.nome">Nome</span></dt>
+        <dd>
+            <span>{{vm.investimento.nome}}</span>
+        </dd>
+        <dt><span translate="gfpApp.investimento.dataAplicacao">Data Aplicacao</span></dt>
+        <dd>
+            <span>{{vm.investimento.dataAplicacao | date:'mediumDate'}}</span>
+        </dd>
+        <dt><span translate="gfpApp.investimento.qtdeCota">Qtde Cota</span></dt>
+        <dd>
+            <span>{{vm.investimento.qtdeCota}}</span>
+        </dd>
+        <dt><span translate="gfpApp.investimento.vlrCota">Vlr Cota</span></dt>
+        <dd>
+            <span>{{vm.investimento.vlrCota}}</span>
+        </dd>
+        <dt><span translate="gfpApp.investimento.carteira">Carteira</span></dt>
+        <dd>
+            <a ui-sref="carteira-detail({id:vm.investimento.carteira.id})">{{vm.investimento.carteira.id}}</a>
+        </dd>
+        <dt><span translate="gfpApp.investimento.tipoInvestimento">Tipo Investimento</span></dt>
+        <dd>
+            <a ui-sref="tipo-investimento-detail({id:vm.investimento.tipoInvestimento.id})">{{vm.investimento.tipoInvestimento.id}}</a>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            onclick="window.history.back()"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span translate="entity.action.back"> Back</span>
+    </button>
+</div>

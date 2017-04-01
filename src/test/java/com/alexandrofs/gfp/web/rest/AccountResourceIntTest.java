@@ -1,6 +1,34 @@
 package com.alexandrofs.gfp.web.rest;
 
-import com.alexandrofs.gfp.GfpApp;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+
+import javax.inject.Inject;
+import javax.transaction.Transactional;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.MediaType;
+import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import com.alexandrofs.gfp.AbstractTest;
 import com.alexandrofs.gfp.domain.Authority;
 import com.alexandrofs.gfp.domain.User;
 import com.alexandrofs.gfp.repository.AuthorityRepository;
@@ -10,43 +38,13 @@ import com.alexandrofs.gfp.service.MailService;
 import com.alexandrofs.gfp.service.UserService;
 import com.alexandrofs.gfp.web.rest.dto.ManagedUserDTO;
 import com.alexandrofs.gfp.web.rest.dto.UserDTO;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-
-import javax.inject.Inject;
-import javax.transaction.Transactional;
-import java.util.*;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Test class for the AccountResource REST controller.
  *
  * @see UserService
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = GfpApp.class)
-@WebAppConfiguration
-@IntegrationTest
-public class AccountResourceIntTest {
+public class AccountResourceIntTest extends AbstractTest {
 
     @Inject
     private UserRepository userRepository;

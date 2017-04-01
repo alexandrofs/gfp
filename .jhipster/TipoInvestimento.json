@@ -1,0 +1,38 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "tipoImpostoRenda",
+            "otherEntityName": "tipoImpostoRenda",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "nome",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 20
+        },
+        {
+            "fieldName": "descricao",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": "255"
+        }
+    ],
+    "changelogDate": "20160713031309",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "tb_tipo_investimento",
+    "pagination": "no"
+}

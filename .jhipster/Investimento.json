@@ -1,0 +1,64 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "carteira",
+            "otherEntityName": "carteira",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "tipoInvestimento",
+            "otherEntityName": "tipoInvestimento",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "id"
+        },
+        {
+            "relationshipName": "historicoCotas",
+            "otherEntityName": "historicoCotas",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "investimento"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "nome",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "dataAplicacao",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "qtdeCota",
+            "fieldType": "BigDecimal",
+            "fieldValidateRules": [
+                "required",
+                "min"
+            ],
+            "fieldValidateRulesMin": 0
+        },
+        {
+            "fieldName": "vlrCota",
+            "fieldType": "BigDecimal",
+            "fieldValidateRules": [
+                "required",
+                "min"
+            ],
+            "fieldValidateRulesMin": 0
+        }
+    ],
+    "changelogDate": "20160713032007",
+    "dto": "no",
+    "service": "serviceClass",
+    "entityTableName": "tb_investimento",
+    "pagination": "no"
+}

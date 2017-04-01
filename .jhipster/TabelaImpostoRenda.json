@@ -1,0 +1,38 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "tipoImpostoRenda",
+            "otherEntityName": "tipoImpostoRenda",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "numDias",
+            "fieldType": "Long",
+            "fieldValidateRules": [
+                "required",
+                "min"
+            ],
+            "fieldValidateRulesMin": 0
+        },
+        {
+            "fieldName": "pctAliquota",
+            "fieldType": "BigDecimal",
+            "fieldValidateRules": [
+                "required",
+                "min"
+            ],
+            "fieldValidateRulesMin": 0
+        }
+    ],
+    "changelogDate": "20160713030900",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "tb_tabela_imposto_renda",
+    "pagination": "no"
+}
