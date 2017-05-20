@@ -351,6 +351,7 @@
     </dependencies>
     <build>
         <defaultGoal>spring-boot:run</defaultGoal>
+        <finalName>gfp</finalName>
         <pluginManagement>
             <plugins>
                 <!--
