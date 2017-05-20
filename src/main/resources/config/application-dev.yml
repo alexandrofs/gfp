@@ -18,10 +18,10 @@ spring:
         livereload:
             enabled: false # we use gulp + BrowserSync for livereload
     datasource:
-        url: jdbc:mysql://localhost:3306/gfp?useUnicode=true&characterEncoding=utf8&useSSL=false
-        name:
-        username: root
-        password: gudiao
+        driver-class-name: org.postgresql.Driver 
+        url: ${JDBC_DATABASE_URL}
+        username: ${JDBC_DATABASE_USERNAME}
+        password: ${JDBC_DATABASE_PASSWORD}
         hikari:
             data-source-properties:
                 cachePrepStmts: true
@@ -29,8 +29,6 @@ spring:
                 prepStmtCacheSqlLimit: 2048
                 useServerPrepStmts: true
     jpa:
-        database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-        database: MYSQL
         show_sql: true
         properties:
             hibernate.cache.use_second_level_cache: false
