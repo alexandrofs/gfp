@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <property name="now" value="now()" dbms="mysql,h2"/>
+    <property name="now" value="current_timestamp" dbms="postgresql"/>
+    <property name="now" value="sysdate" dbms="oracle"/>
+
+    <property name="autoIncrement" value="true" dbms="mysql,h2,postgresql,oracle"/>
+
+    <property name="floatType" value="float4" dbms="postgresql, h2"/>
+    <property name="floatType" value="float" dbms="mysql, oracle"/>
+
+    <changeSet id="20170520-2" author="alexf">
+    	<insert tableName="tb_tipo_imposto_renda">
+	    	<column autoIncrement="true" name="id"/>
+	    	<column name="codigo">RENDAFIXA</column>
+	    	<column name="descricao">IR de Renda Fixa</column>
+    	</insert>
+    	<insert tableName="tb_tabela_imposto_renda">
+	    	<column autoIncrement="true" name="id"/>
+	    	<column name="num_dias">0</column>
+	    	<column name="pct_aliquota">22.5</column>
+	    	<column name="tipo_imposto_renda_id" valueComputed="(select id from tb_tipo_imposto_renda where codigo='RENDAFIXA')"/>
+    	</insert>
+    	<insert tableName="tb_tabela_imposto_renda">
+	    	<column autoIncrement="true" name="id"/>
+	    	<column name="num_dias">180</column>
+	    	<column name="pct_aliquota">20</column>
+	    	<column name="tipo_imposto_renda_id" valueComputed="(select id from tb_tipo_imposto_renda where codigo='RENDAFIXA')"/>
+    	</insert>
+    	<insert tableName="tb_tabela_imposto_renda">
+	    	<column autoIncrement="true" name="id"/>
+	    	<column name="num_dias">360</column>
+	    	<column name="pct_aliquota">17.5</column>
+	    	<column name="tipo_imposto_renda_id" valueComputed="(select id from tb_tipo_imposto_renda where codigo='RENDAFIXA')"/>
+    	</insert>
+    	<insert tableName="tb_tabela_imposto_renda">
+	    	<column autoIncrement="true" name="id"/>
+	    	<column name="num_dias">720</column>
+	    	<column name="pct_aliquota">15</column>
+	    	<column name="tipo_imposto_renda_id" valueComputed="(select id from tb_tipo_imposto_renda where codigo='RENDAFIXA')"/>
+    	</insert> 
+    </changeSet>
+</databaseChangeLog>
