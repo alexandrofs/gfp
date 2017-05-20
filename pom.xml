@@ -67,11 +67,6 @@
     <dependencies>
         <!-- jhipster-needle-maven-add-dependency -->
         <dependency>
-            <groupId>br.com.mvar.shared.corporate</groupId>
-            <artifactId>corporate-data-service</artifactId>
-            <version>3.01.00-SNAPSHOT</version>
-        </dependency>
-        <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-hibernate4</artifactId>
         </dependency>
