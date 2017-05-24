@@ -1,19 +1,10 @@
 {
     "home": {
-        "title": "Bem vindo, Java Hipster!",
-        "subtitle": "Esta é  a página principal",
+        "title": "Bem vindo ao GFP!",
+        "subtitle": "Aqui você pode controlar seus gastos e seus investimentos. Saber se está rendendo mais que a Inflação ou mais que a Poupança.",
         "logged": {
             "message": "Você está logado como \"{{username}}\"."
         },
-        "question": "Em caso de dúvida sobre o JHipster:",
-        "link": {
-            "homepage": "JHipster homepage",
-            "stackoverflow": "JHipster no Stack Overflow",
-            "bugtracker": "JHipster bug tracker",
-            "chat": "JHipster public chat room",
-            "follow": "contate @java_hipster on Twitter"
-        },
-        "like": "Se você gosta do JHipster, não se esqueça de avaliar no",
         "github": "GitHub"
     }
 }
