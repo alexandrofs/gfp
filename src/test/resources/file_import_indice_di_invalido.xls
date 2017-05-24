@@ -1,0 +1,47 @@
+CETIP									
+DI - Depósito Interfinanceiro - Taxas - DI PRÉ - Over									
+									
+De: 01/04/2017 -->  Até: 19/05/2017									
+									
+!DI-CETIP (over)									
+									
+Observações a respeito de mudança de moeda / volume:									
+(1) Anos 1986, 1987 e 1988, volume em Cz$ milhões (Cruzado).									
+(2) A partir de 16/01/1989, corte de três zeros no Cruzado, passando a Cruzado Novo. Volume em NCz$ milhões.									
+(3) A partir de 15/03/1990, restabelecido o Cruzeiro (Cr$) como moeda nacional. Volume em Cr$ milhões.									
+(4) A partir de 01/04/1992, em virtude do crescente volume, o mesmo passa a ser divulgado em Cr$ bilhões.									
+(5) Instituído em 02/08/1993, o Cruzeiro Real (CR$) , com corte de três zeros do Cruzeiro	 volume em CR$ milhões.								
+(6) A partir de 01/11/1993, em virtude do crescimento do volume, o mesmo passa a ser divulgado em CR$ bilhões.									
+(7) Em Julho/1994, com a implantação do Plano Real, com divisão de valores financeiros por 2.750,00 passando o volume financeiro a ser registrado em milhares de Reais.									
+           									
+Observações a respeito da formulação da taxa:									
+(a) Até 30/06/1989, as taxas dos dias que precediam a fins de semana e feriados eram divididas pelo número de dias destes, de forma a mostrar a taxa over paga pelos dias não úteis.									
+(b) Até 31/05/1990, taxas divulgadas ao ano de 360 dias, com expressão linear.									
+ Entre 01/06/1990 e 31/12/1997, somente taxas diárias expressas linear ao mês.									
+(c) A partir de 01/01/1998, taxas médias diárias de DI-Over e de SELIC divulgadas ao ano de 252 dias úteis, com expressão exponencial.									
+     									
+Observações a respeito da amostra / base de cálculo da taxa:									
+(I) Até 29/04/1988, somente taxas envolvendo todas as operações de DI Over.									
+(II) De 02/05/1988 a 31/05/1990, divisão em Extra-Grupo, Intra-Grupo e Total, sendo o acumulado mensal apenas do Extra-Grupo.									
+(III) A partir de 01/06/1990, somente taxas do Extra-Grupo.									
+(IV) A partir de 02/01/1991, inclusão de taxas mínimas, máximas e modais, além do desvio padrão.									
+     									
+Observações localizadas:									
+(i) De acordo com a lei nº 7.320 de 11/06/1985, revogada posteriormente pela lei nº 8.087 de 29/10/1990, foram comemorados por antecipação, nas segundas-feiras, os feriados que caíram nos demais dias da semana, com exceção dos que ocorreram nos sábados e domingos e os dos dias 1º de janeiro (Confraternização Universal), 7 de setembro (Dia da Independência), 25 de dezembro (Natal) e Sexta-Feira Santa.									
+Com base no exposto, durante o período citado pode ocorrer  a inexistência de taxa para dias considerados como úteis (caso de segundas-feiras imediatamente anteriores a feriados, para onde os mesmos foram deslocados) assim como a existência de taxa para dias considerados como não úteis (caso dos feriados ocorridos entre segunda e sexta-feira, com exceção dos casos já citados).									
+(ii) Em 23/12/1987, houve também operações diretamente para o dia 28, com cinco dias e um over (saque), com taxa média de 57,66% a.a.									
+Em 30/12/1987, houve também operações diretamente para o dia 04/01/1988, com cinco dias e dois over (saques), com taxa média de 94,91 % a.a., referentes aos dias 30 e 31/12/1987, abandonando-se, neste caso, a taxa média do dia 31 (60,08 % a.a.).									
+(iii) Em 12/02/1988, houve também operações diretamente para o dia 18, com seis dias e dois over (saques), com taxa média de 115,72 % a.a.									
+ 									
+									
+( - ) Dados Insuficientes.									
+									
+Com base no exposto, durante o período citado pode ocorrer  a inexistência de taxa para dias considerados como úteis (caso de segundas-feiras imediatamente anteriores a feriados, para onde os mesmos foram deslocados) assim como a existência de taxa para dias considerados como não úteis (caso dos feriados ocorridos entre segunda e sexta-feira, com exceção dos casos já citados).	Nr. Operações	Volume	Média	Fator Diário	Mínima	Máxima	Moda	Dsv Pdr	Taxa SELIC
+(ii) Em 23/12/1987, houve também operações diretamente para o dia 28, com cinco dias e um over (saque), com taxa média de 57,66% a.a.	7	2149958,11	12,13	1,00045442	-	-	-	-	12,15
+Em 30/12/1987, houve também operações diretamente para o dia 04/01/1988, com cinco dias e dois over (saques), com taxa média de 94,91 % a.a., referentes aos dias 30 e 31/12/1987, abandonando-se, neste caso, a taxa média do dia 31 (60,08 % a.a.).	7	2303347,86	12,13	1,00045442	-	-	-	-	12,15
+(iii) Em 12/02/1988, houve também operações diretamente para o dia 18, com seis dias e dois over (saques), com taxa média de 115,72 % a.a.									
+									
+									
+									
+									
+Inválido									

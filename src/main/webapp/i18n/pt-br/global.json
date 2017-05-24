@@ -12,6 +12,7 @@
                 "tabelaImpostoRenda": "Tabela Imposto Renda",
                 "tipoInvestimento": "Tipo Investimento",
                 "investimento": "Investimento",
+                "indiceSerieDi": "Indice Serie Di",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {
