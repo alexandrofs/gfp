@@ -1,0 +1,24 @@
+
+<form name="importForm" role="form" novalidate ng-submit="vm.importar()" show-validation>
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                ng-click="vm.clear()">&times;</button>
+        <h4 class="modal-title" id="myIndiceSerieDiLabel" translate="gfpApp.indiceSerieDi.home.importLabel">Create or edit a Indice Serie Di</h4>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="btn btn-primary center" ngf-select ng-model="file" name="file" ngf-pattern="'*/*'"
+    ngf-accept="'*/*'" ngf-max-size="20MB" ngf-min-height="100"
+    ngf-resize="{width: 100, height: 100}">Clique aqui para selecionar o arquivo...</div>
+       {{file.name}}
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span translate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" ng-disabled="importForm.$invalid || vm.isSaving" class="btn btn-primary">
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span translate="gfpApp.indiceSerieDi.importar">Importar</span>
+        </button>
+    </div>
+</form>
