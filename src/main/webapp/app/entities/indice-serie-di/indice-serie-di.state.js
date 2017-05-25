@@ -13,7 +13,7 @@
             parent: 'entity',
             url: '/indice-serie-di',
             data: {
-                authorities: ['ROLE_USER'],
+                authorities: ['ROLE_USER','ROLE_ADMIN'],
                 pageTitle: 'gfpApp.indiceSerieDi.home.title'
             },
             views: {

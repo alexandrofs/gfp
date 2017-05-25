@@ -13,7 +13,7 @@
             parent: 'entity',
             url: '/tabela-imposto-renda',
             data: {
-                authorities: ['ROLE_USER'],
+                authorities: ['ROLE_USER','ROLE_ADMIN'],
                 pageTitle: 'gfpApp.tabelaImpostoRenda.home.title'
             },
             views: {
