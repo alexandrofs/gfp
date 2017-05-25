@@ -4,15 +4,18 @@
         "browsehappy": "Você está usando um navegador <strong>desatualizado</strong>. Favor <a href=\"http://browsehappy.com/?locale=pt_BR\">atualizar o seu navegador</a> para ter uma experiência melhor.",
         "menu": {
             "home": "Início",
-            "jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",
+            "configs": {
+            	"main": "Configurações",
+            	"tipoImpostoRenda": "Tipo Imposto Renda",
+            	"tabelaImpostoRenda": "Tabela Imposto Renda",
+                "tipoInvestimento": "Tipo Investimento",
+                "indiceSerieDi": "Indice Serie Di"
+            },
+			"jhipster-needle-menu-add-element": "JHipster will add additional menu entries here (do not translate!)",            
             "entities": {
                 "main": "Cadastros",
                 "carteira": "Carteira",
-                "tipoImpostoRenda": "Tipo Imposto Renda",
-                "tabelaImpostoRenda": "Tabela Imposto Renda",
-                "tipoInvestimento": "Tipo Investimento",
                 "investimento": "Investimento",
-                "indiceSerieDi": "Indice Serie Di",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {

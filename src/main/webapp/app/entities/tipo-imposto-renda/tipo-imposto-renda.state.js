@@ -13,7 +13,7 @@
             parent: 'entity',
             url: '/tipo-imposto-renda',
             data: {
-                authorities: ['ROLE_USER'],
+                authorities: ['ROLE_USER','ROLE_ADMIN'],
                 pageTitle: 'gfpApp.tipoImpostoRenda.home.title'
             },
             views: {
