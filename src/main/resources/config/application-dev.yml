@@ -37,12 +37,12 @@ spring:
     mail:
         host: smtp.gmail.com
         port: 587
-        username: afssistemas@gmail.com
-        password: pri271100
+        username: ${GMAIL_USERNAME}
+        password: ${GMAIL_PASSWORD}
         properties:
           mail.smtp.starttls.enable: true
           mail.smtp.auth: true
-          mail.smtps.ssl.checkserveridentity: true
+          mail.smtps.ssl.checkserveridentity: false
           mail.smtps.ssl.trust: "*"
        
     messages:
