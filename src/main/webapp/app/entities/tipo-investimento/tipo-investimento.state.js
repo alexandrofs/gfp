@@ -73,6 +73,9 @@
                             return {
                                 nome: null,
                                 descricao: null,
+                                modalidade: null,
+                                tipoIndexador: null,
+                                indice: null,
                                 id: null
                             };
                         }

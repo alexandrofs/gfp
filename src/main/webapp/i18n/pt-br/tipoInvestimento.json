@@ -18,6 +18,9 @@
             },
             "nome": "Nome",
             "descricao": "Descricao",
+            "modalidade": "Modalidade",
+            "tipoIndexador": "Tipo Indexador",
+            "indice": "Indice",
             "tipoImpostoRenda": "Tipo Imposto Renda"
         }
     }

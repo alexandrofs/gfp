@@ -29,6 +29,19 @@ public class TipoInvestimento implements Serializable {
     @Column(name = "descricao", length = 255, nullable = false)
     private String descricao;
 
+    @NotNull
+    @Size(max = 25)
+    @Column(name = "modalidade", length = 25, nullable = false)
+    private String modalidade;
+
+    @Size(max = 10)
+    @Column(name = "tipo_indexador", length = 10, nullable = true)
+    private String tipoIndexador;
+
+    @Size(max = 10)
+    @Column(name = "indice", length = 10, nullable = true)
+    private String indice;
+
     @ManyToOne
     @NotNull
     private TipoImpostoRenda tipoImpostoRenda;
@@ -55,6 +68,30 @@ public class TipoInvestimento implements Serializable {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    public String getModalidade() {
+        return modalidade;
+    }
+
+    public void setModalidade(String modalidade) {
+        this.modalidade = modalidade;
+    }
+
+    public String getTipoIndexador() {
+        return tipoIndexador;
+    }
+
+    public void setTipoIndexador(String tipoIndexador) {
+        this.tipoIndexador = tipoIndexador;
+    }
+
+    public String getIndice() {
+        return indice;
+    }
+
+    public void setIndice(String indice) {
+        this.indice = indice;
     }
 
     public TipoImpostoRenda getTipoImpostoRenda() {
@@ -91,6 +128,9 @@ public class TipoInvestimento implements Serializable {
             "id=" + id +
             ", nome='" + nome + "'" +
             ", descricao='" + descricao + "'" +
+            ", modalidade='" + modalidade + "'" +
+            ", tipoIndexador='" + tipoIndexador + "'" +
+            ", indice='" + indice + "'" +
             '}';
     }
 }

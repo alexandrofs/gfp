@@ -21,6 +21,9 @@
                     <th><span translate="global.field.id">ID</span></th>
                     <th><span translate="gfpApp.tipoInvestimento.nome">Nome</span></th>
                     <th><span translate="gfpApp.tipoInvestimento.descricao">Descricao</span></th>
+                    <th><span translate="gfpApp.tipoInvestimento.modalidade">Modalidade</span></th>
+                    <th><span translate="gfpApp.tipoInvestimento.tipoIndexador">Tipo Indexador</span></th>
+                    <th><span translate="gfpApp.tipoInvestimento.indice">Indice</span></th>
                     <th><span translate="gfpApp.tipoInvestimento.tipoImpostoRenda">Tipo Imposto Renda</span></th>
                     <th></th>
                 </tr>
@@ -30,8 +33,11 @@
                     <td><a ui-sref="tipo-investimento-detail({id:tipoInvestimento.id})">{{tipoInvestimento.id}}</a></td>
                     <td>{{tipoInvestimento.nome}}</td>
                     <td>{{tipoInvestimento.descricao}}</td>
+                    <td>{{tipoInvestimento.modalidade}}</td>
+                    <td>{{tipoInvestimento.tipoIndexador}}</td>
+                    <td>{{tipoInvestimento.indice}}</td>
                     <td>
-                        <a ui-sref="tipo-imposto-renda-detail({id:tipoInvestimento.tipoImpostoRenda.id})">{{tipoInvestimento.tipoImpostoRenda.id}}</a>
+                        <a ui-sref="tipo-imposto-renda-detail({id:tipoInvestimento.tipoImpostoRenda.id})">{{tipoInvestimento.tipoImpostoRenda.codigo}}</a>
                     </td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">
