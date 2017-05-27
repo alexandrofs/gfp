@@ -37,4 +37,35 @@
         </createTable>
         
     </changeSet>
+    <changeSet id="20170526205900-1" author="alexf">
+    	<addColumn tableName="tb_tipo_investimento">
+    	
+    	     <column name="modalidade" type="varchar(25)">
+                <constraints nullable="false" />
+            </column>
+            
+            <column name="tipo_indexador" type="varchar(10)">
+                <constraints nullable="false" />
+            </column>
+            
+            <column name="indice" type="varchar(10)">
+                <constraints nullable="false" />
+            </column>
+            
+    	</addColumn>
+    </changeSet>
+    <changeSet id="20170526205900-2" author="alexf">
+    	<dropColumn tableName="tb_tipo_investimento">
+
+    		<column name="tipo_indexador"/>
+    		<column name="indice"/>
+
+    	</dropColumn>
+    	<addColumn tableName="tb_tipo_investimento">
+    	
+            <column name="tipo_indexador" type="varchar(10)"/>
+            <column name="indice" type="varchar(10)"/>
+            
+    	</addColumn>    	
+    </changeSet>
 </databaseChangeLog>

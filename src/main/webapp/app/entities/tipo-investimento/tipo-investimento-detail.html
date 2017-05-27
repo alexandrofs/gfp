@@ -1,6 +1,6 @@
 
 <div>
-    <h2><span translate="gfpApp.tipoInvestimento.detail.title">Tipo Investimento</span> {{vm.tipoInvestimento.id}}</h2>
+    <h2><span translate="gfpApp.tipoInvestimento.detail.title">Tipo Investimento</span> {{vm.tipoInvestimento.nome}}</h2>
     <hr>
     <jhi-alert-error></jhi-alert-error>
     <dl class="dl-horizontal jh-entity-details">
@@ -12,9 +12,21 @@
         <dd>
             <span>{{vm.tipoInvestimento.descricao}}</span>
         </dd>
+        <dt><span translate="gfpApp.tipoInvestimento.modalidade">Modalidade</span></dt>
+        <dd>
+            <span>{{vm.tipoInvestimento.modalidade}}</span>
+        </dd>
+        <dt><span translate="gfpApp.tipoInvestimento.tipoIndexador">Tipo Indexador</span></dt>
+        <dd>
+            <span>{{vm.tipoInvestimento.tipoIndexador}}</span>
+        </dd>
+        <dt><span translate="gfpApp.tipoInvestimento.indice">Indice</span></dt>
+        <dd>
+            <span>{{vm.tipoInvestimento.indice}}</span>
+        </dd>
         <dt><span translate="gfpApp.tipoInvestimento.tipoImpostoRenda">Tipo Imposto Renda</span></dt>
         <dd>
-            <a ui-sref="tipo-imposto-renda-detail({id:vm.tipoInvestimento.tipoImpostoRenda.id})">{{vm.tipoInvestimento.tipoImpostoRenda.id}}</a>
+            <a ui-sref="tipo-imposto-renda-detail({id:vm.tipoInvestimento.tipoImpostoRenda.id})">{{vm.tipoInvestimento.tipoImpostoRenda.codigo}}</a>
         </dd>
     </dl>
 

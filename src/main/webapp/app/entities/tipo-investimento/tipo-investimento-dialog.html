@@ -45,6 +45,55 @@
                 </p>
             </div>
         </div>
+        <div class="form-group">
+            <label class="control-label" translate="gfpApp.tipoInvestimento.modalidade" for="field_modalidade">Modalidade</label>
+		    <select class="form-control" id="field_modalidade" name="modalidade" ng-model="vm.tipoInvestimento.modalidade" ng-options="tipoModalidade as tipoModalidade for tipoModalidade in vm.tipoModalidades" required>
+                <option value=""></option>
+            </select>                    
+            <div ng-show="editForm.modalidade.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.modalidade.$error.required" translate="entity.validation.required">
+                    This field is required.
+                </p>
+                <p class="help-block"
+                    ng-show="editForm.indice.$error.maxlength" translate="entity.validation.maxlength" translate-value-max="25">
+                    This field cannot be longer than 25 characters.
+                </p>                
+            </div>
+        </div>
+        <div class="form-group" ng-if="vm.tipoInvestimento.modalidade == vm.MODALIDADE_CDB || vm.tipoInvestimento.modalidade == vm.MODALIDADE_LCI">
+            <label class="control-label" translate="gfpApp.tipoInvestimento.tipoIndexador" for="field_tipoIndexador">Tipo Indexador</label>
+		    <select class="form-control" id="field_tipoIndexador" name="tipoIndexador" ng-model="vm.tipoInvestimento.tipoIndexador" ng-options="tipoIndexador as tipoIndexador for tipoIndexador in vm.tipoIndexadores" ng-required="vm.tipoInvestimento.modalidade == vm.MODALIDADE_CDB || vm.tipoInvestimento.modalidade == vm.MODALIDADE_LCI">
+                <option value=""></option>
+            </select>                    
+            <div ng-show="editForm.tipoIndexador.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.tipoIndexador.$error.required" translate="entity.validation.required">
+                    This field is required.
+                </p>
+                <p class="help-block"
+                    ng-show="editForm.indice.$error.maxlength" translate="entity.validation.maxlength" translate-value-max="10">
+                    This field cannot be longer than 10 characters.
+                </p>
+                
+            </div>
+        </div>
+        <div class="form-group" ng-if="vm.tipoInvestimento.tipoIndexador == vm.INDEXADOR_POS">
+            <label class="control-label" translate="gfpApp.tipoInvestimento.indice" for="field_indice">Indice</label>
+		    <select class="form-control" id="field_indice" name="indice" ng-model="vm.tipoInvestimento.indice" ng-options="indice as indice for indice in vm.indices" ng-required="vm.tipoInvestimento.tipoIndexador == vm.INDEXADOR_POS">
+                <option value=""></option>
+            </select>                     
+            <div ng-show="editForm.indice.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.indice.$error.required" translate="entity.validation.required">
+                    This field is required.
+                </p>
+                <p class="help-block"
+                    ng-show="editForm.indice.$error.maxlength" translate="entity.validation.maxlength" translate-value-max="10">
+                    This field cannot be longer than 10 characters.
+                </p>
+            </div>
+        </div>
 
         <div class="form-group">
             <label translate="gfpApp.tipoInvestimento.tipoImpostoRenda" for="field_tipoImpostoRenda">Tipo Imposto Renda</label>

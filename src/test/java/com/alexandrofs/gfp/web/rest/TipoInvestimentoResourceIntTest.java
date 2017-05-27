@@ -1,34 +1,33 @@
 package com.alexandrofs.gfp.web.rest;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
+import com.alexandrofs.gfp.GfpApp;
+import com.alexandrofs.gfp.domain.TipoInvestimento;
+import com.alexandrofs.gfp.repository.TipoInvestimentoRepository;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import static org.hamcrest.Matchers.hasItem;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.boot.test.IntegrationTest;
+import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alexandrofs.gfp.AbstractTest;
-import com.alexandrofs.gfp.domain.TipoInvestimento;
-import com.alexandrofs.gfp.repository.TipoInvestimentoRepository;
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
 /**
@@ -36,12 +35,22 @@ import com.alexandrofs.gfp.repository.TipoInvestimentoRepository;
  *
  * @see TipoInvestimentoResource
  */
-public class TipoInvestimentoResourceIntTest extends AbstractTest {
+@RunWith(SpringJUnit4ClassRunner.class)
+@SpringApplicationConfiguration(classes = GfpApp.class)
+@WebAppConfiguration
+@IntegrationTest
+public class TipoInvestimentoResourceIntTest {
 
     private static final String DEFAULT_NOME = "AAAAAAAAAAAAAAAAAAAA";
     private static final String UPDATED_NOME = "BBBBBBBBBBBBBBBBBBBB";
     private static final String DEFAULT_DESCRICAO = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
     private static final String UPDATED_DESCRICAO = "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB";
+    private static final String DEFAULT_MODALIDADE = "AAAAA";
+    private static final String UPDATED_MODALIDADE = "BBBBB";
+    private static final String DEFAULT_TIPO_INDEXADOR = "AAAAA";
+    private static final String UPDATED_TIPO_INDEXADOR = "BBBBB";
+    private static final String DEFAULT_INDICE = "AAAAAAAAAAAAAAAAAAAA";
+    private static final String UPDATED_INDICE = "BBBBBBBBBBBBBBBBBBBB";
 
     @Inject
     private TipoInvestimentoRepository tipoInvestimentoRepository;
@@ -55,7 +64,7 @@ public class TipoInvestimentoResourceIntTest extends AbstractTest {
     private MockMvc restTipoInvestimentoMockMvc;
 
     private TipoInvestimento tipoInvestimento;
-    
+
     @PostConstruct
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -71,7 +80,9 @@ public class TipoInvestimentoResourceIntTest extends AbstractTest {
         tipoInvestimento = new TipoInvestimento();
         tipoInvestimento.setNome(DEFAULT_NOME);
         tipoInvestimento.setDescricao(DEFAULT_DESCRICAO);
-        tipoInvestimento.setTipoImpostoRenda(dsl.dado().tipoImpostoRenda().salva());
+        tipoInvestimento.setModalidade(DEFAULT_MODALIDADE);
+        tipoInvestimento.setTipoIndexador(DEFAULT_TIPO_INDEXADOR);
+        tipoInvestimento.setIndice(DEFAULT_INDICE);
     }
 
     @Test
@@ -92,6 +103,9 @@ public class TipoInvestimentoResourceIntTest extends AbstractTest {
         TipoInvestimento testTipoInvestimento = tipoInvestimentos.get(tipoInvestimentos.size() - 1);
         assertThat(testTipoInvestimento.getNome()).isEqualTo(DEFAULT_NOME);
         assertThat(testTipoInvestimento.getDescricao()).isEqualTo(DEFAULT_DESCRICAO);
+        assertThat(testTipoInvestimento.getModalidade()).isEqualTo(DEFAULT_MODALIDADE);
+        assertThat(testTipoInvestimento.getTipoIndexador()).isEqualTo(DEFAULT_TIPO_INDEXADOR);
+        assertThat(testTipoInvestimento.getIndice()).isEqualTo(DEFAULT_INDICE);
     }
 
     @Test
@@ -132,6 +146,60 @@ public class TipoInvestimentoResourceIntTest extends AbstractTest {
 
     @Test
     @Transactional
+    public void checkModalidadeIsRequired() throws Exception {
+        int databaseSizeBeforeTest = tipoInvestimentoRepository.findAll().size();
+        // set the field null
+        tipoInvestimento.setModalidade(null);
+
+        // Create the TipoInvestimento, which fails.
+
+        restTipoInvestimentoMockMvc.perform(post("/api/tipo-investimentos")
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(tipoInvestimento)))
+                .andExpect(status().isBadRequest());
+
+        List<TipoInvestimento> tipoInvestimentos = tipoInvestimentoRepository.findAll();
+        assertThat(tipoInvestimentos).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkTipoIndexadorIsRequired() throws Exception {
+        int databaseSizeBeforeTest = tipoInvestimentoRepository.findAll().size();
+        // set the field null
+        tipoInvestimento.setTipoIndexador(null);
+
+        // Create the TipoInvestimento, which fails.
+
+        restTipoInvestimentoMockMvc.perform(post("/api/tipo-investimentos")
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(tipoInvestimento)))
+                .andExpect(status().isBadRequest());
+
+        List<TipoInvestimento> tipoInvestimentos = tipoInvestimentoRepository.findAll();
+        assertThat(tipoInvestimentos).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkIndiceIsRequired() throws Exception {
+        int databaseSizeBeforeTest = tipoInvestimentoRepository.findAll().size();
+        // set the field null
+        tipoInvestimento.setIndice(null);
+
+        // Create the TipoInvestimento, which fails.
+
+        restTipoInvestimentoMockMvc.perform(post("/api/tipo-investimentos")
+                .contentType(TestUtil.APPLICATION_JSON_UTF8)
+                .content(TestUtil.convertObjectToJsonBytes(tipoInvestimento)))
+                .andExpect(status().isBadRequest());
+
+        List<TipoInvestimento> tipoInvestimentos = tipoInvestimentoRepository.findAll();
+        assertThat(tipoInvestimentos).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllTipoInvestimentos() throws Exception {
         // Initialize the database
         tipoInvestimentoRepository.saveAndFlush(tipoInvestimento);
@@ -142,7 +210,10 @@ public class TipoInvestimentoResourceIntTest extends AbstractTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(tipoInvestimento.getId().intValue())))
                 .andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME.toString())))
-                .andExpect(jsonPath("$.[*].descricao").value(hasItem(DEFAULT_DESCRICAO.toString())));
+                .andExpect(jsonPath("$.[*].descricao").value(hasItem(DEFAULT_DESCRICAO.toString())))
+                .andExpect(jsonPath("$.[*].modalidade").value(hasItem(DEFAULT_MODALIDADE.toString())))
+                .andExpect(jsonPath("$.[*].tipoIndexador").value(hasItem(DEFAULT_TIPO_INDEXADOR.toString())))
+                .andExpect(jsonPath("$.[*].indice").value(hasItem(DEFAULT_INDICE.toString())));
     }
 
     @Test
@@ -157,7 +228,10 @@ public class TipoInvestimentoResourceIntTest extends AbstractTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id").value(tipoInvestimento.getId().intValue()))
             .andExpect(jsonPath("$.nome").value(DEFAULT_NOME.toString()))
-            .andExpect(jsonPath("$.descricao").value(DEFAULT_DESCRICAO.toString()));
+            .andExpect(jsonPath("$.descricao").value(DEFAULT_DESCRICAO.toString()))
+            .andExpect(jsonPath("$.modalidade").value(DEFAULT_MODALIDADE.toString()))
+            .andExpect(jsonPath("$.tipoIndexador").value(DEFAULT_TIPO_INDEXADOR.toString()))
+            .andExpect(jsonPath("$.indice").value(DEFAULT_INDICE.toString()));
     }
 
     @Test
@@ -180,7 +254,9 @@ public class TipoInvestimentoResourceIntTest extends AbstractTest {
         updatedTipoInvestimento.setId(tipoInvestimento.getId());
         updatedTipoInvestimento.setNome(UPDATED_NOME);
         updatedTipoInvestimento.setDescricao(UPDATED_DESCRICAO);
-        updatedTipoInvestimento.setTipoImpostoRenda(tipoInvestimento.getTipoImpostoRenda());
+        updatedTipoInvestimento.setModalidade(UPDATED_MODALIDADE);
+        updatedTipoInvestimento.setTipoIndexador(UPDATED_TIPO_INDEXADOR);
+        updatedTipoInvestimento.setIndice(UPDATED_INDICE);
 
         restTipoInvestimentoMockMvc.perform(put("/api/tipo-investimentos")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -193,6 +269,9 @@ public class TipoInvestimentoResourceIntTest extends AbstractTest {
         TipoInvestimento testTipoInvestimento = tipoInvestimentos.get(tipoInvestimentos.size() - 1);
         assertThat(testTipoInvestimento.getNome()).isEqualTo(UPDATED_NOME);
         assertThat(testTipoInvestimento.getDescricao()).isEqualTo(UPDATED_DESCRICAO);
+        assertThat(testTipoInvestimento.getModalidade()).isEqualTo(UPDATED_MODALIDADE);
+        assertThat(testTipoInvestimento.getTipoIndexador()).isEqualTo(UPDATED_TIPO_INDEXADOR);
+        assertThat(testTipoInvestimento.getIndice()).isEqualTo(UPDATED_INDICE);
     }
 
     @Test

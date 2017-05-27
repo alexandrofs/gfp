@@ -5,15 +5,23 @@
         .module('gfpApp')
         .controller('TipoInvestimentoDialogController', TipoInvestimentoDialogController);
 
-    TipoInvestimentoDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'TipoInvestimento', 'TipoImpostoRenda'];
+    TipoInvestimentoDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'TipoInvestimento', 'TipoImpostoRenda', 'MODALIDADE_CDB', 'MODALIDADE_LCI', 'MODALIDADE_TESOURO', 'INDEXADOR_PRE', 'INDEXADOR_POS', 'INDICE_DI', 'INDICE_IPCA'];
 
-    function TipoInvestimentoDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, TipoInvestimento, TipoImpostoRenda) {
+    function TipoInvestimentoDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, TipoInvestimento, TipoImpostoRenda, MODALIDADE_CDB, MODALIDADE_LCI, MODALIDADE_TESOURO, INDEXADOR_PRE, INDEXADOR_POS, INDICE_DI, INDICE_IPCA) {
         var vm = this;
 
+        vm.MODALIDADE_CDB = MODALIDADE_CDB;
+        vm.MODALIDADE_LCI = MODALIDADE_LCI;
+        
+        vm.INDEXADOR_POS = INDEXADOR_POS;
+        
         vm.tipoInvestimento = entity;
         vm.clear = clear;
         vm.save = save;
         vm.tipoimpostorendas = TipoImpostoRenda.query();
+        vm.tipoModalidades = [MODALIDADE_CDB, MODALIDADE_LCI, MODALIDADE_TESOURO];
+        vm.tipoIndexadores = [INDEXADOR_PRE, INDEXADOR_POS];
+        vm.indices = [INDICE_DI, INDICE_IPCA];
 
         $timeout(function (){
             angular.element('.form-group:eq(1)>input').focus();
@@ -25,6 +33,12 @@
 
         function save () {
             vm.isSaving = true;
+            if (vm.tipoInvestimento.modalidade != MODALIDADE_CDB && vm.tipoInvestimento.modalidade != MODALIDADE_LCI) {
+            	vm.tipoInvestimento.tipoIndexador = null;
+            }
+            if (vm.tipoInvestimento.tipoIndexador != INDEXADOR_POS) {
+            	vm.tipoInvestimento.indice = null;
+            }
             if (vm.tipoInvestimento.id !== null) {
                 TipoInvestimento.update(vm.tipoInvestimento, onSaveSuccess, onSaveError);
             } else {

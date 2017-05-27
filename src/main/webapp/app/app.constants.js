@@ -5,5 +5,13 @@
         .module('gfpApp')
         .constant('VERSION', "0.0.1-SNAPSHOT")
         .constant('DEBUG_INFO_ENABLED', true)
+        .constant('MODALIDADE_CDB', 'CDB')
+        .constant('MODALIDADE_LCI', 'LCI')
+        .constant('MODALIDADE_TESOURO', 'Tesouro Direto')
+        .constant('INDEXADOR_PRE', 'PRE')
+        .constant('INDEXADOR_POS', 'POS')
+        .constant('INDICE_DI', 'DI')
+        .constant('INDICE_IPCA', 'IPCA')
+        
 ;
 })();
