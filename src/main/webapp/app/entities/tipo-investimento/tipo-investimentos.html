@@ -33,7 +33,7 @@
                     <td><a ui-sref="tipo-investimento-detail({id:tipoInvestimento.id})">{{tipoInvestimento.id}}</a></td>
                     <td>{{tipoInvestimento.nome}}</td>
                     <td>{{tipoInvestimento.descricao}}</td>
-                    <td>{{tipoInvestimento.modalidade}}</td>
+                    <td>{{vm.modalidades[tipoInvestimento.modalidade]}}</td>
                     <td>{{tipoInvestimento.tipoIndexador}}</td>
                     <td>{{tipoInvestimento.indice}}</td>
                     <td>

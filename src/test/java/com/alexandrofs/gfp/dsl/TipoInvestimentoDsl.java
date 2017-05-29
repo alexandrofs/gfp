@@ -2,6 +2,7 @@ package com.alexandrofs.gfp.dsl;
 
 import com.alexandrofs.gfp.domain.TipoImpostoRenda;
 import com.alexandrofs.gfp.domain.TipoInvestimento;
+import com.alexandrofs.gfp.domain.fixed.ModalidadeEnum;
 import com.alexandrofs.gfp.repository.TipoInvestimentoRepository;
 
 public class TipoInvestimentoDsl {
@@ -19,6 +20,7 @@ public class TipoInvestimentoDsl {
 		tipoInvestimento = new TipoInvestimento();		
 		tipoInvestimento.setNome("AAA");
 		tipoInvestimento.setDescricao("BBB");
+		tipoInvestimento.setModalidade(ModalidadeEnum.CDB);
 	}
 	
 	public TipoInvestimento salva() {

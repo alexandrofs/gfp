@@ -11,7 +11,7 @@ public class TipoImpostoRendaDsl {
 	
 	public TipoImpostoRendaDsl(TipoImpostoRendaRepository tipoImpostoRendaRepository) {
 		this.tipoImpostoRenda = new TipoImpostoRenda(); 
-		this.setCodigo(String.valueOf(Math.random()));
+		this.setCodigo(String.valueOf(new Double(Math.random()*100).intValue()));
 		this.setDescricao("BBBB");
 		this.tipoImpostoRendaRepository = tipoImpostoRendaRepository;
 	}

@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alexandrofs.gfp.domain.TipoInvestimento;
+import com.alexandrofs.gfp.domain.fixed.ModalidadeEnum;
+import com.alexandrofs.gfp.domain.fixed.TipoIndexadorEnum;
 import com.alexandrofs.gfp.repository.TipoInvestimentoRepository;
 import com.alexandrofs.gfp.web.rest.util.HeaderUtil;
 import com.codahale.metrics.annotation.Timed;
@@ -51,6 +53,14 @@ public class TipoInvestimentoResource {
         log.debug("REST request to save TipoInvestimento : {}", tipoInvestimento);
         if (tipoInvestimento.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("tipoInvestimento", "idexists", "A new tipoInvestimento cannot already have an ID")).body(null);
+        }
+        if (ModalidadeEnum.CDB.equals(tipoInvestimento.getModalidade()) || ModalidadeEnum.LCI.equals(tipoInvestimento.getModalidade())) {
+        	if (tipoInvestimento.getTipoIndexador() == null) {
+        		return ResponseEntity.badRequest().headers(HeaderUtil.createAlert("O campo Tipo Indexador é obrigatório quando a modalidade for igual a CDB ou LCI.", "")).body(null);
+        	}
+        	if (TipoIndexadorEnum.POS.equals(tipoInvestimento.getTipoIndexador()) && tipoInvestimento.getIndice() == null) {
+        		return ResponseEntity.badRequest().headers(HeaderUtil.createAlert("O campo Indice é obrigatório quando Tipo Indexador for igual a POS.", "")).body(null);	
+        	}
         }
         TipoInvestimento result = tipoInvestimentoRepository.save(tipoInvestimento);
         return ResponseEntity.created(new URI("/api/tipo-investimentos/" + result.getId()))
