@@ -5,11 +5,12 @@
         .module('gfpApp')
         .controller('TipoInvestimentoController', TipoInvestimentoController);
 
-    TipoInvestimentoController.$inject = ['$scope', '$state', 'TipoInvestimento'];
+    TipoInvestimentoController.$inject = ['$scope', '$state', 'TipoInvestimento', 'ModalidadeService'];
 
-    function TipoInvestimentoController ($scope, $state, TipoInvestimento) {
+    function TipoInvestimentoController ($scope, $state, TipoInvestimento, ModalidadeService) {
         var vm = this;
         
+        vm.modalidades = ModalidadeService.query();
         vm.tipoInvestimentos = [];
 
         loadAll();

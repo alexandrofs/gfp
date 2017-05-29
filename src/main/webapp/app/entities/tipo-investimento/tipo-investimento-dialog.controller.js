@@ -5,9 +5,9 @@
         .module('gfpApp')
         .controller('TipoInvestimentoDialogController', TipoInvestimentoDialogController);
 
-    TipoInvestimentoDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'TipoInvestimento', 'TipoImpostoRenda', 'MODALIDADE_CDB', 'MODALIDADE_LCI', 'MODALIDADE_TESOURO', 'INDEXADOR_PRE', 'INDEXADOR_POS', 'INDICE_DI', 'INDICE_IPCA'];
+    TipoInvestimentoDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'TipoInvestimento', 'TipoImpostoRenda', 'MODALIDADE_CDB', 'MODALIDADE_LCI', 'MODALIDADE_TESOURO', 'INDEXADOR_PRE', 'INDEXADOR_POS', 'INDICE_DI', 'INDICE_IPCA', 'ModalidadeService'];
 
-    function TipoInvestimentoDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, TipoInvestimento, TipoImpostoRenda, MODALIDADE_CDB, MODALIDADE_LCI, MODALIDADE_TESOURO, INDEXADOR_PRE, INDEXADOR_POS, INDICE_DI, INDICE_IPCA) {
+    function TipoInvestimentoDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, TipoInvestimento, TipoImpostoRenda, MODALIDADE_CDB, MODALIDADE_LCI, MODALIDADE_TESOURO, INDEXADOR_PRE, INDEXADOR_POS, INDICE_DI, INDICE_IPCA, ModalidadeService) {
         var vm = this;
 
         vm.MODALIDADE_CDB = MODALIDADE_CDB;
@@ -19,7 +19,7 @@
         vm.clear = clear;
         vm.save = save;
         vm.tipoimpostorendas = TipoImpostoRenda.query();
-        vm.tipoModalidades = [MODALIDADE_CDB, MODALIDADE_LCI, MODALIDADE_TESOURO];
+        vm.tipoModalidades = ModalidadeService.query();
         vm.tipoIndexadores = [INDEXADOR_PRE, INDEXADOR_POS];
         vm.indices = [INDICE_DI, INDICE_IPCA];
 
