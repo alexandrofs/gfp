@@ -1,0 +1,22 @@
+{
+    "gfpApp": {
+        "instituicao" : {
+            "home": {
+                "title": "Instituições",
+                "createLabel": "Criar nova Instituição",
+                "createOrEditLabel": "Criar ou editar Instituição",
+                "search": "Pesquisar por Instituição"
+            },
+            "created": "Uma nova Instituição foi criada com o identificador {{ param }}",
+            "updated": "Uma Instituição foi atualizada com o identificador {{ param }}",
+            "deleted": "Uma Instituição foi deletado com o identificador {{ param }}",
+            "delete": {
+                "question": "Tem certeza de que deseja excluir Instituição {{ id }}?"
+            },
+            "detail": {
+                "title": "Instituição"
+            },
+            "nome": "Nome"
+        }
+    }
+}
