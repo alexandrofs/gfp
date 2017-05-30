@@ -23,6 +23,15 @@
             "otherEntityName": "historicoCotas",
             "relationshipType": "one-to-many",
             "otherEntityRelationshipName": "investimento"
+        },
+        {
+            "relationshipName": "instituicao",
+            "otherEntityName": "instituicao",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "nome"
         }
     ],
     "fields": [
@@ -54,6 +63,10 @@
                 "min"
             ],
             "fieldValidateRulesMin": 0
+        },
+        {
+            "fieldName": "pctPrePosFixado",
+            "fieldType": "BigDecimal"
         }
     ],
     "changelogDate": "20160713032007",

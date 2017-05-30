@@ -20,9 +20,11 @@
             "dataAplicacao": "Data Aplicacao",
             "qtdeCota": "Qtde Cota",
             "vlrCota": "Vlr Cota",
+            "pctPrePosFixado": "Pct Pre Pos Fixado",
             "carteira": "Carteira",
             "tipoInvestimento": "Tipo Investimento",
-            "historicoCotas": "Historico Cotas"
+            "historicoCotas": "Historico Cotas",
+            "instituicao": "Instituicao"
         }
     }
 }

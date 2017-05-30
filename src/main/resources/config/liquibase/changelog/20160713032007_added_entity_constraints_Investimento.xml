@@ -21,4 +21,12 @@
                                  referencedTableName="tb_tipo_investimento"/>
 
     </changeSet>
+    <changeSet id="20160713032007-3" author="jhipster">    
+        <addForeignKeyConstraint baseColumnNames="instituicao_id"
+                                 baseTableName="tb_investimento"
+                                 constraintName="fk_investimento_instituicao_id"
+                                 referencedColumnNames="id"
+                                 referencedTableName="tb_instituicao"/>
+        
+    </changeSet>
 </databaseChangeLog>

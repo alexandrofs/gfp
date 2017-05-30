@@ -1,15 +1,24 @@
 package com.alexandrofs.gfp.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
-import java.util.Set;
 import java.util.Objects;
+import java.util.Set;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * A Investimento.
@@ -23,9 +32,6 @@ public class Investimento implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    @Column(name = "nome")
-    private String nome;
 
     @NotNull
     @Column(name = "data_aplicacao", nullable = false)
@@ -41,6 +47,9 @@ public class Investimento implements Serializable {
     @Column(name = "vlr_cota", precision=10, scale=2, nullable = false)
     private BigDecimal vlrCota;
 
+    @Column(name = "pct_pre_pos_fixado", precision=10, scale=2)
+    private BigDecimal pctPrePosFixado;
+
     @ManyToOne
     @NotNull
     private Carteira carteira;
@@ -53,20 +62,16 @@ public class Investimento implements Serializable {
     @JsonIgnore
     private Set<HistoricoCotas> historicoCotas = new HashSet<>();
 
+    @ManyToOne
+    @NotNull
+    private Instituicao instituicao;
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getNome() {
-        return nome;
-    }
-
-    public void setNome(String nome) {
-        this.nome = nome;
     }
 
     public LocalDate getDataAplicacao() {
@@ -93,6 +98,14 @@ public class Investimento implements Serializable {
         this.vlrCota = vlrCota;
     }
 
+    public BigDecimal getPctPrePosFixado() {
+        return pctPrePosFixado;
+    }
+
+    public void setPctPrePosFixado(BigDecimal pctPrePosFixado) {
+        this.pctPrePosFixado = pctPrePosFixado;
+    }
+
     public Carteira getCarteira() {
         return carteira;
     }
@@ -115,6 +128,14 @@ public class Investimento implements Serializable {
 
     public void setHistoricoCotas(Set<HistoricoCotas> historicoCotas) {
         this.historicoCotas = historicoCotas;
+    }
+
+    public Instituicao getInstituicao() {
+        return instituicao;
+    }
+
+    public void setInstituicao(Instituicao instituicao) {
+        this.instituicao = instituicao;
     }
 
     @Override
@@ -141,10 +162,10 @@ public class Investimento implements Serializable {
     public String toString() {
         return "Investimento{" +
             "id=" + id +
-            ", nome='" + nome + "'" +
             ", dataAplicacao='" + dataAplicacao + "'" +
             ", qtdeCota='" + qtdeCota + "'" +
             ", vlrCota='" + vlrCota + "'" +
+            ", pctPrePosFixado='" + pctPrePosFixado + "'" +
             '}';
     }
 }

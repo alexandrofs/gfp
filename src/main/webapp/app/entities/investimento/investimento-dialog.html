@@ -75,6 +75,12 @@
                 </p>
             </div>
         </div>
+        <div class="form-group">
+            <label class="control-label" translate="gfpApp.investimento.pctPrePosFixado" for="field_pctPrePosFixado">Pct Pre Pos Fixado</label>
+            <input type="number" class="form-control" name="pctPrePosFixado" id="field_pctPrePosFixado"
+                    ng-model="vm.investimento.pctPrePosFixado"
+                     />
+        </div>
 
         <div class="form-group">
             <label translate="gfpApp.investimento.carteira" for="field_carteira">Carteira</label>
@@ -97,6 +103,18 @@
         <div ng-show="editForm.tipoInvestimento.$invalid">
             <p class="help-block"
                 ng-show="editForm.tipoInvestimento.$error.required" translate="entity.validation.required">
+                This field is required.
+            </p>
+        </div>
+        <div class="form-group">
+            <label translate="gfpApp.investimento.instituicao" for="field_instituicao">Instituicao</label>
+            <select class="form-control" id="field_instituicao" name="instituicao" ng-model="vm.investimento.instituicao" ng-options="instituicao as instituicao.nome for instituicao in vm.instituicaos track by instituicao.id" required>
+                <option value=""></option>
+            </select>
+        </div>
+        <div ng-show="editForm.instituicao.$invalid">
+            <p class="help-block"
+                ng-show="editForm.instituicao.$error.required" translate="entity.validation.required">
                 This field is required.
             </p>
         </div>

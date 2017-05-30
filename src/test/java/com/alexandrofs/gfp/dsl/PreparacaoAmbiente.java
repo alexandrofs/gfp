@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import com.alexandrofs.gfp.repository.CarteiraRepository;
+import com.alexandrofs.gfp.repository.InstituicaoRepository;
 import com.alexandrofs.gfp.repository.InvestimentoRepository;
 import com.alexandrofs.gfp.repository.TipoImpostoRendaRepository;
 import com.alexandrofs.gfp.repository.TipoInvestimentoRepository;
@@ -24,6 +25,9 @@ public class PreparacaoAmbiente {
 	private CarteiraRepository carteiraRepository;
 	
 	@Inject
+	private InstituicaoRepository instituicaoRepository;
+	
+	@Inject
 	private InvestimentoRepository investimentoRepository;
 	
 	public TipoImpostoRendaDsl tipoImpostoRenda() {
@@ -36,6 +40,10 @@ public class PreparacaoAmbiente {
 
 	public CarteiraDsl carteira() {
 		return new CarteiraDsl(carteiraRepository);
+	}
+	
+	public InstituicaoDsl instituicao() {
+		return new InstituicaoDsl(instituicaoRepository);
 	}
 
 	public InvestimentoDsl investimento() {

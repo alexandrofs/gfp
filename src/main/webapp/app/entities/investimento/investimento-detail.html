@@ -20,6 +20,10 @@
         <dd>
             <span>{{vm.investimento.vlrCota}}</span>
         </dd>
+        <dt><span translate="gfpApp.investimento.pctPrePosFixado">Pct Pre Pos Fixado</span></dt>
+        <dd>
+            <span>{{vm.investimento.pctPrePosFixado}}</span>
+        </dd>
         <dt><span translate="gfpApp.investimento.carteira">Carteira</span></dt>
         <dd>
             <a ui-sref="carteira-detail({id:vm.investimento.carteira.id})">{{vm.investimento.carteira.id}}</a>
@@ -27,6 +31,10 @@
         <dt><span translate="gfpApp.investimento.tipoInvestimento">Tipo Investimento</span></dt>
         <dd>
             <a ui-sref="tipo-investimento-detail({id:vm.investimento.tipoInvestimento.id})">{{vm.investimento.tipoInvestimento.id}}</a>
+        </dd>
+        <dt><span translate="gfpApp.investimento.instituicao">Instituicao</span></dt>
+        <dd>
+            <a ui-sref="instituicao-detail({id:vm.investimento.instituicao.id})">{{vm.investimento.instituicao.nome}}</a>
         </dd>
     </dl>
 

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import com.alexandrofs.gfp.domain.Carteira;
+import com.alexandrofs.gfp.domain.Instituicao;
 import com.alexandrofs.gfp.domain.Investimento;
 import com.alexandrofs.gfp.domain.TipoInvestimento;
 import com.alexandrofs.gfp.repository.InvestimentoRepository;
@@ -20,7 +21,6 @@ public class InvestimentoDsl {
 		this.dado = dado;
 		investimento = new Investimento();
 		investimento.setDataAplicacao(LocalDate.now());
-		investimento.setNome("AAA");
 		investimento.setQtdeCota(BigDecimal.ONE);
 		investimento.setVlrCota(BigDecimal.ONE);
 	}
@@ -35,12 +35,11 @@ public class InvestimentoDsl {
 			investimento.setCarteira(dado.carteira().salva());
 		}
 		
+		if (investimento.getInstituicao() == null) {
+			investimento.setInstituicao(dado.instituicao().salva());
+		}
+		
 		return repository.saveAndFlush(investimento);
-	}
-
-	public InvestimentoDsl setNome(String nome) {
-		investimento.setNome(nome);
-		return this;
 	}
 
 	public InvestimentoDsl setDataAplicacao(LocalDate dataAplicacao) {
