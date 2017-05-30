@@ -26,14 +26,15 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alexandrofs.gfp.AbstractTest;
 import com.alexandrofs.gfp.domain.Carteira;
+import com.alexandrofs.gfp.domain.Instituicao;
 import com.alexandrofs.gfp.domain.Investimento;
 import com.alexandrofs.gfp.repository.CarteiraRepository;
+import com.alexandrofs.gfp.repository.InstituicaoRepository;
 import com.alexandrofs.gfp.repository.InvestimentoRepository;
 import com.alexandrofs.gfp.service.InvestimentoService;
 
@@ -45,9 +46,6 @@ import com.alexandrofs.gfp.service.InvestimentoService;
  */
 public class InvestimentoResourceIntTest extends AbstractTest {
 
-    private static final String DEFAULT_NOME = "AAAAA";
-    private static final String UPDATED_NOME = "BBBBB";
-
     private static final LocalDate DEFAULT_DATA_APLICACAO = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_DATA_APLICACAO = LocalDate.now(ZoneId.systemDefault());
 
@@ -57,11 +55,17 @@ public class InvestimentoResourceIntTest extends AbstractTest {
     private static final BigDecimal DEFAULT_VLR_COTA = new BigDecimal(0);
     private static final BigDecimal UPDATED_VLR_COTA = new BigDecimal(1);
 
+    private static final BigDecimal DEFAULT_PCT_PRE_POS_FIXADO = new BigDecimal(1);
+    private static final BigDecimal UPDATED_PCT_PRE_POS_FIXADO = new BigDecimal(2);
+
     @Inject
     private InvestimentoRepository investimentoRepository;
     
     @Inject
     private CarteiraRepository carteiraRepository;
+    
+    @Inject
+    private InstituicaoRepository instituicaoRepository;    
 
     @Inject
     private InvestimentoService investimentoService;
@@ -75,7 +79,7 @@ public class InvestimentoResourceIntTest extends AbstractTest {
     private MockMvc restInvestimentoMockMvc;
 
     private Investimento investimento;
-    
+
     @PostConstruct
     public void setup() {
         MockitoAnnotations.initMocks(this);
@@ -89,16 +93,20 @@ public class InvestimentoResourceIntTest extends AbstractTest {
     @Before
     public void initTest() {
         investimento = new Investimento();
-        investimento.setNome(DEFAULT_NOME);
         investimento.setDataAplicacao(DEFAULT_DATA_APLICACAO);
         investimento.setQtdeCota(DEFAULT_QTDE_COTA);
         investimento.setVlrCota(DEFAULT_VLR_COTA);
+        investimento.setPctPrePosFixado(DEFAULT_PCT_PRE_POS_FIXADO);
         Carteira cart = new Carteira();
         cart.setNome("AAA");
         cart.setDescricao("BBB");
         carteiraRepository.saveAndFlush(cart);
         investimento.setCarteira(cart);
         investimento.setTipoInvestimento(dsl.dado().tipoInvestimento().salva());
+        Instituicao instituicao = new Instituicao();
+        instituicao.setNome("CCC");
+        instituicaoRepository.saveAndFlush(instituicao);
+        investimento.setInstituicao(instituicao);
     }
 
     @Test
@@ -117,10 +125,10 @@ public class InvestimentoResourceIntTest extends AbstractTest {
         List<Investimento> investimentos = investimentoRepository.findAll();
         assertThat(investimentos).hasSize(databaseSizeBeforeCreate + 1);
         Investimento testInvestimento = investimentos.get(investimentos.size() - 1);
-        assertThat(testInvestimento.getNome()).isEqualTo(DEFAULT_NOME);
         assertThat(testInvestimento.getDataAplicacao()).isEqualTo(DEFAULT_DATA_APLICACAO);
         assertThat(testInvestimento.getQtdeCota()).isEqualTo(DEFAULT_QTDE_COTA);
         assertThat(testInvestimento.getVlrCota()).isEqualTo(DEFAULT_VLR_COTA);
+        assertThat(testInvestimento.getPctPrePosFixado()).isEqualTo(DEFAULT_PCT_PRE_POS_FIXADO);
     }
 
     @Test
@@ -188,10 +196,10 @@ public class InvestimentoResourceIntTest extends AbstractTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(investimento.getId().intValue())))
-                .andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME.toString())))
                 .andExpect(jsonPath("$.[*].dataAplicacao").value(hasItem(DEFAULT_DATA_APLICACAO.toString())))
                 .andExpect(jsonPath("$.[*].qtdeCota").value(hasItem(DEFAULT_QTDE_COTA.intValue())))
-                .andExpect(jsonPath("$.[*].vlrCota").value(hasItem(DEFAULT_VLR_COTA.intValue())));
+                .andExpect(jsonPath("$.[*].vlrCota").value(hasItem(DEFAULT_VLR_COTA.intValue())))
+                .andExpect(jsonPath("$.[*].pctPrePosFixado").value(hasItem(DEFAULT_PCT_PRE_POS_FIXADO.intValue())));
     }
 
     @Test
@@ -205,10 +213,10 @@ public class InvestimentoResourceIntTest extends AbstractTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON))
             .andExpect(jsonPath("$.id").value(investimento.getId().intValue()))
-            .andExpect(jsonPath("$.nome").value(DEFAULT_NOME.toString()))
             .andExpect(jsonPath("$.dataAplicacao").value(DEFAULT_DATA_APLICACAO.toString()))
             .andExpect(jsonPath("$.qtdeCota").value(DEFAULT_QTDE_COTA.intValue()))
-            .andExpect(jsonPath("$.vlrCota").value(DEFAULT_VLR_COTA.intValue()));
+            .andExpect(jsonPath("$.vlrCota").value(DEFAULT_VLR_COTA.intValue()))
+            .andExpect(jsonPath("$.pctPrePosFixado").value(DEFAULT_PCT_PRE_POS_FIXADO.intValue()));
     }
 
     @Test
@@ -230,26 +238,27 @@ public class InvestimentoResourceIntTest extends AbstractTest {
         // Update the investimento
         Investimento updatedInvestimento = new Investimento();
         updatedInvestimento.setId(investimento.getId());
-        updatedInvestimento.setNome(UPDATED_NOME);
         updatedInvestimento.setDataAplicacao(UPDATED_DATA_APLICACAO);
         updatedInvestimento.setQtdeCota(UPDATED_QTDE_COTA);
         updatedInvestimento.setVlrCota(UPDATED_VLR_COTA);
+        updatedInvestimento.setPctPrePosFixado(UPDATED_PCT_PRE_POS_FIXADO);
         updatedInvestimento.setCarteira(investimento.getCarteira());
-        updatedInvestimento.setTipoInvestimento(investimento.getTipoInvestimento());
+        updatedInvestimento.setTipoInvestimento(investimento.getTipoInvestimento());  
+        updatedInvestimento.setInstituicao(investimento.getInstituicao());
 
-        ResultActions perform = restInvestimentoMockMvc.perform(put("/api/investimentos")
+        restInvestimentoMockMvc.perform(put("/api/investimentos")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(updatedInvestimento)));
-		perform.andExpect(status().isOk());
+                .content(TestUtil.convertObjectToJsonBytes(updatedInvestimento)))
+                .andExpect(status().isOk());
 
         // Validate the Investimento in the database
         List<Investimento> investimentos = investimentoRepository.findAll();
         assertThat(investimentos).hasSize(databaseSizeBeforeUpdate);
         Investimento testInvestimento = investimentos.get(investimentos.size() - 1);
-        assertThat(testInvestimento.getNome()).isEqualTo(UPDATED_NOME);
         assertThat(testInvestimento.getDataAplicacao()).isEqualTo(UPDATED_DATA_APLICACAO);
         assertThat(testInvestimento.getQtdeCota()).isEqualTo(UPDATED_QTDE_COTA);
         assertThat(testInvestimento.getVlrCota()).isEqualTo(UPDATED_VLR_COTA);
+        assertThat(testInvestimento.getPctPrePosFixado()).isEqualTo(UPDATED_PCT_PRE_POS_FIXADO);
     }
 
     @Test

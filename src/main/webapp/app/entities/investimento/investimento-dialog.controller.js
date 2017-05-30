@@ -5,9 +5,9 @@
         .module('gfpApp')
         .controller('InvestimentoDialogController', InvestimentoDialogController);
 
-    InvestimentoDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'Investimento', 'Carteira', 'TipoInvestimento'];
+    InvestimentoDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'Investimento', 'Carteira', 'TipoInvestimento', 'Instituicao'];
 
-    function InvestimentoDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, Investimento, Carteira, TipoInvestimento) {
+    function InvestimentoDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, Investimento, Carteira, TipoInvestimento, Instituicao) {
         var vm = this;
 
         vm.investimento = entity;
@@ -17,6 +17,7 @@
         vm.save = save;
         vm.carteiras = Carteira.query();
         vm.tipoinvestimentos = TipoInvestimento.query();
+        vm.instituicaos = Instituicao.query();
 
         $timeout(function (){
             angular.element('.form-group:eq(1)>input').focus();

@@ -36,7 +36,7 @@
             <column name="vlr_cota" type="decimal(10,2)">
                 <constraints nullable="false" />
             </column>
-            
+                        
             <column name="carteira_id" type="bigint">
                 <constraints nullable="false" />
             </column>
@@ -47,6 +47,18 @@
 
             <!-- jhipster-needle-liquibase-add-column - Jhipster will add columns here, do not remove-->
         </createTable>
-        
     </changeSet>
+    <changeSet id="20160713032007-2" author="alexf">
+    	<addColumn tableName="tb_investimento">            
+            <column name="pct_pre_pos_fixado" type="decimal(10,2)">
+                <constraints nullable="true" />
+            </column>
+			<column name="instituicao_id" type="bigint">
+                <constraints nullable="false" />
+            </column>                
+		</addColumn>   
+		<dropColumn tableName="tb_investimento">
+			<column name="nome"/>
+		</dropColumn>  
+	</changeSet>       
 </databaseChangeLog>

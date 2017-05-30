@@ -75,6 +75,7 @@
                                 dataAplicacao: null,
                                 qtdeCota: null,
                                 vlrCota: null,
+                                pctPrePosFixado: null,
                                 id: null
                             };
                         }

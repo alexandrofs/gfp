@@ -23,8 +23,10 @@
                     <th><span translate="gfpApp.investimento.dataAplicacao">Data Aplicacao</span></th>
                     <th><span translate="gfpApp.investimento.qtdeCota">Qtde Cota</span></th>
                     <th><span translate="gfpApp.investimento.vlrCota">Vlr Cota</span></th>
+                    <th><span translate="gfpApp.investimento.pctPrePosFixado">Pct Pre Pos Fixado</span></th>
                     <th><span translate="gfpApp.investimento.carteira">Carteira</span></th>
                     <th><span translate="gfpApp.investimento.tipoInvestimento">Tipo Investimento</span></th>
+                    <th><span translate="gfpApp.investimento.instituicao">Instituicao</span></th>
                     <th></th>
                 </tr>
             </thead>
@@ -35,11 +37,15 @@
                         <td>{{investimento.dataAplicacao | date:'mediumDate'}}</td>
                     <td>{{investimento.qtdeCota}}</td>
                     <td>{{investimento.vlrCota}}</td>
+                    <td>{{investimento.pctPrePosFixado}}</td>
                     <td>
                         <a ui-sref="carteira-detail({id:investimento.carteira.id})">{{investimento.carteira.id}}</a>
                     </td>
                     <td>
                         <a ui-sref="tipo-investimento-detail({id:investimento.tipoInvestimento.id})">{{investimento.tipoInvestimento.id}}</a>
+                    </td>
+                    <td>
+                        <a ui-sref="instituicao-detail({id:investimento.instituicao.id})">{{investimento.instituicao.nome}}</a>
                     </td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">
