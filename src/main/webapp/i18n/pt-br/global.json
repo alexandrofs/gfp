@@ -6,6 +6,7 @@
             "home": "Início",
             "configs": {
             	"main": "Configurações",
+                "instituicao": "Instituicao",            	
             	"tipoImpostoRenda": "Tipo Imposto Renda",
             	"tabelaImpostoRenda": "Tabela Imposto Renda",
                 "tipoInvestimento": "Tipo Investimento",

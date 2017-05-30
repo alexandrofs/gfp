@@ -31,6 +31,12 @@
                         </span>
                     </a>    
 					<ul class="dropdown-menu" uib-dropdown-menu>
+                        <li ui-sref-active="active" >
+                            <a ui-sref="instituicao" ng-click="vm.collapseNavbar()">
+                                <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
+                                <span translate="global.menu.configs.instituicao">Instituicao</span>
+                            </a>
+                        </li>					
                         <li ui-sref-active="active">
                             <a ui-sref="tipo-imposto-renda" ng-click="vm.collapseNavbar()">
                                 <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
