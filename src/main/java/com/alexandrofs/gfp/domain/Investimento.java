@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,10 +16,12 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * A Investimento.
@@ -58,13 +61,17 @@ public class Investimento implements Serializable {
     @NotNull
     private TipoInvestimento tipoInvestimento;
 
-    @OneToMany(mappedBy = "investimento")
+    @OneToMany(mappedBy = "investimento",cascade=CascadeType.ALL)
     @JsonIgnore
     private Set<HistoricoCotas> historicoCotas = new HashSet<>();
 
     @ManyToOne
     @NotNull
     private Instituicao instituicao;
+    
+    @Transient
+    @JsonProperty("vlrSaldoBruto")
+    private BigDecimal vlrSaldoBruto;
 
     public Long getId() {
         return id;
@@ -74,7 +81,15 @@ public class Investimento implements Serializable {
         this.id = id;
     }
 
-    public LocalDate getDataAplicacao() {
+    public BigDecimal getVlrSaldoBruto() {
+		return vlrSaldoBruto;
+	}
+
+	public void setVlrSaldoBruto(BigDecimal vlrSaldoBruto) {
+		this.vlrSaldoBruto = vlrSaldoBruto;
+	}
+
+	public LocalDate getDataAplicacao() {
         return dataAplicacao;
     }
 
@@ -166,6 +181,7 @@ public class Investimento implements Serializable {
             ", qtdeCota='" + qtdeCota + "'" +
             ", vlrCota='" + vlrCota + "'" +
             ", pctPrePosFixado='" + pctPrePosFixado + "'" +
+            ", vlrSaldoBruto='" + vlrSaldoBruto + "'" +
             '}';
     }
 }

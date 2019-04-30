@@ -18,8 +18,6 @@
         <table class="jh-table table table-striped">
             <thead>
                 <tr>
-                    <th><span translate="global.field.id">ID</span></th>
-                    <th><span translate="gfpApp.investimento.nome">Nome</span></th>
                     <th><span translate="gfpApp.investimento.dataAplicacao">Data Aplicacao</span></th>
                     <th><span translate="gfpApp.investimento.qtdeCota">Qtde Cota</span></th>
                     <th><span translate="gfpApp.investimento.vlrCota">Vlr Cota</span></th>
@@ -27,26 +25,26 @@
                     <th><span translate="gfpApp.investimento.carteira">Carteira</span></th>
                     <th><span translate="gfpApp.investimento.tipoInvestimento">Tipo Investimento</span></th>
                     <th><span translate="gfpApp.investimento.instituicao">Instituicao</span></th>
+                    <th><span translate="gfpApp.investimento.vlrSaldoBruto">Saldo Bruto</span></th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="investimento in vm.investimentos track by investimento.id">
-                    <td><a ui-sref="investimento-detail({id:investimento.id})">{{investimento.id}}</a></td>
-                    <td>{{investimento.nome}}</td>
-                        <td>{{investimento.dataAplicacao | date:'mediumDate'}}</td>
+                    <td>{{investimento.dataAplicacao | date:'dd/MM/yyyy'}}</td>
                     <td>{{investimento.qtdeCota}}</td>
-                    <td>{{investimento.vlrCota}}</td>
+                    <td>{{investimento.vlrCota | number:2}}</td>
                     <td>{{investimento.pctPrePosFixado}}</td>
                     <td>
-                        <a ui-sref="carteira-detail({id:investimento.carteira.id})">{{investimento.carteira.id}}</a>
+                        <a ui-sref="carteira-detail({id:investimento.carteira.id})">{{investimento.carteira.nome}}</a>
                     </td>
                     <td>
-                        <a ui-sref="tipo-investimento-detail({id:investimento.tipoInvestimento.id})">{{investimento.tipoInvestimento.id}}</a>
+                        <a ui-sref="tipo-investimento-detail({id:investimento.tipoInvestimento.id})">{{investimento.tipoInvestimento.nome}}</a>
                     </td>
                     <td>
                         <a ui-sref="instituicao-detail({id:investimento.instituicao.id})">{{investimento.instituicao.nome}}</a>
                     </td>
+                    <td>{{investimento.vlrSaldoBruto | number:2}}</td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">
                             <button type="submit"

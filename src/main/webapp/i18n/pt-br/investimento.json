@@ -17,14 +17,15 @@
                 "title": "Investimento"
             },
             "nome": "Nome",
-            "dataAplicacao": "Data Aplicacao",
+            "dataAplicacao": "Data Aplicação",
             "qtdeCota": "Qtde Cota",
             "vlrCota": "Vlr Cota",
-            "pctPrePosFixado": "Pct Pre Pos Fixado",
+            "pctPrePosFixado": "%",
             "carteira": "Carteira",
             "tipoInvestimento": "Tipo Investimento",
-            "historicoCotas": "Historico Cotas",
-            "instituicao": "Instituicao"
+            "historicoCotas": "Histórico Cotas",
+            "instituicao": "Instituição",
+            "vlrSaldoBruto": "Saldo Bruto"
         }
     }
 }

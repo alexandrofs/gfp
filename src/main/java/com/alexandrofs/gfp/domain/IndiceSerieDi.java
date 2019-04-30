@@ -22,7 +22,7 @@ public class IndiceSerieDi implements Serializable {
     private Long id;
 
     @NotNull
-    @Column(name = "data", nullable = false)
+    @Column(name = "data", nullable = false, unique = true)
     private LocalDate data;
 
     @NotNull

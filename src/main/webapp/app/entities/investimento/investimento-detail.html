@@ -4,13 +4,9 @@
     <hr>
     <jhi-alert-error></jhi-alert-error>
     <dl class="dl-horizontal jh-entity-details">
-        <dt><span translate="gfpApp.investimento.nome">Nome</span></dt>
-        <dd>
-            <span>{{vm.investimento.nome}}</span>
-        </dd>
         <dt><span translate="gfpApp.investimento.dataAplicacao">Data Aplicacao</span></dt>
         <dd>
-            <span>{{vm.investimento.dataAplicacao | date:'mediumDate'}}</span>
+            <span>{{vm.investimento.dataAplicacao | date:'dd/MM/yyyy'}}</span>
         </dd>
         <dt><span translate="gfpApp.investimento.qtdeCota">Qtde Cota</span></dt>
         <dd>
@@ -18,7 +14,7 @@
         </dd>
         <dt><span translate="gfpApp.investimento.vlrCota">Vlr Cota</span></dt>
         <dd>
-            <span>{{vm.investimento.vlrCota}}</span>
+            <span>{{vm.investimento.vlrCota | number:2}}</span>
         </dd>
         <dt><span translate="gfpApp.investimento.pctPrePosFixado">Pct Pre Pos Fixado</span></dt>
         <dd>
@@ -26,16 +22,20 @@
         </dd>
         <dt><span translate="gfpApp.investimento.carteira">Carteira</span></dt>
         <dd>
-            <a ui-sref="carteira-detail({id:vm.investimento.carteira.id})">{{vm.investimento.carteira.id}}</a>
+            <a ui-sref="carteira-detail({id:vm.investimento.carteira.id})">{{vm.investimento.carteira.nome}}</a>
         </dd>
         <dt><span translate="gfpApp.investimento.tipoInvestimento">Tipo Investimento</span></dt>
         <dd>
-            <a ui-sref="tipo-investimento-detail({id:vm.investimento.tipoInvestimento.id})">{{vm.investimento.tipoInvestimento.id}}</a>
+            <a ui-sref="tipo-investimento-detail({id:vm.investimento.tipoInvestimento.id})">{{vm.investimento.tipoInvestimento.nome}}</a>
         </dd>
         <dt><span translate="gfpApp.investimento.instituicao">Instituicao</span></dt>
         <dd>
             <a ui-sref="instituicao-detail({id:vm.investimento.instituicao.id})">{{vm.investimento.instituicao.nome}}</a>
         </dd>
+        <dt><span translate="gfpApp.investimento.vlrSaldoBruto">Saldo Bruto</span></dt>
+        <dd>
+            <span>{{vm.investimento.vlrSaldoBruto | number:2}}</span>
+        </dd>        
     </dl>
 
     <button type="submit"

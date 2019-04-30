@@ -14,12 +14,6 @@
                     ng-model="vm.investimento.id" readonly />
         </div>
         <div class="form-group">
-            <label class="control-label" translate="gfpApp.investimento.nome" for="field_nome">Nome</label>
-            <input type="text" class="form-control" name="nome" id="field_nome"
-                    ng-model="vm.investimento.nome"
-                     />
-        </div>
-        <div class="form-group">
             <label class="control-label" translate="gfpApp.investimento.dataAplicacao" for="field_dataAplicacao">Data Aplicacao</label>
                 <div class="input-group">
                     <input id="field_dataAplicacao" type="text" class="form-control" name="dataAplicacao" uib-datepicker-popup="{{dateformat}}" ng-model="vm.investimento.dataAplicacao" is-open="vm.datePickerOpenStatus.dataAplicacao"
@@ -84,7 +78,7 @@
 
         <div class="form-group">
             <label translate="gfpApp.investimento.carteira" for="field_carteira">Carteira</label>
-            <select class="form-control" id="field_carteira" name="carteira" ng-model="vm.investimento.carteira" ng-options="carteira as carteira.id for carteira in vm.carteiras track by carteira.id" required>
+            <select class="form-control" id="field_carteira" name="carteira" ng-model="vm.investimento.carteira" ng-options="carteira as carteira.nome for carteira in vm.carteiras track by carteira.id" required>
                 <option value=""></option>
             </select>
         </div>
@@ -96,7 +90,7 @@
         </div>
         <div class="form-group">
             <label translate="gfpApp.investimento.tipoInvestimento" for="field_tipoInvestimento">Tipo Investimento</label>
-            <select class="form-control" id="field_tipoInvestimento" name="tipoInvestimento" ng-model="vm.investimento.tipoInvestimento" ng-options="tipoInvestimento as tipoInvestimento.id for tipoInvestimento in vm.tipoinvestimentos track by tipoInvestimento.id" required>
+            <select class="form-control" id="field_tipoInvestimento" name="tipoInvestimento" ng-model="vm.investimento.tipoInvestimento" ng-options="tipoInvestimento as tipoInvestimento.nome for tipoInvestimento in vm.tipoinvestimentos track by tipoInvestimento.id" required>
                 <option value=""></option>
             </select>
         </div>

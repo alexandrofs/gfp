@@ -1,14 +1,21 @@
 package com.alexandrofs.gfp.service;
 
-import com.alexandrofs.gfp.domain.Investimento;
-import com.alexandrofs.gfp.repository.InvestimentoRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
-import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.alexandrofs.gfp.domain.HistoricoCotas;
+import com.alexandrofs.gfp.domain.Investimento;
+import com.alexandrofs.gfp.repository.HistoricoCotasRepository;
+import com.alexandrofs.gfp.repository.InvestimentoRepository;
 
 /**
  * Service Implementation for managing Investimento.
@@ -21,6 +28,9 @@ public class InvestimentoService {
     
     @Inject
     private InvestimentoRepository investimentoRepository;
+    
+    @Autowired
+    private HistoricoCotasRepository cotasRepository;
     
     /**
      * Save a investimento.
@@ -43,8 +53,18 @@ public class InvestimentoService {
     public List<Investimento> findAll() {
         log.debug("Request to get all Investimentos");
         List<Investimento> result = investimentoRepository.findAll();
-        return result;
+        return result.stream().map(this::calculaSaldoBruto).collect(Collectors.toList());
     }
+
+	private Investimento calculaSaldoBruto(final Investimento i) {
+		Optional<HistoricoCotas> cotaDesc = cotasRepository.findFirstByInvestimentoOrderByDataCotaDesc(i);
+		if (cotaDesc.isPresent()) {
+			i.setVlrSaldoBruto(cotaDesc.get().getVlrCota().multiply(i.getQtdeCota()));
+		} else {
+			i.setVlrSaldoBruto(i.getVlrCota().multiply(i.getQtdeCota()));
+		}
+		return i;
+	}
 
     /**
      *  Get one investimento by id.
@@ -56,7 +76,7 @@ public class InvestimentoService {
     public Investimento findOne(Long id) {
         log.debug("Request to get Investimento : {}", id);
         Investimento investimento = investimentoRepository.findOne(id);
-        return investimento;
+        return investimento != null ? calculaSaldoBruto(investimento) : investimento;
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.alexandrofs.gfp.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -15,4 +16,6 @@ public interface HistoricoCotasRepository extends JpaRepository<HistoricoCotas,L
 
 	List<HistoricoCotas> findByInvestimentoOrderByDataCotaDesc(Investimento investimento);
 
+	public Optional<HistoricoCotas> findFirstByInvestimentoOrderByDataCotaDesc(Investimento investimento);
+	
 }

@@ -1,23 +1,29 @@
 package com.alexandrofs.gfp.web.rest;
 
-import com.codahale.metrics.annotation.Timed;
-import com.alexandrofs.gfp.domain.Investimento;
-import com.alexandrofs.gfp.service.InvestimentoService;
-import com.alexandrofs.gfp.web.rest.util.HeaderUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.inject.Inject;
-import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+
+import javax.inject.Inject;
+import javax.validation.Valid;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.alexandrofs.gfp.domain.Investimento;
+import com.alexandrofs.gfp.service.CalculoCotasService;
+import com.alexandrofs.gfp.service.InvestimentoService;
+import com.alexandrofs.gfp.web.rest.util.HeaderUtil;
+import com.codahale.metrics.annotation.Timed;
 
 /**
  * REST controller for managing Investimento.
@@ -30,6 +36,9 @@ public class InvestimentoResource {
         
     @Inject
     private InvestimentoService investimentoService;
+    
+    @Inject
+    private CalculoCotasService calculoCotasService;
     
     /**
      * POST  /investimentos : Create a new investimento.
@@ -88,7 +97,7 @@ public class InvestimentoResource {
     @Timed
     public List<Investimento> getAllInvestimentos() {
         log.debug("REST request to get all Investimentos");
-        return investimentoService.findAll();
+		return investimentoService.findAll();
     }
 
     /**

@@ -10,9 +10,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -33,9 +30,6 @@ import com.alexandrofs.gfp.AbstractTest;
 import com.alexandrofs.gfp.domain.Carteira;
 import com.alexandrofs.gfp.domain.Instituicao;
 import com.alexandrofs.gfp.domain.Investimento;
-import com.alexandrofs.gfp.repository.CarteiraRepository;
-import com.alexandrofs.gfp.repository.InstituicaoRepository;
-import com.alexandrofs.gfp.repository.InvestimentoRepository;
 import com.alexandrofs.gfp.service.InvestimentoService;
 
 
@@ -45,27 +39,6 @@ import com.alexandrofs.gfp.service.InvestimentoService;
  * @see InvestimentoResource
  */
 public class InvestimentoResourceIntTest extends AbstractTest {
-
-    private static final LocalDate DEFAULT_DATA_APLICACAO = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_DATA_APLICACAO = LocalDate.now(ZoneId.systemDefault());
-
-    private static final BigDecimal DEFAULT_QTDE_COTA = new BigDecimal(0);
-    private static final BigDecimal UPDATED_QTDE_COTA = new BigDecimal(1);
-
-    private static final BigDecimal DEFAULT_VLR_COTA = new BigDecimal(0);
-    private static final BigDecimal UPDATED_VLR_COTA = new BigDecimal(1);
-
-    private static final BigDecimal DEFAULT_PCT_PRE_POS_FIXADO = new BigDecimal(1);
-    private static final BigDecimal UPDATED_PCT_PRE_POS_FIXADO = new BigDecimal(2);
-
-    @Inject
-    private InvestimentoRepository investimentoRepository;
-    
-    @Inject
-    private CarteiraRepository carteiraRepository;
-    
-    @Inject
-    private InstituicaoRepository instituicaoRepository;    
 
     @Inject
     private InvestimentoService investimentoService;

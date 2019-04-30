@@ -22,7 +22,7 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="data" type="date">
-                <constraints nullable="false" />
+                <constraints nullable="false" unique="true"/>
             </column>
             
             <column name="taxa_media_anual" type="decimal(10,2)">
