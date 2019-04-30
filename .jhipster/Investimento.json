@@ -36,10 +36,6 @@
     ],
     "fields": [
         {
-            "fieldName": "nome",
-            "fieldType": "String"
-        },
-        {
             "fieldName": "dataAplicacao",
             "fieldType": "LocalDate",
             "fieldValidateRules": [
