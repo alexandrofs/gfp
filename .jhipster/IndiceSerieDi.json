@@ -1,0 +1,38 @@
+{
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "data",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "taxaMediaAnual",
+            "fieldType": "BigDecimal",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "taxaSelic",
+            "fieldType": "BigDecimal",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "fatorDiario",
+            "fieldType": "BigDecimal",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20170523014543",
+    "dto": "no",
+    "service": "serviceClass",
+    "entityTableName": "tb_indice_serie_di",
+    "pagination": "infinite-scroll"
+}

@@ -1,0 +1,35 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "tabelaImpostoRenda",
+            "otherEntityName": "tabelaImpostoRenda",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "tipoImpostoRenda"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "codigo",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 20
+        },
+        {
+            "fieldName": "descricao",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": "255"
+        }
+    ],
+    "changelogDate": "20160713030159",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "tb_tipo_imposto_renda",
+    "pagination": "no"
+}

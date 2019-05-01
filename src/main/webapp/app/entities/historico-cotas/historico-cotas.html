@@ -1,0 +1,62 @@
+<div>
+    <h2 translate="gfpApp.historicoCotas.home.title">Historico Cotas</h2>
+    <jhi-alert></jhi-alert>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-4 no-padding-left">
+                <button class="btn btn-primary" ui-sref="historico-cotas.new" >
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <span  translate="gfpApp.historicoCotas.home.createLabel">
+                        Create new Historico Cotas
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive">
+        <table class="jh-table table table-striped">
+            <thead>
+                <tr>
+                    <th><span translate="global.field.id">ID</span></th>
+                    <th><span translate="gfpApp.historicoCotas.dataCota">Data Cota</span></th>
+                    <th><span translate="gfpApp.historicoCotas.vlrCota">Vlr Cota</span></th>
+                    <th><span translate="gfpApp.historicoCotas.investimento">Investimento</span></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="historicoCotas in vm.historicoCotas track by historicoCotas.id">
+                    <td><a ui-sref="historico-cotas-detail({id:historicoCotas.id})">{{historicoCotas.id}}</a></td>
+                        <td>{{historicoCotas.dataCota | date:'mediumDate'}}</td>
+                    <td>{{historicoCotas.vlrCota}}</td>
+                    <td>
+                        <a ui-sref="investimento-detail({id:historicoCotas.investimento.id})">{{historicoCotas.investimento.id}}</a>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group flex-btn-group-container">
+                            <button type="submit"
+                                    ui-sref="historico-cotas-detail({id:historicoCotas.id})"
+                                    class="btn btn-info btn-sm">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                                <span class="hidden-xs hidden-sm" translate="entity.action.view"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="historico-cotas.edit({id:historicoCotas.id})"
+                                    class="btn btn-primary btn-sm">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="hidden-xs hidden-sm" translate="entity.action.edit"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="historico-cotas.delete({id:historicoCotas.id})"
+                                    class="btn btn-danger btn-sm">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                                <span class="hidden-xs hidden-sm" translate="entity.action.delete"></span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

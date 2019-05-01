@@ -1,0 +1,24 @@
+{
+    "gfpApp": {
+        "historicoCotas" : {
+            "home": {
+                "title": "Historico Cotas",
+                "createLabel": "Criar novo Historico Cotas",
+                "createOrEditLabel": "Criar ou editar Historico Cotas",
+                "search": "Pesquisar por Historico Cotas"
+            },
+            "created": "Um novo Historico Cotas é criado com o identificador {{ param }}",
+            "updated": "Um Historico Cotas é atualizado com o identificador {{ param }}",
+            "deleted": "Um Historico Cotas é deletado com o identificador {{ param }}",
+            "delete": {
+                "question": "Tem certeza de que deseja excluir Historico Cotas {{ id }}?"
+            },
+            "detail": {
+                "title": "Historico Cotas"
+            },
+            "dataCota": "Data Cota",
+            "vlrCota": "Vlr Cota",
+            "investimento": "Investimento"
+        }
+    }
+}

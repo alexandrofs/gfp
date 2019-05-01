@@ -1,0 +1,24 @@
+{
+    "gfpApp": {
+        "carteira" : {
+            "home": {
+                "title": "Carteiras",
+                "createLabel": "Criar novo Carteira",
+                "createOrEditLabel": "Criar ou editar Carteira",
+                "search": "Pesquisar por Carteira"
+            },
+            "created": "Um novo Carteira é criado com o identificador {{ param }}",
+            "updated": "Um Carteira é atualizado com o identificador {{ param }}",
+            "deleted": "Um Carteira é deletado com o identificador {{ param }}",
+            "delete": {
+                "question": "Tem certeza de que deseja excluir Carteira {{ id }}?"
+            },
+            "detail": {
+                "title": "Carteira"
+            },
+            "nome": "Nome",
+            "descricao": "Descricao",
+            "investimentos": "Investimentos"
+        }
+    }
+}

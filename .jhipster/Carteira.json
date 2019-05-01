@@ -1,0 +1,35 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "investimentos",
+            "otherEntityName": "investimento",
+            "relationshipType": "one-to-many",
+            "otherEntityRelationshipName": "carteira"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "nome",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": 20
+        },
+        {
+            "fieldName": "descricao",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": "255"
+        }
+    ],
+    "changelogDate": "20160713022917",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "tb_carteira",
+    "pagination": "no"
+}

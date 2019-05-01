@@ -1,0 +1,27 @@
+{
+    "gfpApp": {
+        "tipoInvestimento" : {
+            "home": {
+                "title": "Tipo Investimentos",
+                "createLabel": "Criar novo Tipo Investimento",
+                "createOrEditLabel": "Criar ou editar Tipo Investimento",
+                "search": "Pesquisar por Tipo Investimento"
+            },
+            "created": "Um novo Tipo Investimento é criado com o identificador {{ param }}",
+            "updated": "Um Tipo Investimento é atualizado com o identificador {{ param }}",
+            "deleted": "Um Tipo Investimento é deletado com o identificador {{ param }}",
+            "delete": {
+                "question": "Tem certeza de que deseja excluir Tipo Investimento {{ id }}?"
+            },
+            "detail": {
+                "title": "Tipo Investimento"
+            },
+            "nome": "Nome",
+            "descricao": "Descricao",
+            "modalidade": "Modalidade",
+            "tipoIndexador": "Tipo Indexador",
+            "indice": "Indice",
+            "tipoImpostoRenda": "Tipo Imposto Renda"
+        }
+    }
+}
