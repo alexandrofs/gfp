@@ -27,6 +27,7 @@
                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
                     $translatePartialLoader.addPart('indiceSerieDi');
                     $translatePartialLoader.addPart('global');
+                    $translatePartialLoader.addPart('indiceSerieDiImporta');
                     return $translate.refresh();
                 }]
             }
@@ -47,6 +48,7 @@
             },
             resolve: {
                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
+                    $translatePartialLoader.addPart('indiceSerieDi');
                     $translatePartialLoader.addPart('indiceSerieDi');
                     return $translate.refresh();
                 }],

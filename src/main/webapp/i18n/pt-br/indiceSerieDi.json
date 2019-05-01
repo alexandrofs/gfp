@@ -4,10 +4,7 @@
             "home": {
                 "title": "Indice Serie Dis",
                 "createLabel": "Criar novo Indice Serie Di",
-                "createOrEditLabel": "Criar ou editar Indice Serie Di",
-                "importLabel": "Importação de arquivos",
-                "search": "Pesquisar por Indice Serie Di",
-                "import": "Importar séries"
+                "createOrEditLabel": "Criar ou editar Indice Serie Di"
             },
             "created": "Um novo Indice Serie Di é criado com o identificador {{ param }}",
             "updated": "Um Indice Serie Di é atualizado com o identificador {{ param }}",
@@ -21,8 +18,7 @@
             "data": "Data",
             "taxaMediaAnual": "Taxa Media Anual",
             "taxaSelic": "Taxa Selic",
-            "fatorDiario": "Fator Diario",
-            "importar": "Importar"
+            "fatorDiario": "Fator Diario"
         }
     }
 }

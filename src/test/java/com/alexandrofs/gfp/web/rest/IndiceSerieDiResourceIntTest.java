@@ -3,7 +3,6 @@ package com.alexandrofs.gfp.web.rest;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -11,11 +10,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.io.InputStream;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -24,18 +21,15 @@ import javax.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alexandrofs.gfp.AbstractTest;
-import com.alexandrofs.gfp.GfpUtils;
 import com.alexandrofs.gfp.domain.IndiceSerieDi;
 import com.alexandrofs.gfp.repository.IndiceSerieDiRepository;
 import com.alexandrofs.gfp.service.IndiceSerieDiService;
@@ -95,70 +89,6 @@ public class IndiceSerieDiResourceIntTest extends AbstractTest {
         indiceSerieDi.setTaxaSelic(DEFAULT_TAXA_SELIC);
         indiceSerieDi.setFatorDiario(DEFAULT_FATOR_DIARIO);
     }
-    
-    @Test
-    @Transactional
-    public void importIndiceSerieDi() throws Exception {
-    	
-        int databaseSizeBeforeCreate = indiceSerieDiRepository.findAll().size();
-
-        InputStream inputStream = new ClassPathResource("file_import_indice_di.xls").getInputStream();
-        
-        MockMultipartFile file = new MockMultipartFile("file", inputStream);
-
-        restIndiceSerieDiMockMvc.perform(fileUpload("/api/indice-serie-dis/import")
-        		.file(file))
-                .andExpect(status().isOk());
-
-        // Validate the IndiceSerieDi in the database
-        List<IndiceSerieDi> indiceSerieDis = indiceSerieDiRepository.findAll();
-        assertThat(indiceSerieDis).hasSize(databaseSizeBeforeCreate + 2);
-        IndiceSerieDi testIndiceSerieDi = indiceSerieDis.get(indiceSerieDis.size() - 2);
-        assertThat(testIndiceSerieDi.getData()).isEqualTo(LocalDate.parse("2017-04-03", DateTimeFormatter.ISO_LOCAL_DATE));
-        assertThat(testIndiceSerieDi.getTaxaMediaAnual()).isEqualTo(GfpUtils.converteStringToBigDecimal("12,13"));
-        assertThat(testIndiceSerieDi.getTaxaSelic()).isEqualTo(GfpUtils.converteStringToBigDecimal("12,15"));
-        assertThat(testIndiceSerieDi.getFatorDiario()).isEqualTo(GfpUtils.converteStringToBigDecimal("1,00045442"));
-        
-        IndiceSerieDi testIndiceSerieDi2 = indiceSerieDis.get(indiceSerieDis.size() - 1);
-        assertThat(testIndiceSerieDi2.getData()).isEqualTo(LocalDate.parse("2017-04-04", DateTimeFormatter.ISO_LOCAL_DATE));
-        assertThat(testIndiceSerieDi2.getTaxaMediaAnual()).isEqualTo(GfpUtils.converteStringToBigDecimal("12,13"));
-        assertThat(testIndiceSerieDi2.getTaxaSelic()).isEqualTo(GfpUtils.converteStringToBigDecimal("12,15"));
-        assertThat(testIndiceSerieDi2.getFatorDiario()).isEqualTo(GfpUtils.converteStringToBigDecimal("1,00045442"));
-    }    
-    
-    @Test
-    @Transactional
-    public void importIndiceSerieDiRepetido() throws Exception {
-    	
-        int databaseSizeBeforeCreate = indiceSerieDiRepository.findAll().size();
-
-        InputStream inputStream = new ClassPathResource("file_import_indice_di.xls").getInputStream();
-        
-        MockMultipartFile file = new MockMultipartFile("file", inputStream);
-
-        restIndiceSerieDiMockMvc.perform(fileUpload("/api/indice-serie-dis/import")
-        		.file(file))
-                .andExpect(status().isOk());
-        
-        restIndiceSerieDiMockMvc.perform(fileUpload("/api/indice-serie-dis/import")
-        		.file(file))
-                .andExpect(status().isOk());        
-
-        // Validate the IndiceSerieDi in the database
-        List<IndiceSerieDi> indiceSerieDis = indiceSerieDiRepository.findAll();
-        assertThat(indiceSerieDis).hasSize(databaseSizeBeforeCreate + 2);
-        IndiceSerieDi testIndiceSerieDi = indiceSerieDis.get(indiceSerieDis.size() - 2);
-        assertThat(testIndiceSerieDi.getData()).isEqualTo(LocalDate.parse("2017-04-03", DateTimeFormatter.ISO_LOCAL_DATE));
-        assertThat(testIndiceSerieDi.getTaxaMediaAnual()).isEqualTo(GfpUtils.converteStringToBigDecimal("12,13"));
-        assertThat(testIndiceSerieDi.getTaxaSelic()).isEqualTo(GfpUtils.converteStringToBigDecimal("12,15"));
-        assertThat(testIndiceSerieDi.getFatorDiario()).isEqualTo(GfpUtils.converteStringToBigDecimal("1,00045442"));
-        
-        IndiceSerieDi testIndiceSerieDi2 = indiceSerieDis.get(indiceSerieDis.size() - 1);
-        assertThat(testIndiceSerieDi2.getData()).isEqualTo(LocalDate.parse("2017-04-04", DateTimeFormatter.ISO_LOCAL_DATE));
-        assertThat(testIndiceSerieDi2.getTaxaMediaAnual()).isEqualTo(GfpUtils.converteStringToBigDecimal("12,13"));
-        assertThat(testIndiceSerieDi2.getTaxaSelic()).isEqualTo(GfpUtils.converteStringToBigDecimal("12,15"));
-        assertThat(testIndiceSerieDi2.getFatorDiario()).isEqualTo(GfpUtils.converteStringToBigDecimal("1,00045442"));
-    }    
     
     @Test
     @Transactional

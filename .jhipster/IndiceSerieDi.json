@@ -5,7 +5,8 @@
             "fieldName": "data",
             "fieldType": "LocalDate",
             "fieldValidateRules": [
-                "required"
+                "required",
+                "unique"
             ]
         },
         {

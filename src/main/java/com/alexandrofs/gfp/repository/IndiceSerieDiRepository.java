@@ -1,20 +1,15 @@
 package com.alexandrofs.gfp.repository;
 
-import java.time.LocalDate;
-import java.util.List;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import com.alexandrofs.gfp.domain.IndiceSerieDi;
+import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
+
 
 /**
- * Spring Data JPA repository for the IndiceSerieDi entity.
+ * Spring Data  repository for the IndiceSerieDi entity.
  */
 @SuppressWarnings("unused")
-public interface IndiceSerieDiRepository extends JpaRepository<IndiceSerieDi,Long> {
-	
-	public IndiceSerieDi findByData(LocalDate data);
-	
-	public List<IndiceSerieDi> findByDataBetweenOrderByData(LocalDate dataI, LocalDate dataF);
+@Repository
+public interface IndiceSerieDiRepository extends JpaRepository<IndiceSerieDi, Long> {
 
 }
