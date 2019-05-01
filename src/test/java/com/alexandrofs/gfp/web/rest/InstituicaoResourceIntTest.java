@@ -9,13 +9,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.hamcrest.Matchers.hasItem;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -23,24 +21,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
 /**
  * Test class for the InstituicaoResource REST controller.
  *
  * @see InstituicaoResource
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = GfpApp.class)
-@WebAppConfiguration
-@IntegrationTest
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = GfpApp.class)
 public class InstituicaoResourceIntTest {
-
     private static final String DEFAULT_NOME = "AAAAA";
     private static final String UPDATED_NOME = "BBBBB";
 
@@ -52,6 +47,9 @@ public class InstituicaoResourceIntTest {
 
     @Inject
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+
+    @Inject
+    private EntityManager em;
 
     private MockMvc restInstituicaoMockMvc;
 
@@ -67,10 +65,22 @@ public class InstituicaoResourceIntTest {
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
-    @Before
-    public void initTest() {
+    /**
+     * Create an entity for this test.
+     *
+     * This is a static method, as tests for other entities might also need it,
+     * if they test an entity which requires the current entity.
+     */
+    public static Instituicao createEntity(EntityManager em) {
+        Instituicao instituicao = new Instituicao();
         instituicao = new Instituicao();
         instituicao.setNome(DEFAULT_NOME);
+        return instituicao;
+    }
+
+    @Before
+    public void initTest() {
+        instituicao = createEntity(em);
     }
 
     @Test
@@ -101,7 +111,7 @@ public class InstituicaoResourceIntTest {
         // Get all the instituicaos
         restInstituicaoMockMvc.perform(get("/api/instituicaos?sort=id,desc"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(instituicao.getId().intValue())))
                 .andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME.toString())));
     }
@@ -115,7 +125,7 @@ public class InstituicaoResourceIntTest {
         // Get the instituicao
         restInstituicaoMockMvc.perform(get("/api/instituicaos/{id}", instituicao.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(instituicao.getId().intValue()))
             .andExpect(jsonPath("$.nome").value(DEFAULT_NOME.toString()));
     }
@@ -136,8 +146,7 @@ public class InstituicaoResourceIntTest {
         int databaseSizeBeforeUpdate = instituicaoRepository.findAll().size();
 
         // Update the instituicao
-        Instituicao updatedInstituicao = new Instituicao();
-        updatedInstituicao.setId(instituicao.getId());
+        Instituicao updatedInstituicao = instituicaoRepository.findOne(instituicao.getId());
         updatedInstituicao.setNome(UPDATED_NOME);
 
         restInstituicaoMockMvc.perform(put("/api/instituicaos")

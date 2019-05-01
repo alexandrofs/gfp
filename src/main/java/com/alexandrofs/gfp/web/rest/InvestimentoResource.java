@@ -30,7 +30,7 @@ public class InvestimentoResource {
         
     @Inject
     private InvestimentoService investimentoService;
-    
+
     /**
      * POST  /investimentos : Create a new investimento.
      *

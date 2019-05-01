@@ -10,9 +10,9 @@
         
         <addForeignKeyConstraint baseColumnNames="investimento_id"
                                  baseTableName="tb_historico_cotas"
-                                 constraintName="fk_historicocotas_investimento_id"
+                                 constraintName="fk_historico_cotas_investimento_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="investimento"/>
+                                 referencedTableName="tb_investimento"/>
 
     </changeSet>
 </databaseChangeLog>

@@ -2,6 +2,9 @@ package com.alexandrofs.gfp.web.rest;
 
 import com.alexandrofs.gfp.GfpApp;
 import com.alexandrofs.gfp.domain.Investimento;
+import com.alexandrofs.gfp.domain.Carteira;
+import com.alexandrofs.gfp.domain.TipoInvestimento;
+import com.alexandrofs.gfp.domain.Instituicao;
 import com.alexandrofs.gfp.repository.InvestimentoRepository;
 import com.alexandrofs.gfp.service.InvestimentoService;
 
@@ -10,13 +13,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.hamcrest.Matchers.hasItem;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -24,27 +25,24 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.math.BigDecimal;;
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
 /**
  * Test class for the InvestimentoResource REST controller.
  *
  * @see InvestimentoResource
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = GfpApp.class)
-@WebAppConfiguration
-@IntegrationTest
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = GfpApp.class)
 public class InvestimentoResourceIntTest {
-
 
     private static final LocalDate DEFAULT_DATA_APLICACAO = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_DATA_APLICACAO = LocalDate.now(ZoneId.systemDefault());
@@ -70,6 +68,9 @@ public class InvestimentoResourceIntTest {
     @Inject
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
+    @Inject
+    private EntityManager em;
+
     private MockMvc restInvestimentoMockMvc;
 
     private Investimento investimento;
@@ -84,13 +85,40 @@ public class InvestimentoResourceIntTest {
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
-    @Before
-    public void initTest() {
+    /**
+     * Create an entity for this test.
+     *
+     * This is a static method, as tests for other entities might also need it,
+     * if they test an entity which requires the current entity.
+     */
+    public static Investimento createEntity(EntityManager em) {
+        Investimento investimento = new Investimento();
         investimento = new Investimento();
         investimento.setDataAplicacao(DEFAULT_DATA_APLICACAO);
         investimento.setQtdeCota(DEFAULT_QTDE_COTA);
         investimento.setVlrCota(DEFAULT_VLR_COTA);
         investimento.setPctPrePosFixado(DEFAULT_PCT_PRE_POS_FIXADO);
+        // Add required entity
+        Carteira carteira = CarteiraResourceIntTest.createEntity(em);
+        em.persist(carteira);
+        em.flush();
+        investimento.setCarteira(carteira);
+        // Add required entity
+        TipoInvestimento tipoInvestimento = TipoInvestimentoResourceIntTest.createEntity(em);
+        em.persist(tipoInvestimento);
+        em.flush();
+        investimento.setTipoInvestimento(tipoInvestimento);
+        // Add required entity
+        Instituicao instituicao = InstituicaoResourceIntTest.createEntity(em);
+        em.persist(instituicao);
+        em.flush();
+        investimento.setInstituicao(instituicao);
+        return investimento;
+    }
+
+    @Before
+    public void initTest() {
+        investimento = createEntity(em);
     }
 
     @Test
@@ -178,7 +206,7 @@ public class InvestimentoResourceIntTest {
         // Get all the investimentos
         restInvestimentoMockMvc.perform(get("/api/investimentos?sort=id,desc"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(investimento.getId().intValue())))
                 .andExpect(jsonPath("$.[*].dataAplicacao").value(hasItem(DEFAULT_DATA_APLICACAO.toString())))
                 .andExpect(jsonPath("$.[*].qtdeCota").value(hasItem(DEFAULT_QTDE_COTA.intValue())))
@@ -195,7 +223,7 @@ public class InvestimentoResourceIntTest {
         // Get the investimento
         restInvestimentoMockMvc.perform(get("/api/investimentos/{id}", investimento.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(investimento.getId().intValue()))
             .andExpect(jsonPath("$.dataAplicacao").value(DEFAULT_DATA_APLICACAO.toString()))
             .andExpect(jsonPath("$.qtdeCota").value(DEFAULT_QTDE_COTA.intValue()))
@@ -220,8 +248,7 @@ public class InvestimentoResourceIntTest {
         int databaseSizeBeforeUpdate = investimentoRepository.findAll().size();
 
         // Update the investimento
-        Investimento updatedInvestimento = new Investimento();
-        updatedInvestimento.setId(investimento.getId());
+        Investimento updatedInvestimento = investimentoRepository.findOne(investimento.getId());
         updatedInvestimento.setDataAplicacao(UPDATED_DATA_APLICACAO);
         updatedInvestimento.setQtdeCota(UPDATED_QTDE_COTA);
         updatedInvestimento.setVlrCota(UPDATED_VLR_COTA);

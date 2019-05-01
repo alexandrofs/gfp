@@ -4,20 +4,22 @@ describe('Controller Tests', function() {
 
     describe('IndiceSerieDi Management Detail Controller', function() {
         var $scope, $rootScope;
-        var MockEntity, MockIndiceSerieDi;
+        var MockEntity, MockPreviousState, MockIndiceSerieDi;
         var createController;
 
         beforeEach(inject(function($injector) {
             $rootScope = $injector.get('$rootScope');
             $scope = $rootScope.$new();
             MockEntity = jasmine.createSpy('MockEntity');
+            MockPreviousState = jasmine.createSpy('MockPreviousState');
             MockIndiceSerieDi = jasmine.createSpy('MockIndiceSerieDi');
             
 
             var locals = {
                 '$scope': $scope,
                 '$rootScope': $rootScope,
-                'entity': MockEntity ,
+                'entity': MockEntity,
+                'previousState': MockPreviousState,
                 'IndiceSerieDi': MockIndiceSerieDi
             };
             createController = function() {

@@ -2,6 +2,7 @@ package com.alexandrofs.gfp.web.rest;
 
 import com.alexandrofs.gfp.GfpApp;
 import com.alexandrofs.gfp.domain.TipoInvestimento;
+import com.alexandrofs.gfp.domain.TipoImpostoRenda;
 import com.alexandrofs.gfp.repository.TipoInvestimentoRepository;
 
 import org.junit.Before;
@@ -9,13 +10,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.hamcrest.Matchers.hasItem;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -23,24 +22,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
 /**
  * Test class for the TipoInvestimentoResource REST controller.
  *
  * @see TipoInvestimentoResource
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = GfpApp.class)
-@WebAppConfiguration
-@IntegrationTest
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = GfpApp.class)
 public class TipoInvestimentoResourceIntTest {
-
     private static final String DEFAULT_NOME = "AAAAAAAAAAAAAAAAAAAA";
     private static final String UPDATED_NOME = "BBBBBBBBBBBBBBBBBBBB";
     private static final String DEFAULT_DESCRICAO = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
@@ -61,6 +57,9 @@ public class TipoInvestimentoResourceIntTest {
     @Inject
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
+    @Inject
+    private EntityManager em;
+
     private MockMvc restTipoInvestimentoMockMvc;
 
     private TipoInvestimento tipoInvestimento;
@@ -75,14 +74,31 @@ public class TipoInvestimentoResourceIntTest {
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
-    @Before
-    public void initTest() {
+    /**
+     * Create an entity for this test.
+     *
+     * This is a static method, as tests for other entities might also need it,
+     * if they test an entity which requires the current entity.
+     */
+    public static TipoInvestimento createEntity(EntityManager em) {
+        TipoInvestimento tipoInvestimento = new TipoInvestimento();
         tipoInvestimento = new TipoInvestimento();
         tipoInvestimento.setNome(DEFAULT_NOME);
         tipoInvestimento.setDescricao(DEFAULT_DESCRICAO);
         tipoInvestimento.setModalidade(DEFAULT_MODALIDADE);
         tipoInvestimento.setTipoIndexador(DEFAULT_TIPO_INDEXADOR);
         tipoInvestimento.setIndice(DEFAULT_INDICE);
+        // Add required entity
+        TipoImpostoRenda tipoImpostoRenda = TipoImpostoRendaResourceIntTest.createEntity(em);
+        em.persist(tipoImpostoRenda);
+        em.flush();
+        tipoInvestimento.setTipoImpostoRenda(tipoImpostoRenda);
+        return tipoInvestimento;
+    }
+
+    @Before
+    public void initTest() {
+        tipoInvestimento = createEntity(em);
     }
 
     @Test
@@ -207,7 +223,7 @@ public class TipoInvestimentoResourceIntTest {
         // Get all the tipoInvestimentos
         restTipoInvestimentoMockMvc.perform(get("/api/tipo-investimentos?sort=id,desc"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(tipoInvestimento.getId().intValue())))
                 .andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME.toString())))
                 .andExpect(jsonPath("$.[*].descricao").value(hasItem(DEFAULT_DESCRICAO.toString())))
@@ -225,7 +241,7 @@ public class TipoInvestimentoResourceIntTest {
         // Get the tipoInvestimento
         restTipoInvestimentoMockMvc.perform(get("/api/tipo-investimentos/{id}", tipoInvestimento.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(tipoInvestimento.getId().intValue()))
             .andExpect(jsonPath("$.nome").value(DEFAULT_NOME.toString()))
             .andExpect(jsonPath("$.descricao").value(DEFAULT_DESCRICAO.toString()))
@@ -250,8 +266,7 @@ public class TipoInvestimentoResourceIntTest {
         int databaseSizeBeforeUpdate = tipoInvestimentoRepository.findAll().size();
 
         // Update the tipoInvestimento
-        TipoInvestimento updatedTipoInvestimento = new TipoInvestimento();
-        updatedTipoInvestimento.setId(tipoInvestimento.getId());
+        TipoInvestimento updatedTipoInvestimento = tipoInvestimentoRepository.findOne(tipoInvestimento.getId());
         updatedTipoInvestimento.setNome(UPDATED_NOME);
         updatedTipoInvestimento.setDescricao(UPDATED_DESCRICAO);
         updatedTipoInvestimento.setModalidade(UPDATED_MODALIDADE);

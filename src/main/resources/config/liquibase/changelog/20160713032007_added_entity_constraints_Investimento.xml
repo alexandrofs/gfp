@@ -12,13 +12,13 @@
                                  baseTableName="tb_investimento"
                                  constraintName="fk_investimento_carteira_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="carteira"/>
+                                 referencedTableName="tb_carteira"/>
 
         <addForeignKeyConstraint baseColumnNames="tipo_investimento_id"
                                  baseTableName="tb_investimento"
-                                 constraintName="fk_investimento_tipoinvestimento_id"
+                                 constraintName="fk_investimento_tipo_investimento_id"
                                  referencedColumnNames="id"
-                                 referencedTableName="tipo_investimento"/>
+                                 referencedTableName="tb_tipo_investimento"/>
 
         <addForeignKeyConstraint baseColumnNames="instituicao_id"
                                  baseTableName="tb_investimento"

@@ -2,6 +2,7 @@ package com.alexandrofs.gfp.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.alexandrofs.gfp.domain.HistoricoCotas;
+
 import com.alexandrofs.gfp.repository.HistoricoCotasRepository;
 import com.alexandrofs.gfp.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
@@ -30,7 +31,7 @@ public class HistoricoCotasResource {
         
     @Inject
     private HistoricoCotasRepository historicoCotasRepository;
-    
+
     /**
      * POST  /historico-cotas : Create a new historicoCotas.
      *

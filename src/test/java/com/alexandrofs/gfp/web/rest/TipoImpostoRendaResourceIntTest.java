@@ -9,13 +9,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.hamcrest.Matchers.hasItem;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -23,24 +21,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
 /**
  * Test class for the TipoImpostoRendaResource REST controller.
  *
  * @see TipoImpostoRendaResource
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = GfpApp.class)
-@WebAppConfiguration
-@IntegrationTest
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = GfpApp.class)
 public class TipoImpostoRendaResourceIntTest {
-
     private static final String DEFAULT_CODIGO = "AAAAAAAAAAAAAAAAAAAA";
     private static final String UPDATED_CODIGO = "BBBBBBBBBBBBBBBBBBBB";
     private static final String DEFAULT_DESCRICAO = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
@@ -54,6 +49,9 @@ public class TipoImpostoRendaResourceIntTest {
 
     @Inject
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+
+    @Inject
+    private EntityManager em;
 
     private MockMvc restTipoImpostoRendaMockMvc;
 
@@ -69,11 +67,23 @@ public class TipoImpostoRendaResourceIntTest {
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
-    @Before
-    public void initTest() {
+    /**
+     * Create an entity for this test.
+     *
+     * This is a static method, as tests for other entities might also need it,
+     * if they test an entity which requires the current entity.
+     */
+    public static TipoImpostoRenda createEntity(EntityManager em) {
+        TipoImpostoRenda tipoImpostoRenda = new TipoImpostoRenda();
         tipoImpostoRenda = new TipoImpostoRenda();
         tipoImpostoRenda.setCodigo(DEFAULT_CODIGO);
         tipoImpostoRenda.setDescricao(DEFAULT_DESCRICAO);
+        return tipoImpostoRenda;
+    }
+
+    @Before
+    public void initTest() {
+        tipoImpostoRenda = createEntity(em);
     }
 
     @Test
@@ -141,7 +151,7 @@ public class TipoImpostoRendaResourceIntTest {
         // Get all the tipoImpostoRendas
         restTipoImpostoRendaMockMvc.perform(get("/api/tipo-imposto-rendas?sort=id,desc"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(tipoImpostoRenda.getId().intValue())))
                 .andExpect(jsonPath("$.[*].codigo").value(hasItem(DEFAULT_CODIGO.toString())))
                 .andExpect(jsonPath("$.[*].descricao").value(hasItem(DEFAULT_DESCRICAO.toString())));
@@ -156,7 +166,7 @@ public class TipoImpostoRendaResourceIntTest {
         // Get the tipoImpostoRenda
         restTipoImpostoRendaMockMvc.perform(get("/api/tipo-imposto-rendas/{id}", tipoImpostoRenda.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(tipoImpostoRenda.getId().intValue()))
             .andExpect(jsonPath("$.codigo").value(DEFAULT_CODIGO.toString()))
             .andExpect(jsonPath("$.descricao").value(DEFAULT_DESCRICAO.toString()));
@@ -178,8 +188,7 @@ public class TipoImpostoRendaResourceIntTest {
         int databaseSizeBeforeUpdate = tipoImpostoRendaRepository.findAll().size();
 
         // Update the tipoImpostoRenda
-        TipoImpostoRenda updatedTipoImpostoRenda = new TipoImpostoRenda();
-        updatedTipoImpostoRenda.setId(tipoImpostoRenda.getId());
+        TipoImpostoRenda updatedTipoImpostoRenda = tipoImpostoRendaRepository.findOne(tipoImpostoRenda.getId());
         updatedTipoImpostoRenda.setCodigo(UPDATED_CODIGO);
         updatedTipoImpostoRenda.setDescricao(UPDATED_DESCRICAO);
 

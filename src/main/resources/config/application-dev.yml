@@ -17,7 +17,10 @@ spring:
             enabled: true
         livereload:
             enabled: false # we use gulp + BrowserSync for livereload
+    jackson:
+        serialization.indent_output: true
     datasource:
+        type: com.zaxxer.hikari.HikariDataSource
         url: jdbc:mysql://localhost:3306/gfp?useUnicode=true&characterEncoding=utf8&useSSL=false
         name:
         username: root
@@ -31,7 +34,7 @@ spring:
     jpa:
         database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
         database: MYSQL
-        show_sql: true
+        show-sql: true
         properties:
             hibernate.cache.use_second_level_cache: false
             hibernate.cache.use_query_cache: false
@@ -45,6 +48,8 @@ spring:
         cache-seconds: 1
     thymeleaf:
         cache: false
+    profiles:
+        include: swagger # automatically set the 'swagger' profile
 
 liquibase:
     contexts: dev
@@ -83,5 +88,3 @@ jhipster:
             host: localhost
             port: 5000
             queueSize: 512
-    swagger: # swagger is enabled. It can be disabled by pasing 'no-swagger' profile at run time as well
-        enabled: true

@@ -52,8 +52,41 @@
                 }],
                 entity: ['$stateParams', 'HistoricoCotas', function($stateParams, HistoricoCotas) {
                     return HistoricoCotas.get({id : $stateParams.id}).$promise;
+                }],
+                previousState: ["$state", function ($state) {
+                    var currentStateData = {
+                        name: $state.current.name || 'historico-cotas',
+                        params: $state.params,
+                        url: $state.href($state.current.name, $state.params)
+                    };
+                    return currentStateData;
                 }]
             }
+        })
+        .state('historico-cotas-detail.edit', {
+            parent: 'historico-cotas-detail',
+            url: '/detail/edit',
+            data: {
+                authorities: ['ROLE_USER']
+            },
+            onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                $uibModal.open({
+                    templateUrl: 'app/entities/historico-cotas/historico-cotas-dialog.html',
+                    controller: 'HistoricoCotasDialogController',
+                    controllerAs: 'vm',
+                    backdrop: 'static',
+                    size: 'lg',
+                    resolve: {
+                        entity: ['HistoricoCotas', function(HistoricoCotas) {
+                            return HistoricoCotas.get({id : $stateParams.id}).$promise;
+                        }]
+                    }
+                }).result.then(function() {
+                    $state.go('^', {}, { reload: false });
+                }, function() {
+                    $state.go('^');
+                });
+            }]
         })
         .state('historico-cotas.new', {
             parent: 'historico-cotas',
@@ -78,7 +111,7 @@
                         }
                     }
                 }).result.then(function() {
-                    $state.go('historico-cotas', null, { reload: true });
+                    $state.go('historico-cotas', null, { reload: 'historico-cotas' });
                 }, function() {
                     $state.go('historico-cotas');
                 });
@@ -103,7 +136,7 @@
                         }]
                     }
                 }).result.then(function() {
-                    $state.go('historico-cotas', null, { reload: true });
+                    $state.go('historico-cotas', null, { reload: 'historico-cotas' });
                 }, function() {
                     $state.go('^');
                 });
@@ -127,7 +160,7 @@
                         }]
                     }
                 }).result.then(function() {
-                    $state.go('historico-cotas', null, { reload: true });
+                    $state.go('historico-cotas', null, { reload: 'historico-cotas' });
                 }, function() {
                     $state.go('^');
                 });

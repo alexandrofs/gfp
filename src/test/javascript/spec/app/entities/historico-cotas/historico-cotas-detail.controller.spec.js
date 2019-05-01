@@ -4,13 +4,14 @@ describe('Controller Tests', function() {
 
     describe('HistoricoCotas Management Detail Controller', function() {
         var $scope, $rootScope;
-        var MockEntity, MockHistoricoCotas, MockInvestimento;
+        var MockEntity, MockPreviousState, MockHistoricoCotas, MockInvestimento;
         var createController;
 
         beforeEach(inject(function($injector) {
             $rootScope = $injector.get('$rootScope');
             $scope = $rootScope.$new();
             MockEntity = jasmine.createSpy('MockEntity');
+            MockPreviousState = jasmine.createSpy('MockPreviousState');
             MockHistoricoCotas = jasmine.createSpy('MockHistoricoCotas');
             MockInvestimento = jasmine.createSpy('MockInvestimento');
             
@@ -18,7 +19,8 @@ describe('Controller Tests', function() {
             var locals = {
                 '$scope': $scope,
                 '$rootScope': $rootScope,
-                'entity': MockEntity ,
+                'entity': MockEntity,
+                'previousState': MockPreviousState,
                 'HistoricoCotas': MockHistoricoCotas,
                 'Investimento': MockInvestimento
             };

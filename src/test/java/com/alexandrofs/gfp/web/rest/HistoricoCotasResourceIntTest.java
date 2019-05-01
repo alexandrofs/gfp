@@ -2,6 +2,7 @@ package com.alexandrofs.gfp.web.rest;
 
 import com.alexandrofs.gfp.GfpApp;
 import com.alexandrofs.gfp.domain.HistoricoCotas;
+import com.alexandrofs.gfp.domain.Investimento;
 import com.alexandrofs.gfp.repository.HistoricoCotasRepository;
 
 import org.junit.Before;
@@ -9,13 +10,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import static org.hamcrest.Matchers.hasItem;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -23,27 +22,24 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.math.BigDecimal;;
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
 /**
  * Test class for the HistoricoCotasResource REST controller.
  *
  * @see HistoricoCotasResource
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = GfpApp.class)
-@WebAppConfiguration
-@IntegrationTest
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = GfpApp.class)
 public class HistoricoCotasResourceIntTest {
-
 
     private static final LocalDate DEFAULT_DATA_COTA = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_DATA_COTA = LocalDate.now(ZoneId.systemDefault());
@@ -60,6 +56,9 @@ public class HistoricoCotasResourceIntTest {
     @Inject
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
+    @Inject
+    private EntityManager em;
+
     private MockMvc restHistoricoCotasMockMvc;
 
     private HistoricoCotas historicoCotas;
@@ -74,11 +73,28 @@ public class HistoricoCotasResourceIntTest {
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
-    @Before
-    public void initTest() {
+    /**
+     * Create an entity for this test.
+     *
+     * This is a static method, as tests for other entities might also need it,
+     * if they test an entity which requires the current entity.
+     */
+    public static HistoricoCotas createEntity(EntityManager em) {
+        HistoricoCotas historicoCotas = new HistoricoCotas();
         historicoCotas = new HistoricoCotas();
         historicoCotas.setDataCota(DEFAULT_DATA_COTA);
         historicoCotas.setVlrCota(DEFAULT_VLR_COTA);
+        // Add required entity
+        Investimento investimento = InvestimentoResourceIntTest.createEntity(em);
+        em.persist(investimento);
+        em.flush();
+        historicoCotas.setInvestimento(investimento);
+        return historicoCotas;
+    }
+
+    @Before
+    public void initTest() {
+        historicoCotas = createEntity(em);
     }
 
     @Test
@@ -146,7 +162,7 @@ public class HistoricoCotasResourceIntTest {
         // Get all the historicoCotas
         restHistoricoCotasMockMvc.perform(get("/api/historico-cotas?sort=id,desc"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(historicoCotas.getId().intValue())))
                 .andExpect(jsonPath("$.[*].dataCota").value(hasItem(DEFAULT_DATA_COTA.toString())))
                 .andExpect(jsonPath("$.[*].vlrCota").value(hasItem(DEFAULT_VLR_COTA.intValue())));
@@ -161,7 +177,7 @@ public class HistoricoCotasResourceIntTest {
         // Get the historicoCotas
         restHistoricoCotasMockMvc.perform(get("/api/historico-cotas/{id}", historicoCotas.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(historicoCotas.getId().intValue()))
             .andExpect(jsonPath("$.dataCota").value(DEFAULT_DATA_COTA.toString()))
             .andExpect(jsonPath("$.vlrCota").value(DEFAULT_VLR_COTA.intValue()));
@@ -183,8 +199,7 @@ public class HistoricoCotasResourceIntTest {
         int databaseSizeBeforeUpdate = historicoCotasRepository.findAll().size();
 
         // Update the historicoCotas
-        HistoricoCotas updatedHistoricoCotas = new HistoricoCotas();
-        updatedHistoricoCotas.setId(historicoCotas.getId());
+        HistoricoCotas updatedHistoricoCotas = historicoCotasRepository.findOne(historicoCotas.getId());
         updatedHistoricoCotas.setDataCota(UPDATED_DATA_COTA);
         updatedHistoricoCotas.setVlrCota(UPDATED_VLR_COTA);
 

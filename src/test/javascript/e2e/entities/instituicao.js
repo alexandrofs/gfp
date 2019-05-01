@@ -29,7 +29,7 @@ describe('Instituicao e2e test', function () {
 
     it('should load create Instituicao dialog', function () {
         element(by.css('[ui-sref="instituicao.new"]')).click().then(function() {
-            expect(element(by.css('h4.modal-title')).getText()).toMatch(/Create or edit a Instituicao/);
+            expect(element(by.css('h4.modal-title')).getAttribute("translate")).toMatch(/gfpApp.instituicao.home.createOrEditLabel/);
             element(by.css('button.close')).click();
         });
     });

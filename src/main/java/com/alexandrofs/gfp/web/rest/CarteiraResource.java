@@ -2,6 +2,7 @@ package com.alexandrofs.gfp.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.alexandrofs.gfp.domain.Carteira;
+
 import com.alexandrofs.gfp.repository.CarteiraRepository;
 import com.alexandrofs.gfp.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
@@ -30,7 +31,7 @@ public class CarteiraResource {
         
     @Inject
     private CarteiraRepository carteiraRepository;
-    
+
     /**
      * POST  /carteiras : Create a new carteira.
      *

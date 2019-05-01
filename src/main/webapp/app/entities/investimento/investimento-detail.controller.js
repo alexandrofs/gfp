@@ -5,12 +5,13 @@
         .module('gfpApp')
         .controller('InvestimentoDetailController', InvestimentoDetailController);
 
-    InvestimentoDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'entity', 'Investimento', 'Carteira', 'TipoInvestimento', 'HistoricoCotas', 'Instituicao'];
+    InvestimentoDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'Investimento', 'Carteira', 'TipoInvestimento', 'HistoricoCotas', 'Instituicao'];
 
-    function InvestimentoDetailController($scope, $rootScope, $stateParams, entity, Investimento, Carteira, TipoInvestimento, HistoricoCotas, Instituicao) {
+    function InvestimentoDetailController($scope, $rootScope, $stateParams, previousState, entity, Investimento, Carteira, TipoInvestimento, HistoricoCotas, Instituicao) {
         var vm = this;
 
         vm.investimento = entity;
+        vm.previousState = previousState.name;
 
         var unsubscribe = $rootScope.$on('gfpApp:investimentoUpdate', function(event, result) {
             vm.investimento = result;

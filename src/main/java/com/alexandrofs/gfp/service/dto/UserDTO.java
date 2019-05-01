@@ -1,4 +1,4 @@
-package com.alexandrofs.gfp.web.rest.dto;
+package com.alexandrofs.gfp.service.dto;
 
 import com.alexandrofs.gfp.config.Constants;
 

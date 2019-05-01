@@ -29,7 +29,7 @@ describe('TabelaImpostoRenda e2e test', function () {
 
     it('should load create TabelaImpostoRenda dialog', function () {
         element(by.css('[ui-sref="tabela-imposto-renda.new"]')).click().then(function() {
-            expect(element(by.css('h4.modal-title')).getText()).toMatch(/Create or edit a Tabela Imposto Renda/);
+            expect(element(by.css('h4.modal-title')).getAttribute("translate")).toMatch(/gfpApp.tabelaImpostoRenda.home.createOrEditLabel/);
             element(by.css('button.close')).click();
         });
     });

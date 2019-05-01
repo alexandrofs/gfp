@@ -52,8 +52,41 @@
                 }],
                 entity: ['$stateParams', 'Instituicao', function($stateParams, Instituicao) {
                     return Instituicao.get({id : $stateParams.id}).$promise;
+                }],
+                previousState: ["$state", function ($state) {
+                    var currentStateData = {
+                        name: $state.current.name || 'instituicao',
+                        params: $state.params,
+                        url: $state.href($state.current.name, $state.params)
+                    };
+                    return currentStateData;
                 }]
             }
+        })
+        .state('instituicao-detail.edit', {
+            parent: 'instituicao-detail',
+            url: '/detail/edit',
+            data: {
+                authorities: ['ROLE_USER']
+            },
+            onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                $uibModal.open({
+                    templateUrl: 'app/entities/instituicao/instituicao-dialog.html',
+                    controller: 'InstituicaoDialogController',
+                    controllerAs: 'vm',
+                    backdrop: 'static',
+                    size: 'lg',
+                    resolve: {
+                        entity: ['Instituicao', function(Instituicao) {
+                            return Instituicao.get({id : $stateParams.id}).$promise;
+                        }]
+                    }
+                }).result.then(function() {
+                    $state.go('^', {}, { reload: false });
+                }, function() {
+                    $state.go('^');
+                });
+            }]
         })
         .state('instituicao.new', {
             parent: 'instituicao',
@@ -77,7 +110,7 @@
                         }
                     }
                 }).result.then(function() {
-                    $state.go('instituicao', null, { reload: true });
+                    $state.go('instituicao', null, { reload: 'instituicao' });
                 }, function() {
                     $state.go('instituicao');
                 });
@@ -102,7 +135,7 @@
                         }]
                     }
                 }).result.then(function() {
-                    $state.go('instituicao', null, { reload: true });
+                    $state.go('instituicao', null, { reload: 'instituicao' });
                 }, function() {
                     $state.go('^');
                 });
@@ -126,7 +159,7 @@
                         }]
                     }
                 }).result.then(function() {
-                    $state.go('instituicao', null, { reload: true });
+                    $state.go('instituicao', null, { reload: 'instituicao' });
                 }, function() {
                     $state.go('^');
                 });

@@ -29,7 +29,7 @@ describe('HistoricoCotas e2e test', function () {
 
     it('should load create HistoricoCotas dialog', function () {
         element(by.css('[ui-sref="historico-cotas.new"]')).click().then(function() {
-            expect(element(by.css('h4.modal-title')).getText()).toMatch(/Create or edit a Historico Cotas/);
+            expect(element(by.css('h4.modal-title')).getAttribute("translate")).toMatch(/gfpApp.historicoCotas.home.createOrEditLabel/);
             element(by.css('button.close')).click();
         });
     });

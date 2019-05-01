@@ -21,10 +21,10 @@ public class InvestimentoService {
     
     @Inject
     private InvestimentoRepository investimentoRepository;
-    
+
     /**
      * Save a investimento.
-     * 
+     *
      * @param investimento the entity to save
      * @return the persisted entity
      */
@@ -43,6 +43,7 @@ public class InvestimentoService {
     public List<Investimento> findAll() {
         log.debug("Request to get all Investimentos");
         List<Investimento> result = investimentoRepository.findAll();
+
         return result;
     }
 
@@ -61,7 +62,7 @@ public class InvestimentoService {
 
     /**
      *  Delete the  investimento by id.
-     *  
+     *
      *  @param id the id of the entity
      */
     public void delete(Long id) {
