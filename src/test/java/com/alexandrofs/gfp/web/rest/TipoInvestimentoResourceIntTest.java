@@ -12,8 +12,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import org.junit.Before;
@@ -45,6 +43,7 @@ import com.alexandrofs.gfp.repository.TipoInvestimentoRepository;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = GfpApp.class)
+@Transactional
 public class TipoInvestimentoResourceIntTest extends AbstractTest {
 	
     private static final String DEFAULT_NOME = "AAAAAAAAAA";
@@ -52,9 +51,6 @@ public class TipoInvestimentoResourceIntTest extends AbstractTest {
 
     private static final String DEFAULT_DESCRICAO = "AAAAAAAAAA";
     private static final String UPDATED_DESCRICAO = "BBBBBBBBBB";
-
-    private static final String DEFAULT_MODALIDADE = "AAAAAAAAAA";
-    private static final String UPDATED_MODALIDADE = "BBBBBBBBBB";
 
     private static final ModalidadeEnum DEFAULT_MODALIDADE = ModalidadeEnum.CDB;
     private static final ModalidadeEnum UPDATED_MODALIDADE = ModalidadeEnum.LCI;

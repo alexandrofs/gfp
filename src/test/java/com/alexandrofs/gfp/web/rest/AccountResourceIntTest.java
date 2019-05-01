@@ -2,7 +2,6 @@ package com.alexandrofs.gfp.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.anyObject;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -16,7 +15,6 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.junit.Before;
@@ -30,16 +28,15 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.alexandrofs.gfp.GfpApp;
 import com.alexandrofs.gfp.domain.Authority;
 import com.alexandrofs.gfp.domain.User;
 import com.alexandrofs.gfp.repository.AuthorityRepository;
+import com.alexandrofs.gfp.repository.PersistentTokenRepository;
 import com.alexandrofs.gfp.repository.UserRepository;
 import com.alexandrofs.gfp.security.AuthoritiesConstants;
 import com.alexandrofs.gfp.service.MailService;
-import static org.mockito.Matchers.anyString;
 import com.alexandrofs.gfp.service.UserService;
 import com.alexandrofs.gfp.service.dto.UserDTO;
 import com.alexandrofs.gfp.web.rest.vm.ManagedUserVM;

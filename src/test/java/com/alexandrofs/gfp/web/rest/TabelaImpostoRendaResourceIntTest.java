@@ -13,8 +13,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.math.BigDecimal;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import org.junit.Before;
@@ -35,7 +33,6 @@ import com.alexandrofs.gfp.GfpApp;
 import com.alexandrofs.gfp.domain.TabelaImpostoRenda;
 import com.alexandrofs.gfp.domain.TipoImpostoRenda;
 import com.alexandrofs.gfp.repository.TabelaImpostoRendaRepository;
-import static org.hamcrest.Matchers.hasItem;
 
 /**
  * Test class for the TabelaImpostoRendaResource REST controller.
@@ -44,6 +41,7 @@ import static org.hamcrest.Matchers.hasItem;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = GfpApp.class)
+@Transactional
 public class TabelaImpostoRendaResourceIntTest {
 
     private static final Long DEFAULT_NUM_DIAS = 0L;

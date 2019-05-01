@@ -15,8 +15,6 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import org.junit.Before;
@@ -37,7 +35,6 @@ import com.alexandrofs.gfp.GfpApp;
 import com.alexandrofs.gfp.domain.HistoricoCotas;
 import com.alexandrofs.gfp.domain.Investimento;
 import com.alexandrofs.gfp.repository.HistoricoCotasRepository;
-import static org.hamcrest.Matchers.hasItem;
 
 /**
  * Test class for the HistoricoCotasResource REST controller.
@@ -46,6 +43,7 @@ import static org.hamcrest.Matchers.hasItem;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = GfpApp.class)
+@Transactional
 public class HistoricoCotasResourceIntTest {
 
     private static final LocalDate DEFAULT_DATA_COTA = LocalDate.ofEpochDay(0L);

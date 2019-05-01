@@ -40,10 +40,6 @@
                 <constraints nullable="false" />
             </column>
 
-            <column name="pct_pre_pos_fixado" type="decimal(10,2)">
-                <constraints nullable="true" />
-            </column>
-
             <column name="carteira_id" type="bigint">
                 <constraints nullable="false" />
             </column>

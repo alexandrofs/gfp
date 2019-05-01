@@ -12,8 +12,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.List;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 
 import org.junit.Before;
@@ -33,7 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.alexandrofs.gfp.GfpApp;
 import com.alexandrofs.gfp.domain.TipoImpostoRenda;
 import com.alexandrofs.gfp.repository.TipoImpostoRendaRepository;
-import static org.hamcrest.Matchers.hasItem;
 
 /**
  * Test class for the TipoImpostoRendaResource REST controller.

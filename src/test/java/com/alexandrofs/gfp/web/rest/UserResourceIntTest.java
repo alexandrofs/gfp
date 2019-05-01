@@ -1,10 +1,12 @@
 package com.alexandrofs.gfp.web.rest;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import com.alexandrofs.gfp.service.MailService;
+
+import javax.persistence.EntityManager;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
@@ -18,8 +20,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.alexandrofs.gfp.GfpApp;
-import javax.persistence.EntityManager;
+import com.alexandrofs.gfp.domain.User;
 import com.alexandrofs.gfp.repository.UserRepository;
+import com.alexandrofs.gfp.service.MailService;
 import com.alexandrofs.gfp.service.UserService;
 
 /**
