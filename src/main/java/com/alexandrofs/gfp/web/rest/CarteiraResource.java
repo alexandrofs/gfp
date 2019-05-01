@@ -35,7 +35,7 @@ public class CarteiraResource {
         
     @Inject
     private CarteiraRepository carteiraRepository;
-    
+
     /**
      * POST  /carteiras : Create a new carteira.
      *

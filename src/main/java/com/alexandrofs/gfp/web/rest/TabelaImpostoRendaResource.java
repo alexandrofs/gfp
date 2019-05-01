@@ -35,7 +35,7 @@ public class TabelaImpostoRendaResource {
         
     @Inject
     private TabelaImpostoRendaRepository tabelaImpostoRendaRepository;
-    
+
     /**
      * POST  /tabela-imposto-rendas : Create a new tabelaImpostoRenda.
      *

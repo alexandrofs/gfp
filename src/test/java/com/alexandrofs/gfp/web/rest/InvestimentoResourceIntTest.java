@@ -10,35 +10,60 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alexandrofs.gfp.AbstractTest;
+import com.alexandrofs.gfp.GfpApp;
 import com.alexandrofs.gfp.domain.Carteira;
 import com.alexandrofs.gfp.domain.Instituicao;
 import com.alexandrofs.gfp.domain.Investimento;
+import com.alexandrofs.gfp.domain.TipoInvestimento;
+import com.alexandrofs.gfp.repository.InvestimentoRepository;
 import com.alexandrofs.gfp.service.InvestimentoService;
-
 
 /**
  * Test class for the InvestimentoResource REST controller.
  *
  * @see InvestimentoResource
  */
-public class InvestimentoResourceIntTest extends AbstractTest {
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = GfpApp.class)
+public class InvestimentoResourceIntTest {
+
+    private static final LocalDate DEFAULT_DATA_APLICACAO = LocalDate.ofEpochDay(0L);
+    private static final LocalDate UPDATED_DATA_APLICACAO = LocalDate.now(ZoneId.systemDefault());
+
+    private static final BigDecimal DEFAULT_QTDE_COTA = new BigDecimal(0);
+    private static final BigDecimal UPDATED_QTDE_COTA = new BigDecimal(1);
+
+    private static final BigDecimal DEFAULT_VLR_COTA = new BigDecimal(0);
+    private static final BigDecimal UPDATED_VLR_COTA = new BigDecimal(1);
+
+    private static final BigDecimal DEFAULT_PCT_PRE_POS_FIXADO = new BigDecimal(1);
+    private static final BigDecimal UPDATED_PCT_PRE_POS_FIXADO = new BigDecimal(2);
+
+    @Inject
+    private InvestimentoRepository investimentoRepository;
 
     @Inject
     private InvestimentoService investimentoService;
@@ -48,6 +73,9 @@ public class InvestimentoResourceIntTest extends AbstractTest {
 
     @Inject
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+
+    @Inject
+    private EntityManager em;
 
     private MockMvc restInvestimentoMockMvc;
 
@@ -63,23 +91,40 @@ public class InvestimentoResourceIntTest extends AbstractTest {
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
-    @Before
-    public void initTest() {
+    /**
+     * Create an entity for this test.
+     *
+     * This is a static method, as tests for other entities might also need it,
+     * if they test an entity which requires the current entity.
+     */
+    public static Investimento createEntity(EntityManager em) {
+        Investimento investimento = new Investimento();
         investimento = new Investimento();
         investimento.setDataAplicacao(DEFAULT_DATA_APLICACAO);
         investimento.setQtdeCota(DEFAULT_QTDE_COTA);
         investimento.setVlrCota(DEFAULT_VLR_COTA);
         investimento.setPctPrePosFixado(DEFAULT_PCT_PRE_POS_FIXADO);
-        Carteira cart = new Carteira();
-        cart.setNome("AAA");
-        cart.setDescricao("BBB");
-        carteiraRepository.saveAndFlush(cart);
-        investimento.setCarteira(cart);
-        investimento.setTipoInvestimento(dsl.dado().tipoInvestimento().salva());
-        Instituicao instituicao = new Instituicao();
-        instituicao.setNome("CCC");
-        instituicaoRepository.saveAndFlush(instituicao);
+        // Add required entity
+        Carteira carteira = CarteiraResourceIntTest.createEntity(em);
+        em.persist(carteira);
+        em.flush();
+        investimento.setCarteira(carteira);
+        // Add required entity
+        TipoInvestimento tipoInvestimento = TipoInvestimentoResourceIntTest.createEntity(em);
+        em.persist(tipoInvestimento);
+        em.flush();
+        investimento.setTipoInvestimento(tipoInvestimento);
+        // Add required entity
+        Instituicao instituicao = InstituicaoResourceIntTest.createEntity(em);
+        em.persist(instituicao);
+        em.flush();
         investimento.setInstituicao(instituicao);
+        return investimento;
+    }
+
+    @Before
+    public void initTest() {
+        investimento = createEntity(em);
     }
 
     @Test
@@ -167,7 +212,7 @@ public class InvestimentoResourceIntTest extends AbstractTest {
         // Get all the investimentos
         restInvestimentoMockMvc.perform(get("/api/investimentos?sort=id,desc"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(investimento.getId().intValue())))
                 .andExpect(jsonPath("$.[*].dataAplicacao").value(hasItem(DEFAULT_DATA_APLICACAO.toString())))
                 .andExpect(jsonPath("$.[*].qtdeCota").value(hasItem(DEFAULT_QTDE_COTA.intValue())))
@@ -184,7 +229,7 @@ public class InvestimentoResourceIntTest extends AbstractTest {
         // Get the investimento
         restInvestimentoMockMvc.perform(get("/api/investimentos/{id}", investimento.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(investimento.getId().intValue()))
             .andExpect(jsonPath("$.dataAplicacao").value(DEFAULT_DATA_APLICACAO.toString()))
             .andExpect(jsonPath("$.qtdeCota").value(DEFAULT_QTDE_COTA.intValue()))
@@ -209,8 +254,7 @@ public class InvestimentoResourceIntTest extends AbstractTest {
         int databaseSizeBeforeUpdate = investimentoRepository.findAll().size();
 
         // Update the investimento
-        Investimento updatedInvestimento = new Investimento();
-        updatedInvestimento.setId(investimento.getId());
+        Investimento updatedInvestimento = investimentoRepository.findOne(investimento.getId());
         updatedInvestimento.setDataAplicacao(UPDATED_DATA_APLICACAO);
         updatedInvestimento.setQtdeCota(UPDATED_QTDE_COTA);
         updatedInvestimento.setVlrCota(UPDATED_VLR_COTA);

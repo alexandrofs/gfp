@@ -5,16 +5,16 @@ import com.alexandrofs.gfp.domain.User;
 import com.alexandrofs.gfp.repository.AuthorityRepository;
 import com.alexandrofs.gfp.repository.PersistentTokenRepository;
 import com.alexandrofs.gfp.repository.UserRepository;
+import com.alexandrofs.gfp.security.AuthoritiesConstants;
 import com.alexandrofs.gfp.security.SecurityUtils;
 import com.alexandrofs.gfp.service.util.RandomUtil;
-import com.alexandrofs.gfp.web.rest.dto.ManagedUserDTO;
+import com.alexandrofs.gfp.web.rest.vm.ManagedUserVM;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
@@ -30,13 +30,11 @@ public class UserService {
 
     private final Logger log = LoggerFactory.getLogger(UserService.class);
 
-
     @Inject
     private PasswordEncoder passwordEncoder;
 
     @Inject
     private UserRepository userRepository;
-
 
     @Inject
     private PersistentTokenRepository persistentTokenRepository;
@@ -85,11 +83,11 @@ public class UserService {
             });
     }
 
-    public User createUserInformation(String login, String password, String firstName, String lastName, String email,
+    public User createUser(String login, String password, String firstName, String lastName, String email,
         String langKey) {
 
         User newUser = new User();
-        Authority authority = authorityRepository.findOne("ROLE_USER");
+        Authority authority = authorityRepository.findOne(AuthoritiesConstants.USER);
         Set<Authority> authorities = new HashSet<>();
         String encryptedPassword = passwordEncoder.encode(password);
         newUser.setLogin(login);
@@ -110,20 +108,20 @@ public class UserService {
         return newUser;
     }
 
-    public User createUser(ManagedUserDTO managedUserDTO) {
+    public User createUser(ManagedUserVM managedUserVM) {
         User user = new User();
-        user.setLogin(managedUserDTO.getLogin());
-        user.setFirstName(managedUserDTO.getFirstName());
-        user.setLastName(managedUserDTO.getLastName());
-        user.setEmail(managedUserDTO.getEmail());
-        if (managedUserDTO.getLangKey() == null) {
+        user.setLogin(managedUserVM.getLogin());
+        user.setFirstName(managedUserVM.getFirstName());
+        user.setLastName(managedUserVM.getLastName());
+        user.setEmail(managedUserVM.getEmail());
+        if (managedUserVM.getLangKey() == null) {
             user.setLangKey("pt-br"); // default language
         } else {
-            user.setLangKey(managedUserDTO.getLangKey());
+            user.setLangKey(managedUserVM.getLangKey());
         }
-        if (managedUserDTO.getAuthorities() != null) {
+        if (managedUserVM.getAuthorities() != null) {
             Set<Authority> authorities = new HashSet<>();
-            managedUserDTO.getAuthorities().stream().forEach(
+            managedUserVM.getAuthorities().stream().forEach(
                 authority -> authorities.add(authorityRepository.findOne(authority))
             );
             user.setAuthorities(authorities);
@@ -138,7 +136,7 @@ public class UserService {
         return user;
     }
 
-    public void updateUserInformation(String firstName, String lastName, String email, String langKey) {
+    public void updateUser(String firstName, String lastName, String email, String langKey) {
         userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin()).ifPresent(u -> {
             u.setFirstName(firstName);
             u.setLastName(lastName);
@@ -149,7 +147,28 @@ public class UserService {
         });
     }
 
-    public void deleteUserInformation(String login) {
+    public void updateUser(Long id, String login, String firstName, String lastName, String email,
+        boolean activated, String langKey, Set<String> authorities) {
+
+        userRepository
+            .findOneById(id)
+            .ifPresent(u -> {
+                u.setLogin(login);
+                u.setFirstName(firstName);
+                u.setLastName(lastName);
+                u.setEmail(email);
+                u.setActivated(activated);
+                u.setLangKey(langKey);
+                Set<Authority> managedAuthorities = u.getAuthorities();
+                managedAuthorities.clear();
+                authorities.stream().forEach(
+                    authority -> managedAuthorities.add(authorityRepository.findOne(authority))
+                );
+                log.debug("Changed Information for User: {}", u);
+            });
+    }
+
+    public void deleteUser(String login) {
         userRepository.findOneByLogin(login).ifPresent(u -> {
             userRepository.delete(u);
             log.debug("Deleted User: {}", u);

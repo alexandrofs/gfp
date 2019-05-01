@@ -29,7 +29,7 @@ describe('Investimento e2e test', function () {
 
     it('should load create Investimento dialog', function () {
         element(by.css('[ui-sref="investimento.new"]')).click().then(function() {
-            expect(element(by.css('h4.modal-title')).getText()).toMatch(/Create or edit a Investimento/);
+            expect(element(by.css('h4.modal-title')).getAttribute("translate")).toMatch(/gfpApp.investimento.home.createOrEditLabel/);
             element(by.css('button.close')).click();
         });
     });

@@ -10,7 +10,7 @@
         
         <addForeignKeyConstraint baseColumnNames="tipo_imposto_renda_id"
                                  baseTableName="tb_tipo_investimento"
-                                 constraintName="fk_tipoinvestimento_tipoimpostorenda_id"
+                                 constraintName="fk_tipo_investimento_tipo_imposto_renda_id"
                                  referencedColumnNames="id"
                                  referencedTableName="tb_tipo_imposto_renda"/>
 

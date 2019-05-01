@@ -1,6 +1,5 @@
 package com.alexandrofs.gfp.web.rest;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -21,9 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.alexandrofs.gfp.domain.IndiceSerieDi;
 import com.alexandrofs.gfp.service.IndiceSerieDiService;
@@ -42,7 +39,7 @@ public class IndiceSerieDiResource {
         
     @Inject
     private IndiceSerieDiService indiceSerieDiService;
-    
+
     /**
      * POST  /indice-serie-dis : Create a new indiceSerieDi.
      *
@@ -65,21 +62,6 @@ public class IndiceSerieDiResource {
             .body(result);
     }
 
-    @RequestMapping(value = "/indice-serie-dis/import",
-            method = RequestMethod.POST,
-            consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Timed
-    public ResponseEntity<Void> importaIndiceSerieDi(@RequestParam("file") MultipartFile file) throws URISyntaxException, IOException {
-    	log.debug("REST request to import File : {}", file.getOriginalFilename());
-
-    	indiceSerieDiService.importa(file.getInputStream());
-        
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createAlert("Arquivo importado com sucesso", file.getOriginalFilename()))
-            .build();
-    }
-    
-    
     /**
      * PUT  /indice-serie-dis : Updates an existing indiceSerieDi.
      *
@@ -118,7 +100,7 @@ public class IndiceSerieDiResource {
     public ResponseEntity<List<IndiceSerieDi>> getAllIndiceSerieDis(Pageable pageable)
         throws URISyntaxException {
         log.debug("REST request to get a page of IndiceSerieDis");
-        Page<IndiceSerieDi> page = indiceSerieDiService.findAll(pageable); 
+        Page<IndiceSerieDi> page = indiceSerieDiService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/indice-serie-dis");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }

@@ -27,6 +27,7 @@
                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
                     $translatePartialLoader.addPart('indiceSerieDi');
                     $translatePartialLoader.addPart('global');
+                    $translatePartialLoader.addPart('indiceSerieDiImporta');
                     return $translate.refresh();
                 }]
             }
@@ -48,12 +49,46 @@
             resolve: {
                 translatePartialLoader: ['$translate', '$translatePartialLoader', function ($translate, $translatePartialLoader) {
                     $translatePartialLoader.addPart('indiceSerieDi');
+                    $translatePartialLoader.addPart('indiceSerieDi');
                     return $translate.refresh();
                 }],
                 entity: ['$stateParams', 'IndiceSerieDi', function($stateParams, IndiceSerieDi) {
                     return IndiceSerieDi.get({id : $stateParams.id}).$promise;
+                }],
+                previousState: ["$state", function ($state) {
+                    var currentStateData = {
+                        name: $state.current.name || 'indice-serie-di',
+                        params: $state.params,
+                        url: $state.href($state.current.name, $state.params)
+                    };
+                    return currentStateData;
                 }]
             }
+        })
+        .state('indice-serie-di-detail.edit', {
+            parent: 'indice-serie-di-detail',
+            url: '/detail/edit',
+            data: {
+                authorities: ['ROLE_USER']
+            },
+            onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                $uibModal.open({
+                    templateUrl: 'app/entities/indice-serie-di/indice-serie-di-dialog.html',
+                    controller: 'IndiceSerieDiDialogController',
+                    controllerAs: 'vm',
+                    backdrop: 'static',
+                    size: 'lg',
+                    resolve: {
+                        entity: ['IndiceSerieDi', function(IndiceSerieDi) {
+                            return IndiceSerieDi.get({id : $stateParams.id}).$promise;
+                        }]
+                    }
+                }).result.then(function() {
+                    $state.go('^', {}, { reload: false });
+                }, function() {
+                    $state.go('^');
+                });
+            }]
         })
         .state('indice-serie-di.new', {
             parent: 'indice-serie-di',
@@ -80,7 +115,7 @@
                         }
                     }
                 }).result.then(function() {
-                    $state.go('indice-serie-di', null, { reload: true });
+                    $state.go('indice-serie-di', null, { reload: 'indice-serie-di' });
                 }, function() {
                     $state.go('indice-serie-di');
                 });
@@ -105,7 +140,7 @@
                         }]
                     }
                 }).result.then(function() {
-                    $state.go('indice-serie-di', null, { reload: true });
+                    $state.go('indice-serie-di', null, { reload: 'indice-serie-di' });
                 }, function() {
                     $state.go('^');
                 });
@@ -149,7 +184,7 @@
                         }]
                     }
                 }).result.then(function() {
-                    $state.go('indice-serie-di', null, { reload: true });
+                    $state.go('indice-serie-di', null, { reload: 'indice-serie-di' });
                 }, function() {
                     $state.go('^');
                 });

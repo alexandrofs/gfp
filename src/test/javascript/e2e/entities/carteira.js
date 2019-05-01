@@ -29,7 +29,7 @@ describe('Carteira e2e test', function () {
 
     it('should load create Carteira dialog', function () {
         element(by.css('[ui-sref="carteira.new"]')).click().then(function() {
-            expect(element(by.css('h4.modal-title')).getText()).toMatch(/Create or edit a Carteira/);
+            expect(element(by.css('h4.modal-title')).getAttribute("translate")).toMatch(/gfpApp.carteira.home.createOrEditLabel/);
             element(by.css('button.close')).click();
         });
     });

@@ -2,7 +2,7 @@ version: '2'
 services:
     gfp-mysql:
         container_name: gfp-mysql
-        image: mysql:5.7.12
+        image: mysql:5.7.13
         # volumes:
         #     - ~/volumes/jhipster/gfp/mysql/:/var/lib/mysql/
         environment:

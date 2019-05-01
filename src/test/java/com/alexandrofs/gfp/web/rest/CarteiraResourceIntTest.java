@@ -14,30 +14,34 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alexandrofs.gfp.AbstractTest;
+import com.alexandrofs.gfp.GfpApp;
 import com.alexandrofs.gfp.domain.Carteira;
 import com.alexandrofs.gfp.repository.CarteiraRepository;
-
 
 /**
  * Test class for the CarteiraResource REST controller.
  *
  * @see CarteiraResource
  */
-public class CarteiraResourceIntTest extends AbstractTest {
-
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = GfpApp.class)
+public class CarteiraResourceIntTest {
     private static final String DEFAULT_NOME = "AAAAAAAAAAAAAAAAAAAA";
     private static final String UPDATED_NOME = "BBBBBBBBBBBBBBBBBBBB";
     private static final String DEFAULT_DESCRICAO = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
@@ -51,6 +55,9 @@ public class CarteiraResourceIntTest extends AbstractTest {
 
     @Inject
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+
+    @Inject
+    private EntityManager em;
 
     private MockMvc restCarteiraMockMvc;
 
@@ -66,11 +73,23 @@ public class CarteiraResourceIntTest extends AbstractTest {
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
-    @Before
-    public void initTest() {
+    /**
+     * Create an entity for this test.
+     *
+     * This is a static method, as tests for other entities might also need it,
+     * if they test an entity which requires the current entity.
+     */
+    public static Carteira createEntity(EntityManager em) {
+        Carteira carteira = new Carteira();
         carteira = new Carteira();
         carteira.setNome(DEFAULT_NOME);
         carteira.setDescricao(DEFAULT_DESCRICAO);
+        return carteira;
+    }
+
+    @Before
+    public void initTest() {
+        carteira = createEntity(em);
     }
 
     @Test
@@ -138,7 +157,7 @@ public class CarteiraResourceIntTest extends AbstractTest {
         // Get all the carteiras
         restCarteiraMockMvc.perform(get("/api/carteiras?sort=id,desc"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(carteira.getId().intValue())))
                 .andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME.toString())))
                 .andExpect(jsonPath("$.[*].descricao").value(hasItem(DEFAULT_DESCRICAO.toString())));
@@ -153,7 +172,7 @@ public class CarteiraResourceIntTest extends AbstractTest {
         // Get the carteira
         restCarteiraMockMvc.perform(get("/api/carteiras/{id}", carteira.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(carteira.getId().intValue()))
             .andExpect(jsonPath("$.nome").value(DEFAULT_NOME.toString()))
             .andExpect(jsonPath("$.descricao").value(DEFAULT_DESCRICAO.toString()));
@@ -175,8 +194,7 @@ public class CarteiraResourceIntTest extends AbstractTest {
         int databaseSizeBeforeUpdate = carteiraRepository.findAll().size();
 
         // Update the carteira
-        Carteira updatedCarteira = new Carteira();
-        updatedCarteira.setId(carteira.getId());
+        Carteira updatedCarteira = carteiraRepository.findOne(carteira.getId());
         updatedCarteira.setNome(UPDATED_NOME);
         updatedCarteira.setDescricao(UPDATED_DESCRICAO);
 

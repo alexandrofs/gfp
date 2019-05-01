@@ -1,0 +1,12 @@
+{
+    "gfpApp": {
+        "indiceSerieDi" : {
+            "home": {
+                "importLabel": "Importação de arquivos",
+                "search": "Pesquisar por Indice Serie Di",
+                "import": "Importar séries"
+            },
+            "importar": "Importar"
+        }
+    }
+}

@@ -37,7 +37,7 @@ public class TipoInvestimentoResource {
         
     @Inject
     private TipoInvestimentoRepository tipoInvestimentoRepository;
-    
+
     /**
      * POST  /tipo-investimentos : Create a new tipoInvestimento.
      *

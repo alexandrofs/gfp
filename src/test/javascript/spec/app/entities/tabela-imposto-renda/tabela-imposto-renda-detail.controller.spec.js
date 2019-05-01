@@ -4,13 +4,14 @@ describe('Controller Tests', function() {
 
     describe('TabelaImpostoRenda Management Detail Controller', function() {
         var $scope, $rootScope;
-        var MockEntity, MockTabelaImpostoRenda, MockTipoImpostoRenda;
+        var MockEntity, MockPreviousState, MockTabelaImpostoRenda, MockTipoImpostoRenda;
         var createController;
 
         beforeEach(inject(function($injector) {
             $rootScope = $injector.get('$rootScope');
             $scope = $rootScope.$new();
             MockEntity = jasmine.createSpy('MockEntity');
+            MockPreviousState = jasmine.createSpy('MockPreviousState');
             MockTabelaImpostoRenda = jasmine.createSpy('MockTabelaImpostoRenda');
             MockTipoImpostoRenda = jasmine.createSpy('MockTipoImpostoRenda');
             
@@ -18,7 +19,8 @@ describe('Controller Tests', function() {
             var locals = {
                 '$scope': $scope,
                 '$rootScope': $rootScope,
-                'entity': MockEntity ,
+                'entity': MockEntity,
+                'previousState': MockPreviousState,
                 'TabelaImpostoRenda': MockTabelaImpostoRenda,
                 'TipoImpostoRenda': MockTipoImpostoRenda
             };

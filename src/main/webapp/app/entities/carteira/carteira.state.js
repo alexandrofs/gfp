@@ -52,8 +52,41 @@
                 }],
                 entity: ['$stateParams', 'Carteira', function($stateParams, Carteira) {
                     return Carteira.get({id : $stateParams.id}).$promise;
+                }],
+                previousState: ["$state", function ($state) {
+                    var currentStateData = {
+                        name: $state.current.name || 'carteira',
+                        params: $state.params,
+                        url: $state.href($state.current.name, $state.params)
+                    };
+                    return currentStateData;
                 }]
             }
+        })
+        .state('carteira-detail.edit', {
+            parent: 'carteira-detail',
+            url: '/detail/edit',
+            data: {
+                authorities: ['ROLE_USER']
+            },
+            onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                $uibModal.open({
+                    templateUrl: 'app/entities/carteira/carteira-dialog.html',
+                    controller: 'CarteiraDialogController',
+                    controllerAs: 'vm',
+                    backdrop: 'static',
+                    size: 'lg',
+                    resolve: {
+                        entity: ['Carteira', function(Carteira) {
+                            return Carteira.get({id : $stateParams.id}).$promise;
+                        }]
+                    }
+                }).result.then(function() {
+                    $state.go('^', {}, { reload: false });
+                }, function() {
+                    $state.go('^');
+                });
+            }]
         })
         .state('carteira.new', {
             parent: 'carteira',
@@ -78,7 +111,7 @@
                         }
                     }
                 }).result.then(function() {
-                    $state.go('carteira', null, { reload: true });
+                    $state.go('carteira', null, { reload: 'carteira' });
                 }, function() {
                     $state.go('carteira');
                 });
@@ -103,7 +136,7 @@
                         }]
                     }
                 }).result.then(function() {
-                    $state.go('carteira', null, { reload: true });
+                    $state.go('carteira', null, { reload: 'carteira' });
                 }, function() {
                     $state.go('^');
                 });
@@ -127,7 +160,7 @@
                         }]
                     }
                 }).result.then(function() {
-                    $state.go('carteira', null, { reload: true });
+                    $state.go('carteira', null, { reload: 'carteira' });
                 }, function() {
                     $state.go('^');
                 });

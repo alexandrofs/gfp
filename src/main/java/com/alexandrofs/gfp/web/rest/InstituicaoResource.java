@@ -2,6 +2,7 @@ package com.alexandrofs.gfp.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.alexandrofs.gfp.domain.Instituicao;
+
 import com.alexandrofs.gfp.repository.InstituicaoRepository;
 import com.alexandrofs.gfp.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
@@ -29,7 +30,7 @@ public class InstituicaoResource {
         
     @Inject
     private InstituicaoRepository instituicaoRepository;
-    
+
     /**
      * POST  /instituicaos : Create a new instituicao.
      *

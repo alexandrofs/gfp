@@ -5,12 +5,13 @@
         .module('gfpApp')
         .controller('CarteiraDetailController', CarteiraDetailController);
 
-    CarteiraDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'entity', 'Carteira', 'Investimento'];
+    CarteiraDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'Carteira', 'Investimento'];
 
-    function CarteiraDetailController($scope, $rootScope, $stateParams, entity, Carteira, Investimento) {
+    function CarteiraDetailController($scope, $rootScope, $stateParams, previousState, entity, Carteira, Investimento) {
         var vm = this;
 
         vm.carteira = entity;
+        vm.previousState = previousState.name;
 
         var unsubscribe = $rootScope.$on('gfpApp:carteiraUpdate', function(event, result) {
             vm.carteira = result;

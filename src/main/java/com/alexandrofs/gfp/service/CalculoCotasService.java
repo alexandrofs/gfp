@@ -14,7 +14,7 @@ import com.alexandrofs.gfp.domain.HistoricoCotas;
 import com.alexandrofs.gfp.domain.IndiceSerieDi;
 import com.alexandrofs.gfp.domain.Investimento;
 import com.alexandrofs.gfp.repository.HistoricoCotasRepository;
-import com.alexandrofs.gfp.repository.IndiceSerieDiRepository;
+import com.alexandrofs.gfp.repository.ImportaIndiceSerieDiRepository;
 
 
 @Service
@@ -27,7 +27,7 @@ public class CalculoCotasService {
 	private HistoricoCotasRepository cotasRepository;
 	
 	@Autowired
-	private IndiceSerieDiRepository serieDiRepository;
+	private ImportaIndiceSerieDiRepository serieDiRepository;
 	
 	@Autowired
 	private InvestimentoService investimentoService;
@@ -71,4 +71,13 @@ public class CalculoCotasService {
 			
 	}
 	
+	public Investimento calculaSaldoBruto(final Investimento i) {
+		Optional<HistoricoCotas> cotaDesc = cotasRepository.findFirstByInvestimentoOrderByDataCotaDesc(i);
+		if (cotaDesc.isPresent()) {
+			i.setVlrSaldoBruto(cotaDesc.get().getVlrCota().multiply(i.getQtdeCota()));
+		} else {
+			i.setVlrSaldoBruto(i.getVlrCota().multiply(i.getQtdeCota()));
+		}
+		return i;
+	}
 }

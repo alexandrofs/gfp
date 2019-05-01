@@ -52,8 +52,41 @@
                 }],
                 entity: ['$stateParams', 'TipoImpostoRenda', function($stateParams, TipoImpostoRenda) {
                     return TipoImpostoRenda.get({id : $stateParams.id}).$promise;
+                }],
+                previousState: ["$state", function ($state) {
+                    var currentStateData = {
+                        name: $state.current.name || 'tipo-imposto-renda',
+                        params: $state.params,
+                        url: $state.href($state.current.name, $state.params)
+                    };
+                    return currentStateData;
                 }]
             }
+        })
+        .state('tipo-imposto-renda-detail.edit', {
+            parent: 'tipo-imposto-renda-detail',
+            url: '/detail/edit',
+            data: {
+                authorities: ['ROLE_USER']
+            },
+            onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                $uibModal.open({
+                    templateUrl: 'app/entities/tipo-imposto-renda/tipo-imposto-renda-dialog.html',
+                    controller: 'TipoImpostoRendaDialogController',
+                    controllerAs: 'vm',
+                    backdrop: 'static',
+                    size: 'lg',
+                    resolve: {
+                        entity: ['TipoImpostoRenda', function(TipoImpostoRenda) {
+                            return TipoImpostoRenda.get({id : $stateParams.id}).$promise;
+                        }]
+                    }
+                }).result.then(function() {
+                    $state.go('^', {}, { reload: false });
+                }, function() {
+                    $state.go('^');
+                });
+            }]
         })
         .state('tipo-imposto-renda.new', {
             parent: 'tipo-imposto-renda',
@@ -78,7 +111,7 @@
                         }
                     }
                 }).result.then(function() {
-                    $state.go('tipo-imposto-renda', null, { reload: true });
+                    $state.go('tipo-imposto-renda', null, { reload: 'tipo-imposto-renda' });
                 }, function() {
                     $state.go('tipo-imposto-renda');
                 });
@@ -103,7 +136,7 @@
                         }]
                     }
                 }).result.then(function() {
-                    $state.go('tipo-imposto-renda', null, { reload: true });
+                    $state.go('tipo-imposto-renda', null, { reload: 'tipo-imposto-renda' });
                 }, function() {
                     $state.go('^');
                 });
@@ -127,7 +160,7 @@
                         }]
                     }
                 }).result.then(function() {
-                    $state.go('tipo-imposto-renda', null, { reload: true });
+                    $state.go('tipo-imposto-renda', null, { reload: 'tipo-imposto-renda' });
                 }, function() {
                     $state.go('^');
                 });

@@ -1,35 +1,34 @@
 package com.alexandrofs.gfp.web.rest;
 
-import com.alexandrofs.gfp.AbstractTest;
-import com.alexandrofs.gfp.GfpApp;
-import com.alexandrofs.gfp.domain.User;
-import com.alexandrofs.gfp.repository.UserRepository;
-import com.alexandrofs.gfp.service.UserService;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import javax.inject.Inject;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import javax.inject.Inject;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.alexandrofs.gfp.GfpApp;
+import com.alexandrofs.gfp.repository.UserRepository;
+import com.alexandrofs.gfp.service.UserService;
 
 /**
  * Test class for the UserResource REST controller.
  *
  * @see UserResource
  */
-public class UserResourceIntTest extends AbstractTest {
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = GfpApp.class)
+public class UserResourceIntTest {
 
     @Inject
     private UserRepository userRepository;
@@ -52,7 +51,7 @@ public class UserResourceIntTest extends AbstractTest {
         restUserMockMvc.perform(get("/api/users/admin")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json"))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.lastName").value("Administrator"));
     }
 

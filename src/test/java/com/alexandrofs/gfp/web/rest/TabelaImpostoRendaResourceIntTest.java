@@ -15,36 +15,35 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alexandrofs.gfp.AbstractTest;
 import com.alexandrofs.gfp.GfpApp;
 import com.alexandrofs.gfp.domain.TabelaImpostoRenda;
+import com.alexandrofs.gfp.domain.TipoImpostoRenda;
 import com.alexandrofs.gfp.repository.TabelaImpostoRendaRepository;
-
 
 /**
  * Test class for the TabelaImpostoRendaResource REST controller.
  *
  * @see TabelaImpostoRendaResource
  */
-public class TabelaImpostoRendaResourceIntTest extends AbstractTest {
-
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = GfpApp.class)
+public class TabelaImpostoRendaResourceIntTest {
 
     private static final Long DEFAULT_NUM_DIAS = 0L;
     private static final Long UPDATED_NUM_DIAS = 1L;
@@ -61,6 +60,9 @@ public class TabelaImpostoRendaResourceIntTest extends AbstractTest {
     @Inject
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
+    @Inject
+    private EntityManager em;
+
     private MockMvc restTabelaImpostoRendaMockMvc;
 
     private TabelaImpostoRenda tabelaImpostoRenda;
@@ -75,12 +77,28 @@ public class TabelaImpostoRendaResourceIntTest extends AbstractTest {
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
-    @Before
-    public void initTest() {
+    /**
+     * Create an entity for this test.
+     *
+     * This is a static method, as tests for other entities might also need it,
+     * if they test an entity which requires the current entity.
+     */
+    public static TabelaImpostoRenda createEntity(EntityManager em) {
+        TabelaImpostoRenda tabelaImpostoRenda = new TabelaImpostoRenda();
         tabelaImpostoRenda = new TabelaImpostoRenda();
         tabelaImpostoRenda.setNumDias(DEFAULT_NUM_DIAS);
         tabelaImpostoRenda.setPctAliquota(DEFAULT_PCT_ALIQUOTA);
-        tabelaImpostoRenda.setTipoImpostoRenda(dsl.dado().tipoImpostoRenda().salva());
+        // Add required entity
+        TipoImpostoRenda tipoImpostoRenda = TipoImpostoRendaResourceIntTest.createEntity(em);
+        em.persist(tipoImpostoRenda);
+        em.flush();
+        tabelaImpostoRenda.setTipoImpostoRenda(tipoImpostoRenda);
+        return tabelaImpostoRenda;
+    }
+
+    @Before
+    public void initTest() {
+        tabelaImpostoRenda = createEntity(em);
     }
 
     @Test
@@ -148,7 +166,7 @@ public class TabelaImpostoRendaResourceIntTest extends AbstractTest {
         // Get all the tabelaImpostoRendas
         restTabelaImpostoRendaMockMvc.perform(get("/api/tabela-imposto-rendas?sort=id,desc"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(tabelaImpostoRenda.getId().intValue())))
                 .andExpect(jsonPath("$.[*].numDias").value(hasItem(DEFAULT_NUM_DIAS.intValue())))
                 .andExpect(jsonPath("$.[*].pctAliquota").value(hasItem(DEFAULT_PCT_ALIQUOTA.intValue())));
@@ -163,7 +181,7 @@ public class TabelaImpostoRendaResourceIntTest extends AbstractTest {
         // Get the tabelaImpostoRenda
         restTabelaImpostoRendaMockMvc.perform(get("/api/tabela-imposto-rendas/{id}", tabelaImpostoRenda.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(tabelaImpostoRenda.getId().intValue()))
             .andExpect(jsonPath("$.numDias").value(DEFAULT_NUM_DIAS.intValue()))
             .andExpect(jsonPath("$.pctAliquota").value(DEFAULT_PCT_ALIQUOTA.intValue()));
@@ -185,8 +203,7 @@ public class TabelaImpostoRendaResourceIntTest extends AbstractTest {
         int databaseSizeBeforeUpdate = tabelaImpostoRendaRepository.findAll().size();
 
         // Update the tabelaImpostoRenda
-        TabelaImpostoRenda updatedTabelaImpostoRenda = new TabelaImpostoRenda();
-        updatedTabelaImpostoRenda.setId(tabelaImpostoRenda.getId());
+        TabelaImpostoRenda updatedTabelaImpostoRenda = tabelaImpostoRendaRepository.findOne(tabelaImpostoRenda.getId());
         updatedTabelaImpostoRenda.setNumDias(UPDATED_NUM_DIAS);
         updatedTabelaImpostoRenda.setPctAliquota(UPDATED_PCT_ALIQUOTA);
         updatedTabelaImpostoRenda.setTipoImpostoRenda(tabelaImpostoRenda.getTipoImpostoRenda());

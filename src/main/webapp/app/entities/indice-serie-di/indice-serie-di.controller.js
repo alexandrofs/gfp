@@ -14,6 +14,9 @@
         vm.loadPage = loadPage;
         vm.page = 0;
         vm.predicate = 'data';
+        vm.links = {
+            last: 0
+        };
         vm.reset = reset;
         vm.reverse = true;
 
@@ -32,6 +35,7 @@
                 }
                 return result;
             }
+
             function onSuccess(data, headers) {
                 vm.links = ParseLinks.parse(headers('link'));
                 vm.totalItems = headers('X-Total-Count');
@@ -39,6 +43,7 @@
                     vm.indiceSerieDis.push(data[i]);
                 }
             }
+
             function onError(error) {
                 AlertService.error(error.data.message);
             }
