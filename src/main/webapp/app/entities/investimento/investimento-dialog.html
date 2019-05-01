@@ -4,17 +4,17 @@
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
                 ng-click="vm.clear()">&times;</button>
-        <h4 class="modal-title" id="myInvestimentoLabel" translate="gfpApp.investimento.home.createOrEditLabel">Create or edit a Investimento</h4>
+        <h4 class="modal-title" id="myInvestimentoLabel" data-translate="gfpApp.investimento.home.createOrEditLabel">Create or edit a Investimento</h4>
     </div>
     <div class="modal-body">
         <jhi-alert-error></jhi-alert-error>
         <div class="form-group" ng-show="vm.investimento.id">
-            <label for="id" translate="global.field.id">ID</label>
+            <label for="id" data-translate="global.field.id">ID</label>
             <input type="text" class="form-control" id="id" name="id"
                     ng-model="vm.investimento.id" readonly />
         </div>
         <div class="form-group">
-            <label class="control-label" translate="gfpApp.investimento.dataAplicacao" for="field_dataAplicacao">Data Aplicacao</label>
+            <label class="control-label" data-translate="gfpApp.investimento.dataAplicacao" for="field_dataAplicacao">Data Aplicacao</label>
                 <div class="input-group">
                     <input id="field_dataAplicacao" type="text" class="form-control" name="dataAplicacao" uib-datepicker-popup="{{dateformat}}" ng-model="vm.investimento.dataAplicacao" is-open="vm.datePickerOpenStatus.dataAplicacao"
                     required/>
@@ -24,101 +24,101 @@
                 </div>
             <div ng-show="editForm.dataAplicacao.$invalid">
                 <p class="help-block"
-                    ng-show="editForm.dataAplicacao.$error.required" translate="entity.validation.required">
+                    ng-show="editForm.dataAplicacao.$error.required" data-translate="entity.validation.required">
                     This field is required.
                 </p>
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label" translate="gfpApp.investimento.qtdeCota" for="field_qtdeCota">Qtde Cota</label>
+            <label class="control-label" data-translate="gfpApp.investimento.qtdeCota" for="field_qtdeCota">Qtde Cota</label>
             <input type="number" class="form-control" name="qtdeCota" id="field_qtdeCota"
                     ng-model="vm.investimento.qtdeCota"
-                    required min="0" />
+                    required min="0"/>
             <div ng-show="editForm.qtdeCota.$invalid">
                 <p class="help-block"
-                    ng-show="editForm.qtdeCota.$error.required" translate="entity.validation.required">
+                    ng-show="editForm.qtdeCota.$error.required" data-translate="entity.validation.required">
                     This field is required.
                 </p>
                 <p class="help-block"
-                    ng-show="editForm.qtdeCota.$error.min" translate="entity.validation.min" translate-value-min="0">
-                    This field should be more than 0.
+                    ng-show="editForm.qtdeCota.$error.min" data-translate="entity.validation.min" translate-value-min="0">
+                    This field should be at least 0.
                 </p>
                 <p class="help-block"
-                    ng-show="editForm.qtdeCota.$error.number" translate="entity.validation.number">
+                    ng-show="editForm.qtdeCota.$error.number" data-translate="entity.validation.number">
                     This field should be a number.
                 </p>
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label" translate="gfpApp.investimento.vlrCota" for="field_vlrCota">Vlr Cota</label>
+            <label class="control-label" data-translate="gfpApp.investimento.vlrCota" for="field_vlrCota">Vlr Cota</label>
             <input type="number" class="form-control" name="vlrCota" id="field_vlrCota"
                     ng-model="vm.investimento.vlrCota"
-                    required min="0" />
+                    required min="0"/>
             <div ng-show="editForm.vlrCota.$invalid">
                 <p class="help-block"
-                    ng-show="editForm.vlrCota.$error.required" translate="entity.validation.required">
+                    ng-show="editForm.vlrCota.$error.required" data-translate="entity.validation.required">
                     This field is required.
                 </p>
                 <p class="help-block"
-                    ng-show="editForm.vlrCota.$error.min" translate="entity.validation.min" translate-value-min="0">
-                    This field should be more than 0.
+                    ng-show="editForm.vlrCota.$error.min" data-translate="entity.validation.min" translate-value-min="0">
+                    This field should be at least 0.
                 </p>
                 <p class="help-block"
-                    ng-show="editForm.vlrCota.$error.number" translate="entity.validation.number">
+                    ng-show="editForm.vlrCota.$error.number" data-translate="entity.validation.number">
                     This field should be a number.
                 </p>
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label" translate="gfpApp.investimento.pctPrePosFixado" for="field_pctPrePosFixado">Pct Pre Pos Fixado</label>
+            <label class="control-label" data-translate="gfpApp.investimento.pctPrePosFixado" for="field_pctPrePosFixado">Pct Pre Pos Fixado</label>
             <input type="number" class="form-control" name="pctPrePosFixado" id="field_pctPrePosFixado"
                     ng-model="vm.investimento.pctPrePosFixado"
-                     />
+                    />
         </div>
 
         <div class="form-group">
-            <label translate="gfpApp.investimento.carteira" for="field_carteira">Carteira</label>
+            <label data-translate="gfpApp.investimento.carteira" for="field_carteira">Carteira</label>
             <select class="form-control" id="field_carteira" name="carteira" ng-model="vm.investimento.carteira" ng-options="carteira as carteira.id for carteira in vm.carteiras track by carteira.id" required>
                 <option value=""></option>
             </select>
         </div>
         <div ng-show="editForm.carteira.$invalid">
             <p class="help-block"
-                ng-show="editForm.carteira.$error.required" translate="entity.validation.required">
+                ng-show="editForm.carteira.$error.required" data-translate="entity.validation.required">
                 This field is required.
             </p>
         </div>
         <div class="form-group">
-            <label translate="gfpApp.investimento.tipoInvestimento" for="field_tipoInvestimento">Tipo Investimento</label>
+            <label data-translate="gfpApp.investimento.tipoInvestimento" for="field_tipoInvestimento">Tipo Investimento</label>
             <select class="form-control" id="field_tipoInvestimento" name="tipoInvestimento" ng-model="vm.investimento.tipoInvestimento" ng-options="tipoInvestimento as tipoInvestimento.id for tipoInvestimento in vm.tipoinvestimentos track by tipoInvestimento.id" required>
                 <option value=""></option>
             </select>
         </div>
         <div ng-show="editForm.tipoInvestimento.$invalid">
             <p class="help-block"
-                ng-show="editForm.tipoInvestimento.$error.required" translate="entity.validation.required">
+                ng-show="editForm.tipoInvestimento.$error.required" data-translate="entity.validation.required">
                 This field is required.
             </p>
         </div>
         <div class="form-group">
-            <label translate="gfpApp.investimento.instituicao" for="field_instituicao">Instituicao</label>
+            <label data-translate="gfpApp.investimento.instituicao" for="field_instituicao">Instituicao</label>
             <select class="form-control" id="field_instituicao" name="instituicao" ng-model="vm.investimento.instituicao" ng-options="instituicao as instituicao.nome for instituicao in vm.instituicaos track by instituicao.id" required>
                 <option value=""></option>
             </select>
         </div>
         <div ng-show="editForm.instituicao.$invalid">
             <p class="help-block"
-                ng-show="editForm.instituicao.$error.required" translate="entity.validation.required">
+                ng-show="editForm.instituicao.$error.required" data-translate="entity.validation.required">
                 This field is required.
             </p>
         </div>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">
-            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span translate="entity.action.cancel">Cancel</span>
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span data-translate="entity.action.cancel">Cancel</span>
         </button>
         <button type="submit" ng-disabled="editForm.$invalid || vm.isSaving" class="btn btn-primary">
-            <span class="glyphicon glyphicon-save"></span>&nbsp;<span translate="entity.action.save">Save</span>
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span data-translate="entity.action.save">Save</span>
         </button>
     </div>
 </form>

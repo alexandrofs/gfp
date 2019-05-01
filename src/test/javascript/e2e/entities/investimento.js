@@ -22,14 +22,18 @@ describe('Investimento e2e test', function () {
 
     it('should load Investimentos', function () {
         entityMenu.click();
-        element(by.css('[ui-sref="investimento"]')).click().then(function() {
-            expect(element.all(by.css('h2')).first().getText()).toMatch(/Investimentos/);
+        element.all(by.css('[ui-sref="investimento"]')).first().click().then(function() {
+            element.all(by.css('h2')).first().getAttribute('data-translate').then(function (value) {
+                expect(value).toMatch(/gfpApp.investimento.home.title/);
+            });
         });
     });
 
     it('should load create Investimento dialog', function () {
         element(by.css('[ui-sref="investimento.new"]')).click().then(function() {
-            expect(element(by.css('h4.modal-title')).getAttribute("translate")).toMatch(/gfpApp.investimento.home.createOrEditLabel/);
+            element(by.css('h4.modal-title')).getAttribute('data-translate').then(function (value) {
+                expect(value).toMatch(/gfpApp.investimento.home.createOrEditLabel/);
+            });
             element(by.css('button.close')).click();
         });
     });

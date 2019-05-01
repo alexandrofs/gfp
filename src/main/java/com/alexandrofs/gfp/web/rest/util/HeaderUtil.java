@@ -7,9 +7,14 @@ import org.springframework.http.HttpHeaders;
 /**
  * Utility class for HTTP headers creation.
  */
-public class HeaderUtil {
+public final class HeaderUtil {
 
     private static final Logger log = LoggerFactory.getLogger(HeaderUtil.class);
+
+    private static final String APPLICATION_NAME = "gfpApp";
+
+    private HeaderUtil() {
+    }
 
     public static HttpHeaders createAlert(String message, String param) {
         HttpHeaders headers = new HttpHeaders();
@@ -19,15 +24,15 @@ public class HeaderUtil {
     }
 
     public static HttpHeaders createEntityCreationAlert(String entityName, String param) {
-        return createAlert("gfpApp." + entityName + ".created", param);
+        return createAlert(APPLICATION_NAME + "." + entityName + ".created", param);
     }
 
     public static HttpHeaders createEntityUpdateAlert(String entityName, String param) {
-        return createAlert("gfpApp." + entityName + ".updated", param);
+        return createAlert(APPLICATION_NAME + "." + entityName + ".updated", param);
     }
 
     public static HttpHeaders createEntityDeletionAlert(String entityName, String param) {
-        return createAlert("gfpApp." + entityName + ".deleted", param);
+        return createAlert(APPLICATION_NAME + "." + entityName + ".deleted", param);
     }
 
     public static HttpHeaders createFailureAlert(String entityName, String errorKey, String defaultMessage) {

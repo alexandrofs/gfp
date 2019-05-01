@@ -22,14 +22,18 @@ describe('TabelaImpostoRenda e2e test', function () {
 
     it('should load TabelaImpostoRendas', function () {
         entityMenu.click();
-        element(by.css('[ui-sref="tabela-imposto-renda"]')).click().then(function() {
-            expect(element.all(by.css('h2')).first().getText()).toMatch(/Tabela Imposto Rendas/);
+        element.all(by.css('[ui-sref="tabela-imposto-renda"]')).first().click().then(function() {
+            element.all(by.css('h2')).first().getAttribute('data-translate').then(function (value) {
+                expect(value).toMatch(/gfpApp.tabelaImpostoRenda.home.title/);
+            });
         });
     });
 
     it('should load create TabelaImpostoRenda dialog', function () {
         element(by.css('[ui-sref="tabela-imposto-renda.new"]')).click().then(function() {
-            expect(element(by.css('h4.modal-title')).getAttribute("translate")).toMatch(/gfpApp.tabelaImpostoRenda.home.createOrEditLabel/);
+            element(by.css('h4.modal-title')).getAttribute('data-translate').then(function (value) {
+                expect(value).toMatch(/gfpApp.tabelaImpostoRenda.home.createOrEditLabel/);
+            });
             element(by.css('button.close')).click();
         });
     });

@@ -1,30 +1,29 @@
 package com.alexandrofs.gfp.web.rest;
 
 import com.alexandrofs.gfp.GfpApp;
+
 import com.alexandrofs.gfp.domain.TipoImpostoRenda;
 import com.alexandrofs.gfp.repository.TipoImpostoRendaRepository;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.hamcrest.Matchers.hasItem;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -36,32 +35,33 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = GfpApp.class)
 public class TipoImpostoRendaResourceIntTest {
-    private static final String DEFAULT_CODIGO = "AAAAAAAAAAAAAAAAAAAA";
-    private static final String UPDATED_CODIGO = "BBBBBBBBBBBBBBBBBBBB";
-    private static final String DEFAULT_DESCRICAO = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-    private static final String UPDATED_DESCRICAO = "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB";
 
-    @Inject
+    private static final String DEFAULT_CODIGO = "AAAAAAAAAA";
+    private static final String UPDATED_CODIGO = "BBBBBBBBBB";
+
+    private static final String DEFAULT_DESCRICAO = "AAAAAAAAAA";
+    private static final String UPDATED_DESCRICAO = "BBBBBBBBBB";
+
+    @Autowired
     private TipoImpostoRendaRepository tipoImpostoRendaRepository;
 
-    @Inject
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Inject
+    @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Inject
+    @Autowired
     private EntityManager em;
 
     private MockMvc restTipoImpostoRendaMockMvc;
 
     private TipoImpostoRenda tipoImpostoRenda;
 
-    @PostConstruct
+    @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        TipoImpostoRendaResource tipoImpostoRendaResource = new TipoImpostoRendaResource();
-        ReflectionTestUtils.setField(tipoImpostoRendaResource, "tipoImpostoRendaRepository", tipoImpostoRendaRepository);
+            TipoImpostoRendaResource tipoImpostoRendaResource = new TipoImpostoRendaResource(tipoImpostoRendaRepository);
         this.restTipoImpostoRendaMockMvc = MockMvcBuilders.standaloneSetup(tipoImpostoRendaResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setMessageConverters(jacksonMessageConverter).build();
@@ -75,7 +75,6 @@ public class TipoImpostoRendaResourceIntTest {
      */
     public static TipoImpostoRenda createEntity(EntityManager em) {
         TipoImpostoRenda tipoImpostoRenda = new TipoImpostoRenda();
-        tipoImpostoRenda = new TipoImpostoRenda();
         tipoImpostoRenda.setCodigo(DEFAULT_CODIGO);
         tipoImpostoRenda.setDescricao(DEFAULT_DESCRICAO);
         return tipoImpostoRenda;
@@ -94,16 +93,36 @@ public class TipoImpostoRendaResourceIntTest {
         // Create the TipoImpostoRenda
 
         restTipoImpostoRendaMockMvc.perform(post("/api/tipo-imposto-rendas")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(tipoImpostoRenda)))
-                .andExpect(status().isCreated());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(tipoImpostoRenda)))
+            .andExpect(status().isCreated());
 
         // Validate the TipoImpostoRenda in the database
-        List<TipoImpostoRenda> tipoImpostoRendas = tipoImpostoRendaRepository.findAll();
-        assertThat(tipoImpostoRendas).hasSize(databaseSizeBeforeCreate + 1);
-        TipoImpostoRenda testTipoImpostoRenda = tipoImpostoRendas.get(tipoImpostoRendas.size() - 1);
+        List<TipoImpostoRenda> tipoImpostoRendaList = tipoImpostoRendaRepository.findAll();
+        assertThat(tipoImpostoRendaList).hasSize(databaseSizeBeforeCreate + 1);
+        TipoImpostoRenda testTipoImpostoRenda = tipoImpostoRendaList.get(tipoImpostoRendaList.size() - 1);
         assertThat(testTipoImpostoRenda.getCodigo()).isEqualTo(DEFAULT_CODIGO);
         assertThat(testTipoImpostoRenda.getDescricao()).isEqualTo(DEFAULT_DESCRICAO);
+    }
+
+    @Test
+    @Transactional
+    public void createTipoImpostoRendaWithExistingId() throws Exception {
+        int databaseSizeBeforeCreate = tipoImpostoRendaRepository.findAll().size();
+
+        // Create the TipoImpostoRenda with an existing ID
+        TipoImpostoRenda existingTipoImpostoRenda = new TipoImpostoRenda();
+        existingTipoImpostoRenda.setId(1L);
+
+        // An entity with an existing ID cannot be created, so this API call must fail
+        restTipoImpostoRendaMockMvc.perform(post("/api/tipo-imposto-rendas")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(existingTipoImpostoRenda)))
+            .andExpect(status().isBadRequest());
+
+        // Validate the Alice in the database
+        List<TipoImpostoRenda> tipoImpostoRendaList = tipoImpostoRendaRepository.findAll();
+        assertThat(tipoImpostoRendaList).hasSize(databaseSizeBeforeCreate);
     }
 
     @Test
@@ -116,12 +135,12 @@ public class TipoImpostoRendaResourceIntTest {
         // Create the TipoImpostoRenda, which fails.
 
         restTipoImpostoRendaMockMvc.perform(post("/api/tipo-imposto-rendas")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(tipoImpostoRenda)))
-                .andExpect(status().isBadRequest());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(tipoImpostoRenda)))
+            .andExpect(status().isBadRequest());
 
-        List<TipoImpostoRenda> tipoImpostoRendas = tipoImpostoRendaRepository.findAll();
-        assertThat(tipoImpostoRendas).hasSize(databaseSizeBeforeTest);
+        List<TipoImpostoRenda> tipoImpostoRendaList = tipoImpostoRendaRepository.findAll();
+        assertThat(tipoImpostoRendaList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -134,12 +153,12 @@ public class TipoImpostoRendaResourceIntTest {
         // Create the TipoImpostoRenda, which fails.
 
         restTipoImpostoRendaMockMvc.perform(post("/api/tipo-imposto-rendas")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(tipoImpostoRenda)))
-                .andExpect(status().isBadRequest());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(tipoImpostoRenda)))
+            .andExpect(status().isBadRequest());
 
-        List<TipoImpostoRenda> tipoImpostoRendas = tipoImpostoRendaRepository.findAll();
-        assertThat(tipoImpostoRendas).hasSize(databaseSizeBeforeTest);
+        List<TipoImpostoRenda> tipoImpostoRendaList = tipoImpostoRendaRepository.findAll();
+        assertThat(tipoImpostoRendaList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -148,13 +167,13 @@ public class TipoImpostoRendaResourceIntTest {
         // Initialize the database
         tipoImpostoRendaRepository.saveAndFlush(tipoImpostoRenda);
 
-        // Get all the tipoImpostoRendas
+        // Get all the tipoImpostoRendaList
         restTipoImpostoRendaMockMvc.perform(get("/api/tipo-imposto-rendas?sort=id,desc"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.[*].id").value(hasItem(tipoImpostoRenda.getId().intValue())))
-                .andExpect(jsonPath("$.[*].codigo").value(hasItem(DEFAULT_CODIGO.toString())))
-                .andExpect(jsonPath("$.[*].descricao").value(hasItem(DEFAULT_DESCRICAO.toString())));
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(tipoImpostoRenda.getId().intValue())))
+            .andExpect(jsonPath("$.[*].codigo").value(hasItem(DEFAULT_CODIGO.toString())))
+            .andExpect(jsonPath("$.[*].descricao").value(hasItem(DEFAULT_DESCRICAO.toString())));
     }
 
     @Test
@@ -177,7 +196,7 @@ public class TipoImpostoRendaResourceIntTest {
     public void getNonExistingTipoImpostoRenda() throws Exception {
         // Get the tipoImpostoRenda
         restTipoImpostoRendaMockMvc.perform(get("/api/tipo-imposto-rendas/{id}", Long.MAX_VALUE))
-                .andExpect(status().isNotFound());
+            .andExpect(status().isNotFound());
     }
 
     @Test
@@ -193,16 +212,34 @@ public class TipoImpostoRendaResourceIntTest {
         updatedTipoImpostoRenda.setDescricao(UPDATED_DESCRICAO);
 
         restTipoImpostoRendaMockMvc.perform(put("/api/tipo-imposto-rendas")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(updatedTipoImpostoRenda)))
-                .andExpect(status().isOk());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(updatedTipoImpostoRenda)))
+            .andExpect(status().isOk());
 
         // Validate the TipoImpostoRenda in the database
-        List<TipoImpostoRenda> tipoImpostoRendas = tipoImpostoRendaRepository.findAll();
-        assertThat(tipoImpostoRendas).hasSize(databaseSizeBeforeUpdate);
-        TipoImpostoRenda testTipoImpostoRenda = tipoImpostoRendas.get(tipoImpostoRendas.size() - 1);
+        List<TipoImpostoRenda> tipoImpostoRendaList = tipoImpostoRendaRepository.findAll();
+        assertThat(tipoImpostoRendaList).hasSize(databaseSizeBeforeUpdate);
+        TipoImpostoRenda testTipoImpostoRenda = tipoImpostoRendaList.get(tipoImpostoRendaList.size() - 1);
         assertThat(testTipoImpostoRenda.getCodigo()).isEqualTo(UPDATED_CODIGO);
         assertThat(testTipoImpostoRenda.getDescricao()).isEqualTo(UPDATED_DESCRICAO);
+    }
+
+    @Test
+    @Transactional
+    public void updateNonExistingTipoImpostoRenda() throws Exception {
+        int databaseSizeBeforeUpdate = tipoImpostoRendaRepository.findAll().size();
+
+        // Create the TipoImpostoRenda
+
+        // If the entity doesn't have an ID, it will be created instead of just being updated
+        restTipoImpostoRendaMockMvc.perform(put("/api/tipo-imposto-rendas")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(tipoImpostoRenda)))
+            .andExpect(status().isCreated());
+
+        // Validate the TipoImpostoRenda in the database
+        List<TipoImpostoRenda> tipoImpostoRendaList = tipoImpostoRendaRepository.findAll();
+        assertThat(tipoImpostoRendaList).hasSize(databaseSizeBeforeUpdate + 1);
     }
 
     @Test
@@ -214,11 +251,16 @@ public class TipoImpostoRendaResourceIntTest {
 
         // Get the tipoImpostoRenda
         restTipoImpostoRendaMockMvc.perform(delete("/api/tipo-imposto-rendas/{id}", tipoImpostoRenda.getId())
-                .accept(TestUtil.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk());
+            .accept(TestUtil.APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk());
 
         // Validate the database is empty
-        List<TipoImpostoRenda> tipoImpostoRendas = tipoImpostoRendaRepository.findAll();
-        assertThat(tipoImpostoRendas).hasSize(databaseSizeBeforeDelete - 1);
+        List<TipoImpostoRenda> tipoImpostoRendaList = tipoImpostoRendaRepository.findAll();
+        assertThat(tipoImpostoRendaList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(TipoImpostoRenda.class);
     }
 }

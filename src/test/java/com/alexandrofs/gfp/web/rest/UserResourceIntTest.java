@@ -4,20 +4,22 @@ import com.alexandrofs.gfp.GfpApp;
 import com.alexandrofs.gfp.domain.User;
 import com.alexandrofs.gfp.repository.UserRepository;
 import com.alexandrofs.gfp.service.UserService;
+import com.alexandrofs.gfp.service.MailService;
+
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -30,19 +32,41 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = GfpApp.class)
 public class UserResourceIntTest {
 
-    @Inject
+    @Autowired
     private UserRepository userRepository;
 
-    @Inject
+    @Autowired
+    private MailService mailService;
+
+    @Autowired
     private UserService userService;
 
     private MockMvc restUserMockMvc;
 
+    /**
+     * Create a User.
+     *
+     * This is a static method, as tests for other entities might also need it,
+     * if they test an entity which has a required relationship to the User entity.
+     */
+    public static User createEntity(EntityManager em) {
+        User user = new User();
+        user.setLogin("test");
+        user.setPassword(RandomStringUtils.random(60));
+        user.setActivated(true);
+        user.setEmail("test@test.com");
+        user.setFirstName("test");
+        user.setLastName("test");
+        user.setImageUrl("http://placehold.it/50x50");
+        user.setLangKey("en");
+        em.persist(user);
+        em.flush();
+        return user;
+    }
+
     @Before
     public void setup() {
-        UserResource userResource = new UserResource();
-        ReflectionTestUtils.setField(userResource, "userRepository", userRepository);
-        ReflectionTestUtils.setField(userResource, "userService", userService);
+        UserResource userResource = new UserResource(userRepository, mailService, userService);
         this.restUserMockMvc = MockMvcBuilders.standaloneSetup(userResource).build();
     }
 
@@ -62,4 +86,12 @@ public class UserResourceIntTest {
                 .andExpect(status().isNotFound());
     }
 
+    @Test
+    public void equalsVerifier() throws Exception {
+        User userA = new User();
+        userA.setLogin("AAA");
+        User userB = new User();
+        userB.setLogin("BBB");
+        assertThat(userA).isNotEqualTo(userB);
+    }
 }

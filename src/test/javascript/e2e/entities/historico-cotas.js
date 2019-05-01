@@ -22,14 +22,18 @@ describe('HistoricoCotas e2e test', function () {
 
     it('should load HistoricoCotas', function () {
         entityMenu.click();
-        element(by.css('[ui-sref="historico-cotas"]')).click().then(function() {
-            expect(element.all(by.css('h2')).first().getText()).toMatch(/Historico Cotas/);
+        element.all(by.css('[ui-sref="historico-cotas"]')).first().click().then(function() {
+            element.all(by.css('h2')).first().getAttribute('data-translate').then(function (value) {
+                expect(value).toMatch(/gfpApp.historicoCotas.home.title/);
+            });
         });
     });
 
     it('should load create HistoricoCotas dialog', function () {
         element(by.css('[ui-sref="historico-cotas.new"]')).click().then(function() {
-            expect(element(by.css('h4.modal-title')).getAttribute("translate")).toMatch(/gfpApp.historicoCotas.home.createOrEditLabel/);
+            element(by.css('h4.modal-title')).getAttribute('data-translate').then(function (value) {
+                expect(value).toMatch(/gfpApp.historicoCotas.home.createOrEditLabel/);
+            });
             element(by.css('button.close')).click();
         });
     });

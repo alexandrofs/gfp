@@ -22,14 +22,18 @@ describe('TipoInvestimento e2e test', function () {
 
     it('should load TipoInvestimentos', function () {
         entityMenu.click();
-        element(by.css('[ui-sref="tipo-investimento"]')).click().then(function() {
-            expect(element.all(by.css('h2')).first().getText()).toMatch(/Tipo Investimentos/);
+        element.all(by.css('[ui-sref="tipo-investimento"]')).first().click().then(function() {
+            element.all(by.css('h2')).first().getAttribute('data-translate').then(function (value) {
+                expect(value).toMatch(/gfpApp.tipoInvestimento.home.title/);
+            });
         });
     });
 
     it('should load create TipoInvestimento dialog', function () {
         element(by.css('[ui-sref="tipo-investimento.new"]')).click().then(function() {
-            expect(element(by.css('h4.modal-title')).getAttribute("translate")).toMatch(/gfpApp.tipoInvestimento.home.createOrEditLabel/);
+            element(by.css('h4.modal-title')).getAttribute('data-translate').then(function (value) {
+                expect(value).toMatch(/gfpApp.tipoInvestimento.home.createOrEditLabel/);
+            });
             element(by.css('button.close')).click();
         });
     });

@@ -2,6 +2,9 @@
 # Spring Boot configuration for the "dev" profile.
 #
 # This configuration overrides the application.yml file.
+#
+# More information on profiles: https://jhipster.github.io/profiles/
+# More information on configuration properties: https://jhipster.github.io/common-application-properties/
 # ===================================================================
 
 # ===================================================================
@@ -10,8 +13,10 @@
 # http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 # ===================================================================
 
-
 spring:
+    profiles:
+        active: dev
+        include: swagger
     devtools:
         restart:
             enabled: true
@@ -22,7 +27,6 @@ spring:
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         url: jdbc:mysql://localhost:3306/gfp?useUnicode=true&characterEncoding=utf8&useSSL=false
-        name:
         username: root
         password:
         hikari:
@@ -36,6 +40,7 @@ spring:
         database: MYSQL
         show-sql: true
         properties:
+            hibernate.id.new_generator_mappings: true
             hibernate.cache.use_second_level_cache: false
             hibernate.cache.use_query_cache: false
             hibernate.generate_statistics: true
@@ -48,8 +53,6 @@ spring:
         cache-seconds: 1
     thymeleaf:
         cache: false
-    profiles:
-        include: swagger # automatically set the 'swagger' profile
 
 liquibase:
     contexts: dev
@@ -59,26 +62,28 @@ server:
 
 # ===================================================================
 # JHipster specific properties
+#
+# Full reference is available at: https://jhipster.github.io/common-application-properties/
 # ===================================================================
 
 jhipster:
     security:
-        rememberMe:
+        remember-me:
             # security key (this key should be unique for your application, and kept secret)
             key: fcc6f354cbe3938e3fb3a60fc9a6e1e882763523
     mail: # specific JHipster mail property, for standard properties see MailProperties
         from: gfp@localhost
+        base-url: http://127.0.0.1:8080
     metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
         jmx.enabled: true
-        spark:
-            enabled: false
-            host: localhost
-            port: 9999
-        graphite:
+        graphite: # Use the "graphite" Maven profile to have the Graphite dependencies
             enabled: false
             host: localhost
             port: 2003
             prefix: gfp
+        prometheus: # Use the "prometheus" Maven profile to have the Prometheus dependencies
+            enabled: false
+            endpoint: /prometheusMetrics
         logs: # Reports Dropwizard metrics in the logs
             enabled: false
             reportFrequency: 60 # in seconds
@@ -87,4 +92,15 @@ jhipster:
             enabled: false
             host: localhost
             port: 5000
-            queueSize: 512
+            queue-size: 512
+
+# ===================================================================
+# Application specific properties
+# Add your own application properties here, see the ApplicationProperties class
+# to have type-safe configuration, like in the JHipsterProperties above
+#
+# More documentation is available at:
+# https://jhipster.github.io/common-application-properties/
+# ===================================================================
+
+application:

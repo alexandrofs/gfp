@@ -18,7 +18,7 @@ public class IndiceSerieDi implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
@@ -86,7 +86,7 @@ public class IndiceSerieDi implements Serializable {
             return false;
         }
         IndiceSerieDi indiceSerieDi = (IndiceSerieDi) o;
-        if(indiceSerieDi.id == null || id == null) {
+        if (indiceSerieDi.id == null || id == null) {
             return false;
         }
         return Objects.equals(id, indiceSerieDi.id);

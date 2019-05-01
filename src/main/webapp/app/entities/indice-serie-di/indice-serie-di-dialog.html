@@ -4,17 +4,17 @@
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
                 ng-click="vm.clear()">&times;</button>
-        <h4 class="modal-title" id="myIndiceSerieDiLabel" translate="gfpApp.indiceSerieDi.home.createOrEditLabel">Create or edit a Indice Serie Di</h4>
+        <h4 class="modal-title" id="myIndiceSerieDiLabel" data-translate="gfpApp.indiceSerieDi.home.createOrEditLabel">Create or edit a Indice Serie Di</h4>
     </div>
     <div class="modal-body">
         <jhi-alert-error></jhi-alert-error>
         <div class="form-group" ng-show="vm.indiceSerieDi.id">
-            <label for="id" translate="global.field.id">ID</label>
+            <label for="id" data-translate="global.field.id">ID</label>
             <input type="text" class="form-control" id="id" name="id"
                     ng-model="vm.indiceSerieDi.id" readonly />
         </div>
         <div class="form-group">
-            <label class="control-label" translate="gfpApp.indiceSerieDi.data" for="field_data">Data</label>
+            <label class="control-label" data-translate="gfpApp.indiceSerieDi.data" for="field_data">Data</label>
                 <div class="input-group">
                     <input id="field_data" type="text" class="form-control" name="data" uib-datepicker-popup="{{dateformat}}" ng-model="vm.indiceSerieDi.data" is-open="vm.datePickerOpenStatus.data"
                     required/>
@@ -24,55 +24,55 @@
                 </div>
             <div ng-show="editForm.data.$invalid">
                 <p class="help-block"
-                    ng-show="editForm.data.$error.required" translate="entity.validation.required">
+                    ng-show="editForm.data.$error.required" data-translate="entity.validation.required">
                     This field is required.
                 </p>
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label" translate="gfpApp.indiceSerieDi.taxaMediaAnual" for="field_taxaMediaAnual">Taxa Media Anual</label>
+            <label class="control-label" data-translate="gfpApp.indiceSerieDi.taxaMediaAnual" for="field_taxaMediaAnual">Taxa Media Anual</label>
             <input type="number" class="form-control" name="taxaMediaAnual" id="field_taxaMediaAnual"
                     ng-model="vm.indiceSerieDi.taxaMediaAnual"
-                    required />
+                    required/>
             <div ng-show="editForm.taxaMediaAnual.$invalid">
                 <p class="help-block"
-                    ng-show="editForm.taxaMediaAnual.$error.required" translate="entity.validation.required">
+                    ng-show="editForm.taxaMediaAnual.$error.required" data-translate="entity.validation.required">
                     This field is required.
                 </p>
                 <p class="help-block"
-                    ng-show="editForm.taxaMediaAnual.$error.number" translate="entity.validation.number">
+                    ng-show="editForm.taxaMediaAnual.$error.number" data-translate="entity.validation.number">
                     This field should be a number.
                 </p>
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label" translate="gfpApp.indiceSerieDi.taxaSelic" for="field_taxaSelic">Taxa Selic</label>
+            <label class="control-label" data-translate="gfpApp.indiceSerieDi.taxaSelic" for="field_taxaSelic">Taxa Selic</label>
             <input type="number" class="form-control" name="taxaSelic" id="field_taxaSelic"
                     ng-model="vm.indiceSerieDi.taxaSelic"
-                    required />
+                    required/>
             <div ng-show="editForm.taxaSelic.$invalid">
                 <p class="help-block"
-                    ng-show="editForm.taxaSelic.$error.required" translate="entity.validation.required">
+                    ng-show="editForm.taxaSelic.$error.required" data-translate="entity.validation.required">
                     This field is required.
                 </p>
                 <p class="help-block"
-                    ng-show="editForm.taxaSelic.$error.number" translate="entity.validation.number">
+                    ng-show="editForm.taxaSelic.$error.number" data-translate="entity.validation.number">
                     This field should be a number.
                 </p>
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label" translate="gfpApp.indiceSerieDi.fatorDiario" for="field_fatorDiario">Fator Diario</label>
+            <label class="control-label" data-translate="gfpApp.indiceSerieDi.fatorDiario" for="field_fatorDiario">Fator Diario</label>
             <input type="number" class="form-control" name="fatorDiario" id="field_fatorDiario"
                     ng-model="vm.indiceSerieDi.fatorDiario"
-                    required />
+                    required/>
             <div ng-show="editForm.fatorDiario.$invalid">
                 <p class="help-block"
-                    ng-show="editForm.fatorDiario.$error.required" translate="entity.validation.required">
+                    ng-show="editForm.fatorDiario.$error.required" data-translate="entity.validation.required">
                     This field is required.
                 </p>
                 <p class="help-block"
-                    ng-show="editForm.fatorDiario.$error.number" translate="entity.validation.number">
+                    ng-show="editForm.fatorDiario.$error.number" data-translate="entity.validation.number">
                     This field should be a number.
                 </p>
             </div>
@@ -81,10 +81,10 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">
-            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span translate="entity.action.cancel">Cancel</span>
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span data-translate="entity.action.cancel">Cancel</span>
         </button>
         <button type="submit" ng-disabled="editForm.$invalid || vm.isSaving" class="btn btn-primary">
-            <span class="glyphicon glyphicon-save"></span>&nbsp;<span translate="entity.action.save">Save</span>
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span data-translate="entity.action.save">Save</span>
         </button>
     </div>
 </form>

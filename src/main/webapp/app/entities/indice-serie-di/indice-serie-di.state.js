@@ -32,7 +32,7 @@
             }
         })
         .state('indice-serie-di-detail', {
-            parent: 'entity',
+            parent: 'indice-serie-di',
             url: '/indice-serie-di/{id}',
             data: {
                 authorities: ['ROLE_USER'],

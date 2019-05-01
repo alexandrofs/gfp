@@ -9,7 +9,7 @@
 
     function HistoricoCotasController ($scope, $state, HistoricoCotas) {
         var vm = this;
-        
+
         vm.historicoCotas = [];
 
         loadAll();
@@ -17,6 +17,7 @@
         function loadAll() {
             HistoricoCotas.query(function(result) {
                 vm.historicoCotas = result;
+                vm.searchQuery = null;
             });
         }
     }

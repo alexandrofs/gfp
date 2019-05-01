@@ -32,7 +32,7 @@
             }
         })
         .state('tabela-imposto-renda-detail', {
-            parent: 'entity',
+            parent: 'tabela-imposto-renda',
             url: '/tabela-imposto-renda/{id}',
             data: {
                 authorities: ['ROLE_USER'],

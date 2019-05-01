@@ -9,7 +9,7 @@
 
     function TipoInvestimentoController ($scope, $state, TipoInvestimento) {
         var vm = this;
-        
+
         vm.tipoInvestimentos = [];
 
         loadAll();
@@ -17,6 +17,7 @@
         function loadAll() {
             TipoInvestimento.query(function(result) {
                 vm.tipoInvestimentos = result;
+                vm.searchQuery = null;
             });
         }
     }

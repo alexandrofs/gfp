@@ -16,7 +16,7 @@ public class TipoInvestimento implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
@@ -44,7 +44,7 @@ public class TipoInvestimento implements Serializable {
     @Column(name = "indice", length = 10, nullable = false)
     private String indice;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @NotNull
     private TipoImpostoRenda tipoImpostoRenda;
 
@@ -113,7 +113,7 @@ public class TipoInvestimento implements Serializable {
             return false;
         }
         TipoInvestimento tipoInvestimento = (TipoInvestimento) o;
-        if(tipoInvestimento.id == null || id == null) {
+        if (tipoInvestimento.id == null || id == null) {
             return false;
         }
         return Objects.equals(id, tipoInvestimento.id);

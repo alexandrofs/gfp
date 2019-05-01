@@ -1,17 +1,17 @@
 package com.alexandrofs.gfp.config;
 
+import io.github.jhipster.config.JHipsterConstants;
+import io.github.jhipster.config.JHipsterProperties;
+import io.github.jhipster.web.filter.CachingHttpHeadersFilter;
+
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.servlet.InstrumentedFilter;
 import com.codahale.metrics.servlets.MetricsServlet;
-import com.alexandrofs.gfp.web.filter.CachingHttpHeadersFilter;
 
-import org.apache.catalina.webresources.StandardRoot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.embedded.*;
-import org.springframework.boot.context.embedded.tomcat.*;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,7 +23,6 @@ import org.springframework.web.filter.CorsFilter;
 import java.io.File;
 import java.nio.file.Paths;
 import java.util.*;
-import javax.inject.Inject;
 import javax.servlet.*;
 
 /**
@@ -34,30 +33,33 @@ public class WebConfigurer implements ServletContextInitializer, EmbeddedServlet
 
     private final Logger log = LoggerFactory.getLogger(WebConfigurer.class);
 
-    @Inject
-    private Environment env;
+    private final Environment env;
 
-    @Inject
-    private JHipsterProperties jHipsterProperties;
+    private final JHipsterProperties jHipsterProperties;
 
-    @Autowired(required = false)
     private MetricRegistry metricRegistry;
+
+    public WebConfigurer(Environment env, JHipsterProperties jHipsterProperties) {
+
+        this.env = env;
+        this.jHipsterProperties = jHipsterProperties;
+    }
 
     @Override
     public void onStartup(ServletContext servletContext) throws ServletException {
         if (env.getActiveProfiles().length != 0) {
-            log.info("Web application configuration, using profiles: {}", Arrays.toString(env.getActiveProfiles()));
+            log.info("Web application configuration, using profiles: {}", (Object[]) env.getActiveProfiles());
         }
         EnumSet<DispatcherType> disps = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.ASYNC);
         initMetrics(servletContext, disps);
-        if (env.acceptsProfiles(Constants.SPRING_PROFILE_PRODUCTION)) {
+        if (env.acceptsProfiles(JHipsterConstants.SPRING_PROFILE_PRODUCTION)) {
             initCachingHttpHeadersFilter(servletContext, disps);
         }
         log.info("Web application fully configured");
     }
 
     /**
-     * Customize the Tomcat engine: Mime types, the document root, the cache.
+     * Customize the Servlet engine: Mime types, the document root, the cache.
      */
     @Override
     public void customize(ConfigurableEmbeddedServletContainer container) {
@@ -67,31 +69,14 @@ public class WebConfigurer implements ServletContextInitializer, EmbeddedServlet
         // CloudFoundry issue, see https://github.com/cloudfoundry/gorouter/issues/64
         mappings.add("json", "text/html;charset=utf-8");
         container.setMimeMappings(mappings);
-        customizeTomcat(container);
         // When running in an IDE or with ./mvnw spring-boot:run, set location of the static web assets.
         setLocationForStaticAssets(container);
-    }
-
-    /**
-     * Customize Tomcat configuration.
-     */
-    private void customizeTomcat(ConfigurableEmbeddedServletContainer container) {
-        if (container instanceof TomcatEmbeddedServletContainerFactory) {
-            TomcatEmbeddedServletContainerFactory tomcatFactory = (TomcatEmbeddedServletContainerFactory) container;
-            tomcatFactory.addContextCustomizers((TomcatContextCustomizer) context -> {
-                // See https://github.com/jhipster/generator-jhipster/issues/3995
-                StandardRoot resources = new StandardRoot();
-                resources.setCacheMaxSize(40960);
-                resources.setCacheObjectMaxSize(2048);
-                context.setResources(resources);
-            });
-        }
     }
 
     private void setLocationForStaticAssets(ConfigurableEmbeddedServletContainer container) {
         File root;
         String prefixPath = resolvePathPrefix();
-        if (env.acceptsProfiles(Constants.SPRING_PROFILE_PRODUCTION)) {
+        if (env.acceptsProfiles(JHipsterConstants.SPRING_PROFILE_PRODUCTION)) {
             root = new File(prefixPath + "target/www/");
         } else {
             root = new File(prefixPath + "src/main/webapp/");
@@ -151,20 +136,25 @@ public class WebConfigurer implements ServletContextInitializer, EmbeddedServlet
         ServletRegistration.Dynamic metricsAdminServlet =
             servletContext.addServlet("metricsServlet", new MetricsServlet());
 
-        metricsAdminServlet.addMapping("/management/jhipster/metrics/*");
+        metricsAdminServlet.addMapping("/management/metrics/*");
         metricsAdminServlet.setAsyncSupported(true);
         metricsAdminServlet.setLoadOnStartup(2);
     }
 
     @Bean
-    @ConditionalOnProperty(name = "jhipster.cors.allowed-origins")
     public CorsFilter corsFilter() {
-        log.debug("Registering CORS filter");
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = jHipsterProperties.getCors();
-        source.registerCorsConfiguration("/api/**", config);
-        source.registerCorsConfiguration("/v2/api-docs", config);
-        source.registerCorsConfiguration("/oauth/**", config);
+        if (config.getAllowedOrigins() != null && !config.getAllowedOrigins().isEmpty()) {
+            log.debug("Registering CORS filter");
+            source.registerCorsConfiguration("/api/**", config);
+            source.registerCorsConfiguration("/v2/api-docs", config);
+        }
         return new CorsFilter(source);
+    }
+
+    @Autowired(required = false)
+    public void setMetricRegistry(MetricRegistry metricRegistry) {
+        this.metricRegistry = metricRegistry;
     }
 }

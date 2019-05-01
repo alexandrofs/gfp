@@ -32,7 +32,7 @@
             }
         })
         .state('tipo-imposto-renda-detail', {
-            parent: 'entity',
+            parent: 'tipo-imposto-renda',
             url: '/tipo-imposto-renda/{id}',
             data: {
                 authorities: ['ROLE_USER'],

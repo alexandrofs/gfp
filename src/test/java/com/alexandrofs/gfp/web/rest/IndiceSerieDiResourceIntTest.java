@@ -1,6 +1,7 @@
 package com.alexandrofs.gfp.web.rest;
 
 import com.alexandrofs.gfp.GfpApp;
+
 import com.alexandrofs.gfp.domain.IndiceSerieDi;
 import com.alexandrofs.gfp.repository.IndiceSerieDiRepository;
 import com.alexandrofs.gfp.service.IndiceSerieDiService;
@@ -8,20 +9,17 @@ import com.alexandrofs.gfp.service.IndiceSerieDiService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.hamcrest.Matchers.hasItem;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -29,6 +27,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -53,30 +52,29 @@ public class IndiceSerieDiResourceIntTest {
     private static final BigDecimal DEFAULT_FATOR_DIARIO = new BigDecimal(1);
     private static final BigDecimal UPDATED_FATOR_DIARIO = new BigDecimal(2);
 
-    @Inject
+    @Autowired
     private IndiceSerieDiRepository indiceSerieDiRepository;
 
-    @Inject
+    @Autowired
     private IndiceSerieDiService indiceSerieDiService;
 
-    @Inject
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Inject
+    @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Inject
+    @Autowired
     private EntityManager em;
 
     private MockMvc restIndiceSerieDiMockMvc;
 
     private IndiceSerieDi indiceSerieDi;
 
-    @PostConstruct
+    @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        IndiceSerieDiResource indiceSerieDiResource = new IndiceSerieDiResource();
-        ReflectionTestUtils.setField(indiceSerieDiResource, "indiceSerieDiService", indiceSerieDiService);
+        IndiceSerieDiResource indiceSerieDiResource = new IndiceSerieDiResource(indiceSerieDiService);
         this.restIndiceSerieDiMockMvc = MockMvcBuilders.standaloneSetup(indiceSerieDiResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setMessageConverters(jacksonMessageConverter).build();
@@ -90,7 +88,6 @@ public class IndiceSerieDiResourceIntTest {
      */
     public static IndiceSerieDi createEntity(EntityManager em) {
         IndiceSerieDi indiceSerieDi = new IndiceSerieDi();
-        indiceSerieDi = new IndiceSerieDi();
         indiceSerieDi.setData(DEFAULT_DATA);
         indiceSerieDi.setTaxaMediaAnual(DEFAULT_TAXA_MEDIA_ANUAL);
         indiceSerieDi.setTaxaSelic(DEFAULT_TAXA_SELIC);
@@ -111,18 +108,38 @@ public class IndiceSerieDiResourceIntTest {
         // Create the IndiceSerieDi
 
         restIndiceSerieDiMockMvc.perform(post("/api/indice-serie-dis")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(indiceSerieDi)))
-                .andExpect(status().isCreated());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(indiceSerieDi)))
+            .andExpect(status().isCreated());
 
         // Validate the IndiceSerieDi in the database
-        List<IndiceSerieDi> indiceSerieDis = indiceSerieDiRepository.findAll();
-        assertThat(indiceSerieDis).hasSize(databaseSizeBeforeCreate + 1);
-        IndiceSerieDi testIndiceSerieDi = indiceSerieDis.get(indiceSerieDis.size() - 1);
+        List<IndiceSerieDi> indiceSerieDiList = indiceSerieDiRepository.findAll();
+        assertThat(indiceSerieDiList).hasSize(databaseSizeBeforeCreate + 1);
+        IndiceSerieDi testIndiceSerieDi = indiceSerieDiList.get(indiceSerieDiList.size() - 1);
         assertThat(testIndiceSerieDi.getData()).isEqualTo(DEFAULT_DATA);
         assertThat(testIndiceSerieDi.getTaxaMediaAnual()).isEqualTo(DEFAULT_TAXA_MEDIA_ANUAL);
         assertThat(testIndiceSerieDi.getTaxaSelic()).isEqualTo(DEFAULT_TAXA_SELIC);
         assertThat(testIndiceSerieDi.getFatorDiario()).isEqualTo(DEFAULT_FATOR_DIARIO);
+    }
+
+    @Test
+    @Transactional
+    public void createIndiceSerieDiWithExistingId() throws Exception {
+        int databaseSizeBeforeCreate = indiceSerieDiRepository.findAll().size();
+
+        // Create the IndiceSerieDi with an existing ID
+        IndiceSerieDi existingIndiceSerieDi = new IndiceSerieDi();
+        existingIndiceSerieDi.setId(1L);
+
+        // An entity with an existing ID cannot be created, so this API call must fail
+        restIndiceSerieDiMockMvc.perform(post("/api/indice-serie-dis")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(existingIndiceSerieDi)))
+            .andExpect(status().isBadRequest());
+
+        // Validate the Alice in the database
+        List<IndiceSerieDi> indiceSerieDiList = indiceSerieDiRepository.findAll();
+        assertThat(indiceSerieDiList).hasSize(databaseSizeBeforeCreate);
     }
 
     @Test
@@ -135,12 +152,12 @@ public class IndiceSerieDiResourceIntTest {
         // Create the IndiceSerieDi, which fails.
 
         restIndiceSerieDiMockMvc.perform(post("/api/indice-serie-dis")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(indiceSerieDi)))
-                .andExpect(status().isBadRequest());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(indiceSerieDi)))
+            .andExpect(status().isBadRequest());
 
-        List<IndiceSerieDi> indiceSerieDis = indiceSerieDiRepository.findAll();
-        assertThat(indiceSerieDis).hasSize(databaseSizeBeforeTest);
+        List<IndiceSerieDi> indiceSerieDiList = indiceSerieDiRepository.findAll();
+        assertThat(indiceSerieDiList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -153,12 +170,12 @@ public class IndiceSerieDiResourceIntTest {
         // Create the IndiceSerieDi, which fails.
 
         restIndiceSerieDiMockMvc.perform(post("/api/indice-serie-dis")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(indiceSerieDi)))
-                .andExpect(status().isBadRequest());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(indiceSerieDi)))
+            .andExpect(status().isBadRequest());
 
-        List<IndiceSerieDi> indiceSerieDis = indiceSerieDiRepository.findAll();
-        assertThat(indiceSerieDis).hasSize(databaseSizeBeforeTest);
+        List<IndiceSerieDi> indiceSerieDiList = indiceSerieDiRepository.findAll();
+        assertThat(indiceSerieDiList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -171,12 +188,12 @@ public class IndiceSerieDiResourceIntTest {
         // Create the IndiceSerieDi, which fails.
 
         restIndiceSerieDiMockMvc.perform(post("/api/indice-serie-dis")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(indiceSerieDi)))
-                .andExpect(status().isBadRequest());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(indiceSerieDi)))
+            .andExpect(status().isBadRequest());
 
-        List<IndiceSerieDi> indiceSerieDis = indiceSerieDiRepository.findAll();
-        assertThat(indiceSerieDis).hasSize(databaseSizeBeforeTest);
+        List<IndiceSerieDi> indiceSerieDiList = indiceSerieDiRepository.findAll();
+        assertThat(indiceSerieDiList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -189,12 +206,12 @@ public class IndiceSerieDiResourceIntTest {
         // Create the IndiceSerieDi, which fails.
 
         restIndiceSerieDiMockMvc.perform(post("/api/indice-serie-dis")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(indiceSerieDi)))
-                .andExpect(status().isBadRequest());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(indiceSerieDi)))
+            .andExpect(status().isBadRequest());
 
-        List<IndiceSerieDi> indiceSerieDis = indiceSerieDiRepository.findAll();
-        assertThat(indiceSerieDis).hasSize(databaseSizeBeforeTest);
+        List<IndiceSerieDi> indiceSerieDiList = indiceSerieDiRepository.findAll();
+        assertThat(indiceSerieDiList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -203,15 +220,15 @@ public class IndiceSerieDiResourceIntTest {
         // Initialize the database
         indiceSerieDiRepository.saveAndFlush(indiceSerieDi);
 
-        // Get all the indiceSerieDis
+        // Get all the indiceSerieDiList
         restIndiceSerieDiMockMvc.perform(get("/api/indice-serie-dis?sort=id,desc"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.[*].id").value(hasItem(indiceSerieDi.getId().intValue())))
-                .andExpect(jsonPath("$.[*].data").value(hasItem(DEFAULT_DATA.toString())))
-                .andExpect(jsonPath("$.[*].taxaMediaAnual").value(hasItem(DEFAULT_TAXA_MEDIA_ANUAL.intValue())))
-                .andExpect(jsonPath("$.[*].taxaSelic").value(hasItem(DEFAULT_TAXA_SELIC.intValue())))
-                .andExpect(jsonPath("$.[*].fatorDiario").value(hasItem(DEFAULT_FATOR_DIARIO.intValue())));
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(indiceSerieDi.getId().intValue())))
+            .andExpect(jsonPath("$.[*].data").value(hasItem(DEFAULT_DATA.toString())))
+            .andExpect(jsonPath("$.[*].taxaMediaAnual").value(hasItem(DEFAULT_TAXA_MEDIA_ANUAL.intValue())))
+            .andExpect(jsonPath("$.[*].taxaSelic").value(hasItem(DEFAULT_TAXA_SELIC.intValue())))
+            .andExpect(jsonPath("$.[*].fatorDiario").value(hasItem(DEFAULT_FATOR_DIARIO.intValue())));
     }
 
     @Test
@@ -236,7 +253,7 @@ public class IndiceSerieDiResourceIntTest {
     public void getNonExistingIndiceSerieDi() throws Exception {
         // Get the indiceSerieDi
         restIndiceSerieDiMockMvc.perform(get("/api/indice-serie-dis/{id}", Long.MAX_VALUE))
-                .andExpect(status().isNotFound());
+            .andExpect(status().isNotFound());
     }
 
     @Test
@@ -255,18 +272,36 @@ public class IndiceSerieDiResourceIntTest {
         updatedIndiceSerieDi.setFatorDiario(UPDATED_FATOR_DIARIO);
 
         restIndiceSerieDiMockMvc.perform(put("/api/indice-serie-dis")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(updatedIndiceSerieDi)))
-                .andExpect(status().isOk());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(updatedIndiceSerieDi)))
+            .andExpect(status().isOk());
 
         // Validate the IndiceSerieDi in the database
-        List<IndiceSerieDi> indiceSerieDis = indiceSerieDiRepository.findAll();
-        assertThat(indiceSerieDis).hasSize(databaseSizeBeforeUpdate);
-        IndiceSerieDi testIndiceSerieDi = indiceSerieDis.get(indiceSerieDis.size() - 1);
+        List<IndiceSerieDi> indiceSerieDiList = indiceSerieDiRepository.findAll();
+        assertThat(indiceSerieDiList).hasSize(databaseSizeBeforeUpdate);
+        IndiceSerieDi testIndiceSerieDi = indiceSerieDiList.get(indiceSerieDiList.size() - 1);
         assertThat(testIndiceSerieDi.getData()).isEqualTo(UPDATED_DATA);
         assertThat(testIndiceSerieDi.getTaxaMediaAnual()).isEqualTo(UPDATED_TAXA_MEDIA_ANUAL);
         assertThat(testIndiceSerieDi.getTaxaSelic()).isEqualTo(UPDATED_TAXA_SELIC);
         assertThat(testIndiceSerieDi.getFatorDiario()).isEqualTo(UPDATED_FATOR_DIARIO);
+    }
+
+    @Test
+    @Transactional
+    public void updateNonExistingIndiceSerieDi() throws Exception {
+        int databaseSizeBeforeUpdate = indiceSerieDiRepository.findAll().size();
+
+        // Create the IndiceSerieDi
+
+        // If the entity doesn't have an ID, it will be created instead of just being updated
+        restIndiceSerieDiMockMvc.perform(put("/api/indice-serie-dis")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(indiceSerieDi)))
+            .andExpect(status().isCreated());
+
+        // Validate the IndiceSerieDi in the database
+        List<IndiceSerieDi> indiceSerieDiList = indiceSerieDiRepository.findAll();
+        assertThat(indiceSerieDiList).hasSize(databaseSizeBeforeUpdate + 1);
     }
 
     @Test
@@ -279,11 +314,16 @@ public class IndiceSerieDiResourceIntTest {
 
         // Get the indiceSerieDi
         restIndiceSerieDiMockMvc.perform(delete("/api/indice-serie-dis/{id}", indiceSerieDi.getId())
-                .accept(TestUtil.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk());
+            .accept(TestUtil.APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk());
 
         // Validate the database is empty
-        List<IndiceSerieDi> indiceSerieDis = indiceSerieDiRepository.findAll();
-        assertThat(indiceSerieDis).hasSize(databaseSizeBeforeDelete - 1);
+        List<IndiceSerieDi> indiceSerieDiList = indiceSerieDiRepository.findAll();
+        assertThat(indiceSerieDiList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(IndiceSerieDi.class);
     }
 }

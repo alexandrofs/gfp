@@ -32,7 +32,7 @@
             }
         })
         .state('carteira-detail', {
-            parent: 'entity',
+            parent: 'carteira',
             url: '/carteira/{id}',
             data: {
                 authorities: ['ROLE_USER'],

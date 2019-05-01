@@ -32,7 +32,7 @@
             }
         })
         .state('historico-cotas-detail', {
-            parent: 'entity',
+            parent: 'historico-cotas',
             url: '/historico-cotas/{id}',
             data: {
                 authorities: ['ROLE_USER'],

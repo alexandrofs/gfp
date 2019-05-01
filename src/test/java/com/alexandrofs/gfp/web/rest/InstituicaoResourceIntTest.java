@@ -1,30 +1,29 @@
 package com.alexandrofs.gfp.web.rest;
 
 import com.alexandrofs.gfp.GfpApp;
+
 import com.alexandrofs.gfp.domain.Instituicao;
 import com.alexandrofs.gfp.repository.InstituicaoRepository;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.hamcrest.Matchers.hasItem;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -36,30 +35,30 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = GfpApp.class)
 public class InstituicaoResourceIntTest {
-    private static final String DEFAULT_NOME = "AAAAA";
-    private static final String UPDATED_NOME = "BBBBB";
 
-    @Inject
+    private static final String DEFAULT_NOME = "AAAAAAAAAA";
+    private static final String UPDATED_NOME = "BBBBBBBBBB";
+
+    @Autowired
     private InstituicaoRepository instituicaoRepository;
 
-    @Inject
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Inject
+    @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Inject
+    @Autowired
     private EntityManager em;
 
     private MockMvc restInstituicaoMockMvc;
 
     private Instituicao instituicao;
 
-    @PostConstruct
+    @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        InstituicaoResource instituicaoResource = new InstituicaoResource();
-        ReflectionTestUtils.setField(instituicaoResource, "instituicaoRepository", instituicaoRepository);
+            InstituicaoResource instituicaoResource = new InstituicaoResource(instituicaoRepository);
         this.restInstituicaoMockMvc = MockMvcBuilders.standaloneSetup(instituicaoResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setMessageConverters(jacksonMessageConverter).build();
@@ -73,7 +72,6 @@ public class InstituicaoResourceIntTest {
      */
     public static Instituicao createEntity(EntityManager em) {
         Instituicao instituicao = new Instituicao();
-        instituicao = new Instituicao();
         instituicao.setNome(DEFAULT_NOME);
         return instituicao;
     }
@@ -91,15 +89,35 @@ public class InstituicaoResourceIntTest {
         // Create the Instituicao
 
         restInstituicaoMockMvc.perform(post("/api/instituicaos")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(instituicao)))
-                .andExpect(status().isCreated());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(instituicao)))
+            .andExpect(status().isCreated());
 
         // Validate the Instituicao in the database
-        List<Instituicao> instituicaos = instituicaoRepository.findAll();
-        assertThat(instituicaos).hasSize(databaseSizeBeforeCreate + 1);
-        Instituicao testInstituicao = instituicaos.get(instituicaos.size() - 1);
+        List<Instituicao> instituicaoList = instituicaoRepository.findAll();
+        assertThat(instituicaoList).hasSize(databaseSizeBeforeCreate + 1);
+        Instituicao testInstituicao = instituicaoList.get(instituicaoList.size() - 1);
         assertThat(testInstituicao.getNome()).isEqualTo(DEFAULT_NOME);
+    }
+
+    @Test
+    @Transactional
+    public void createInstituicaoWithExistingId() throws Exception {
+        int databaseSizeBeforeCreate = instituicaoRepository.findAll().size();
+
+        // Create the Instituicao with an existing ID
+        Instituicao existingInstituicao = new Instituicao();
+        existingInstituicao.setId(1L);
+
+        // An entity with an existing ID cannot be created, so this API call must fail
+        restInstituicaoMockMvc.perform(post("/api/instituicaos")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(existingInstituicao)))
+            .andExpect(status().isBadRequest());
+
+        // Validate the Alice in the database
+        List<Instituicao> instituicaoList = instituicaoRepository.findAll();
+        assertThat(instituicaoList).hasSize(databaseSizeBeforeCreate);
     }
 
     @Test
@@ -108,12 +126,12 @@ public class InstituicaoResourceIntTest {
         // Initialize the database
         instituicaoRepository.saveAndFlush(instituicao);
 
-        // Get all the instituicaos
+        // Get all the instituicaoList
         restInstituicaoMockMvc.perform(get("/api/instituicaos?sort=id,desc"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.[*].id").value(hasItem(instituicao.getId().intValue())))
-                .andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME.toString())));
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(instituicao.getId().intValue())))
+            .andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME.toString())));
     }
 
     @Test
@@ -135,7 +153,7 @@ public class InstituicaoResourceIntTest {
     public void getNonExistingInstituicao() throws Exception {
         // Get the instituicao
         restInstituicaoMockMvc.perform(get("/api/instituicaos/{id}", Long.MAX_VALUE))
-                .andExpect(status().isNotFound());
+            .andExpect(status().isNotFound());
     }
 
     @Test
@@ -150,15 +168,33 @@ public class InstituicaoResourceIntTest {
         updatedInstituicao.setNome(UPDATED_NOME);
 
         restInstituicaoMockMvc.perform(put("/api/instituicaos")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(updatedInstituicao)))
-                .andExpect(status().isOk());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(updatedInstituicao)))
+            .andExpect(status().isOk());
 
         // Validate the Instituicao in the database
-        List<Instituicao> instituicaos = instituicaoRepository.findAll();
-        assertThat(instituicaos).hasSize(databaseSizeBeforeUpdate);
-        Instituicao testInstituicao = instituicaos.get(instituicaos.size() - 1);
+        List<Instituicao> instituicaoList = instituicaoRepository.findAll();
+        assertThat(instituicaoList).hasSize(databaseSizeBeforeUpdate);
+        Instituicao testInstituicao = instituicaoList.get(instituicaoList.size() - 1);
         assertThat(testInstituicao.getNome()).isEqualTo(UPDATED_NOME);
+    }
+
+    @Test
+    @Transactional
+    public void updateNonExistingInstituicao() throws Exception {
+        int databaseSizeBeforeUpdate = instituicaoRepository.findAll().size();
+
+        // Create the Instituicao
+
+        // If the entity doesn't have an ID, it will be created instead of just being updated
+        restInstituicaoMockMvc.perform(put("/api/instituicaos")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(instituicao)))
+            .andExpect(status().isCreated());
+
+        // Validate the Instituicao in the database
+        List<Instituicao> instituicaoList = instituicaoRepository.findAll();
+        assertThat(instituicaoList).hasSize(databaseSizeBeforeUpdate + 1);
     }
 
     @Test
@@ -170,11 +206,16 @@ public class InstituicaoResourceIntTest {
 
         // Get the instituicao
         restInstituicaoMockMvc.perform(delete("/api/instituicaos/{id}", instituicao.getId())
-                .accept(TestUtil.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk());
+            .accept(TestUtil.APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk());
 
         // Validate the database is empty
-        List<Instituicao> instituicaos = instituicaoRepository.findAll();
-        assertThat(instituicaos).hasSize(databaseSizeBeforeDelete - 1);
+        List<Instituicao> instituicaoList = instituicaoRepository.findAll();
+        assertThat(instituicaoList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(Instituicao.class);
     }
 }

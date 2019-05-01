@@ -21,7 +21,7 @@ public class Investimento implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
@@ -41,11 +41,11 @@ public class Investimento implements Serializable {
     @Column(name = "pct_pre_pos_fixado", precision=10, scale=2)
     private BigDecimal pctPrePosFixado;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @NotNull
     private Carteira carteira;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @NotNull
     private TipoInvestimento tipoInvestimento;
 
@@ -53,7 +53,7 @@ public class Investimento implements Serializable {
     @JsonIgnore
     private Set<HistoricoCotas> historicoCotas = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @NotNull
     private Instituicao instituicao;
 
@@ -138,7 +138,7 @@ public class Investimento implements Serializable {
             return false;
         }
         Investimento investimento = (Investimento) o;
-        if(investimento.id == null || id == null) {
+        if (investimento.id == null || id == null) {
             return false;
         }
         return Objects.equals(id, investimento.id);

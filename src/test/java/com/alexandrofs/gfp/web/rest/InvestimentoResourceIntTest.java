@@ -1,6 +1,7 @@
 package com.alexandrofs.gfp.web.rest;
 
 import com.alexandrofs.gfp.GfpApp;
+
 import com.alexandrofs.gfp.domain.Investimento;
 import com.alexandrofs.gfp.domain.Carteira;
 import com.alexandrofs.gfp.domain.TipoInvestimento;
@@ -11,20 +12,17 @@ import com.alexandrofs.gfp.service.InvestimentoService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import static org.hamcrest.Matchers.hasItem;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -32,6 +30,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -56,30 +55,29 @@ public class InvestimentoResourceIntTest {
     private static final BigDecimal DEFAULT_PCT_PRE_POS_FIXADO = new BigDecimal(1);
     private static final BigDecimal UPDATED_PCT_PRE_POS_FIXADO = new BigDecimal(2);
 
-    @Inject
+    @Autowired
     private InvestimentoRepository investimentoRepository;
 
-    @Inject
+    @Autowired
     private InvestimentoService investimentoService;
 
-    @Inject
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Inject
+    @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Inject
+    @Autowired
     private EntityManager em;
 
     private MockMvc restInvestimentoMockMvc;
 
     private Investimento investimento;
 
-    @PostConstruct
+    @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        InvestimentoResource investimentoResource = new InvestimentoResource();
-        ReflectionTestUtils.setField(investimentoResource, "investimentoService", investimentoService);
+        InvestimentoResource investimentoResource = new InvestimentoResource(investimentoService);
         this.restInvestimentoMockMvc = MockMvcBuilders.standaloneSetup(investimentoResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setMessageConverters(jacksonMessageConverter).build();
@@ -93,7 +91,6 @@ public class InvestimentoResourceIntTest {
      */
     public static Investimento createEntity(EntityManager em) {
         Investimento investimento = new Investimento();
-        investimento = new Investimento();
         investimento.setDataAplicacao(DEFAULT_DATA_APLICACAO);
         investimento.setQtdeCota(DEFAULT_QTDE_COTA);
         investimento.setVlrCota(DEFAULT_VLR_COTA);
@@ -129,18 +126,38 @@ public class InvestimentoResourceIntTest {
         // Create the Investimento
 
         restInvestimentoMockMvc.perform(post("/api/investimentos")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(investimento)))
-                .andExpect(status().isCreated());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(investimento)))
+            .andExpect(status().isCreated());
 
         // Validate the Investimento in the database
-        List<Investimento> investimentos = investimentoRepository.findAll();
-        assertThat(investimentos).hasSize(databaseSizeBeforeCreate + 1);
-        Investimento testInvestimento = investimentos.get(investimentos.size() - 1);
+        List<Investimento> investimentoList = investimentoRepository.findAll();
+        assertThat(investimentoList).hasSize(databaseSizeBeforeCreate + 1);
+        Investimento testInvestimento = investimentoList.get(investimentoList.size() - 1);
         assertThat(testInvestimento.getDataAplicacao()).isEqualTo(DEFAULT_DATA_APLICACAO);
         assertThat(testInvestimento.getQtdeCota()).isEqualTo(DEFAULT_QTDE_COTA);
         assertThat(testInvestimento.getVlrCota()).isEqualTo(DEFAULT_VLR_COTA);
         assertThat(testInvestimento.getPctPrePosFixado()).isEqualTo(DEFAULT_PCT_PRE_POS_FIXADO);
+    }
+
+    @Test
+    @Transactional
+    public void createInvestimentoWithExistingId() throws Exception {
+        int databaseSizeBeforeCreate = investimentoRepository.findAll().size();
+
+        // Create the Investimento with an existing ID
+        Investimento existingInvestimento = new Investimento();
+        existingInvestimento.setId(1L);
+
+        // An entity with an existing ID cannot be created, so this API call must fail
+        restInvestimentoMockMvc.perform(post("/api/investimentos")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(existingInvestimento)))
+            .andExpect(status().isBadRequest());
+
+        // Validate the Alice in the database
+        List<Investimento> investimentoList = investimentoRepository.findAll();
+        assertThat(investimentoList).hasSize(databaseSizeBeforeCreate);
     }
 
     @Test
@@ -153,12 +170,12 @@ public class InvestimentoResourceIntTest {
         // Create the Investimento, which fails.
 
         restInvestimentoMockMvc.perform(post("/api/investimentos")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(investimento)))
-                .andExpect(status().isBadRequest());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(investimento)))
+            .andExpect(status().isBadRequest());
 
-        List<Investimento> investimentos = investimentoRepository.findAll();
-        assertThat(investimentos).hasSize(databaseSizeBeforeTest);
+        List<Investimento> investimentoList = investimentoRepository.findAll();
+        assertThat(investimentoList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -171,12 +188,12 @@ public class InvestimentoResourceIntTest {
         // Create the Investimento, which fails.
 
         restInvestimentoMockMvc.perform(post("/api/investimentos")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(investimento)))
-                .andExpect(status().isBadRequest());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(investimento)))
+            .andExpect(status().isBadRequest());
 
-        List<Investimento> investimentos = investimentoRepository.findAll();
-        assertThat(investimentos).hasSize(databaseSizeBeforeTest);
+        List<Investimento> investimentoList = investimentoRepository.findAll();
+        assertThat(investimentoList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -189,12 +206,12 @@ public class InvestimentoResourceIntTest {
         // Create the Investimento, which fails.
 
         restInvestimentoMockMvc.perform(post("/api/investimentos")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(investimento)))
-                .andExpect(status().isBadRequest());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(investimento)))
+            .andExpect(status().isBadRequest());
 
-        List<Investimento> investimentos = investimentoRepository.findAll();
-        assertThat(investimentos).hasSize(databaseSizeBeforeTest);
+        List<Investimento> investimentoList = investimentoRepository.findAll();
+        assertThat(investimentoList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -203,15 +220,15 @@ public class InvestimentoResourceIntTest {
         // Initialize the database
         investimentoRepository.saveAndFlush(investimento);
 
-        // Get all the investimentos
+        // Get all the investimentoList
         restInvestimentoMockMvc.perform(get("/api/investimentos?sort=id,desc"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.[*].id").value(hasItem(investimento.getId().intValue())))
-                .andExpect(jsonPath("$.[*].dataAplicacao").value(hasItem(DEFAULT_DATA_APLICACAO.toString())))
-                .andExpect(jsonPath("$.[*].qtdeCota").value(hasItem(DEFAULT_QTDE_COTA.intValue())))
-                .andExpect(jsonPath("$.[*].vlrCota").value(hasItem(DEFAULT_VLR_COTA.intValue())))
-                .andExpect(jsonPath("$.[*].pctPrePosFixado").value(hasItem(DEFAULT_PCT_PRE_POS_FIXADO.intValue())));
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(investimento.getId().intValue())))
+            .andExpect(jsonPath("$.[*].dataAplicacao").value(hasItem(DEFAULT_DATA_APLICACAO.toString())))
+            .andExpect(jsonPath("$.[*].qtdeCota").value(hasItem(DEFAULT_QTDE_COTA.intValue())))
+            .andExpect(jsonPath("$.[*].vlrCota").value(hasItem(DEFAULT_VLR_COTA.intValue())))
+            .andExpect(jsonPath("$.[*].pctPrePosFixado").value(hasItem(DEFAULT_PCT_PRE_POS_FIXADO.intValue())));
     }
 
     @Test
@@ -236,7 +253,7 @@ public class InvestimentoResourceIntTest {
     public void getNonExistingInvestimento() throws Exception {
         // Get the investimento
         restInvestimentoMockMvc.perform(get("/api/investimentos/{id}", Long.MAX_VALUE))
-                .andExpect(status().isNotFound());
+            .andExpect(status().isNotFound());
     }
 
     @Test
@@ -255,18 +272,36 @@ public class InvestimentoResourceIntTest {
         updatedInvestimento.setPctPrePosFixado(UPDATED_PCT_PRE_POS_FIXADO);
 
         restInvestimentoMockMvc.perform(put("/api/investimentos")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(updatedInvestimento)))
-                .andExpect(status().isOk());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(updatedInvestimento)))
+            .andExpect(status().isOk());
 
         // Validate the Investimento in the database
-        List<Investimento> investimentos = investimentoRepository.findAll();
-        assertThat(investimentos).hasSize(databaseSizeBeforeUpdate);
-        Investimento testInvestimento = investimentos.get(investimentos.size() - 1);
+        List<Investimento> investimentoList = investimentoRepository.findAll();
+        assertThat(investimentoList).hasSize(databaseSizeBeforeUpdate);
+        Investimento testInvestimento = investimentoList.get(investimentoList.size() - 1);
         assertThat(testInvestimento.getDataAplicacao()).isEqualTo(UPDATED_DATA_APLICACAO);
         assertThat(testInvestimento.getQtdeCota()).isEqualTo(UPDATED_QTDE_COTA);
         assertThat(testInvestimento.getVlrCota()).isEqualTo(UPDATED_VLR_COTA);
         assertThat(testInvestimento.getPctPrePosFixado()).isEqualTo(UPDATED_PCT_PRE_POS_FIXADO);
+    }
+
+    @Test
+    @Transactional
+    public void updateNonExistingInvestimento() throws Exception {
+        int databaseSizeBeforeUpdate = investimentoRepository.findAll().size();
+
+        // Create the Investimento
+
+        // If the entity doesn't have an ID, it will be created instead of just being updated
+        restInvestimentoMockMvc.perform(put("/api/investimentos")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(investimento)))
+            .andExpect(status().isCreated());
+
+        // Validate the Investimento in the database
+        List<Investimento> investimentoList = investimentoRepository.findAll();
+        assertThat(investimentoList).hasSize(databaseSizeBeforeUpdate + 1);
     }
 
     @Test
@@ -279,11 +314,16 @@ public class InvestimentoResourceIntTest {
 
         // Get the investimento
         restInvestimentoMockMvc.perform(delete("/api/investimentos/{id}", investimento.getId())
-                .accept(TestUtil.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk());
+            .accept(TestUtil.APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk());
 
         // Validate the database is empty
-        List<Investimento> investimentos = investimentoRepository.findAll();
-        assertThat(investimentos).hasSize(databaseSizeBeforeDelete - 1);
+        List<Investimento> investimentoList = investimentoRepository.findAll();
+        assertThat(investimentoList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(Investimento.class);
     }
 }

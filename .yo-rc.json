@@ -1,18 +1,18 @@
 {
   "generator-jhipster": {
-    "jhipsterVersion": "3.6.0",
+    "jhipsterVersion": "4.0.0",
     "baseName": "gfp",
     "packageName": "com.alexandrofs.gfp",
     "packageFolder": "com/alexandrofs/gfp",
     "serverPort": "8080",
     "authenticationType": "session",
     "hibernateCache": "no",
-    "clusteredHttpSession": "no",
-    "websocket": "no",
+    "clusteredHttpSession": false,
+    "websocket": false,
     "databaseType": "sql",
     "devDatabaseType": "mysql",
     "prodDatabaseType": "mysql",
-    "searchEngine": "no",
+    "searchEngine": false,
     "buildTool": "maven",
     "enableSocialSignIn": false,
     "rememberMeKey": "fcc6f354cbe3938e3fb3a60fc9a6e1e882763523",
@@ -26,6 +26,10 @@
     "nativeLanguage": "pt-br",
     "languages": [
       "pt-br"
-    ]
+    ],
+    "messageBroker": false,
+    "serviceDiscoveryType": false,
+    "clientPackageManager": "npm",
+    "clientFramework": "angular1"
   }
 }
