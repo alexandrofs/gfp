@@ -14,6 +14,9 @@
         vm.loadPage = loadPage;
         vm.page = 0;
         vm.predicate = 'data';
+        vm.links = {
+            last: 0
+        };
         vm.reset = reset;
         vm.reverse = true;
 

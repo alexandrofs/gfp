@@ -37,6 +37,7 @@
         <mapstruct.version>1.0.0.Final</mapstruct.version>
         <maven-enforcer-plugin.version>1.4.1</maven-enforcer-plugin.version>
         <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
+        <maven-resources-plugin.version>3.0.0</maven-resources-plugin.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <metrics-spark-reporter.version>1.2</metrics-spark-reporter.version>
@@ -479,12 +480,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
+                <version>${maven-resources-plugin.version}</version>
                 <executions>
                     <execution>
                         <id>default-resources</id>
                         <phase>validate</phase>
                         <goals>
-                            <goal>resources</goal>
+                            <goal>copy-resources</goal>
                         </goals>
                         <configuration>
                             <outputDirectory>target/classes</outputDirectory>
@@ -797,5 +799,4 @@
             </dependencies>
         </profile>
     </profiles>
-
 </project>
