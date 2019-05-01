@@ -1,0 +1,25 @@
+{
+    "gfpApp": {
+        "indiceSerieDi" : {
+            "home": {
+                "title": "Indice Serie Dis",
+                "createLabel": "Criar novo Indice Serie Di",
+                "createOrEditLabel": "Criar ou editar Indice Serie Di",
+                "search": "Pesquisar por Indice Serie Di"
+            },
+            "created": "Um novo Indice Serie Di é criado com o identificador {{ param }}",
+            "updated": "Um Indice Serie Di é atualizado com o identificador {{ param }}",
+            "deleted": "Um Indice Serie Di é deletado com o identificador {{ param }}",
+            "delete": {
+                "question": "Tem certeza de que deseja excluir Indice Serie Di {{ id }}?"
+            },
+            "detail": {
+                "title": "Indice Serie Di"
+            },
+            "data": "Data",
+            "taxaMediaAnual": "Taxa Media Anual",
+            "taxaSelic": "Taxa Selic",
+            "fatorDiario": "Fator Diario"
+        }
+    }
+}

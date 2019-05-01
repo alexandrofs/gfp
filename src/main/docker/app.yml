@@ -1,0 +1,16 @@
+version: '2'
+services:
+    gfp-app:
+        image: gfp
+        external_links:
+            - gfp-mysql:mysql
+        environment:
+            - SPRING_PROFILES_ACTIVE=prod
+            - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/gfp?useUnicode=true&characterEncoding=utf8&useSSL=false
+            - JHIPSTER_SLEEP=10 # gives time for the database to boot before the application
+        ports:
+            - 8080:8080
+    gfp-mysql:
+        extends:
+            file: mysql.yml
+            service: gfp-mysql

@@ -1,0 +1,70 @@
+
+<form name="editForm" role="form" novalidate ng-submit="vm.save()" show-validation>
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                ng-click="vm.clear()">&times;</button>
+        <h4 class="modal-title" id="myHistoricoCotasLabel" translate="gfpApp.historicoCotas.home.createOrEditLabel">Create or edit a Historico Cotas</h4>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" ng-show="vm.historicoCotas.id">
+            <label for="id" translate="global.field.id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                    ng-model="vm.historicoCotas.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="control-label" translate="gfpApp.historicoCotas.dataCota" for="field_dataCota">Data Cota</label>
+                <div class="input-group">
+                    <input id="field_dataCota" type="text" class="form-control" name="dataCota" uib-datepicker-popup="{{dateformat}}" ng-model="vm.historicoCotas.dataCota" is-open="vm.datePickerOpenStatus.dataCota"
+                    required/>
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('dataCota')"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </div>
+            <div ng-show="editForm.dataCota.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.dataCota.$error.required" translate="entity.validation.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" translate="gfpApp.historicoCotas.vlrCota" for="field_vlrCota">Vlr Cota</label>
+            <input type="number" class="form-control" name="vlrCota" id="field_vlrCota"
+                    ng-model="vm.historicoCotas.vlrCota"
+                    required />
+            <div ng-show="editForm.vlrCota.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.vlrCota.$error.required" translate="entity.validation.required">
+                    This field is required.
+                </p>
+                <p class="help-block"
+                    ng-show="editForm.vlrCota.$error.number" translate="entity.validation.number">
+                    This field should be a number.
+                </p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label translate="gfpApp.historicoCotas.investimento" for="field_investimento">Investimento</label>
+            <select class="form-control" id="field_investimento" name="investimento" ng-model="vm.historicoCotas.investimento" ng-options="investimento as investimento.id for investimento in vm.investimentos track by investimento.id" required>
+                <option value=""></option>
+            </select>
+        </div>
+        <div ng-show="editForm.investimento.$invalid">
+            <p class="help-block"
+                ng-show="editForm.investimento.$error.required" translate="entity.validation.required">
+                This field is required.
+            </p>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span translate="entity.action.cancel">Cancel</span>
+        </button>
+        <button type="submit" ng-disabled="editForm.$invalid || vm.isSaving" class="btn btn-primary">
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span translate="entity.action.save">Save</span>
+        </button>
+    </div>
+</form>

@@ -1,0 +1,34 @@
+{
+    "relationships": [
+        {
+            "relationshipName": "investimento",
+            "otherEntityName": "investimento",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "id"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "dataCota",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "vlrCota",
+            "fieldType": "BigDecimal",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20160713032838",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "tb_historico_cotas",
+    "pagination": "no"
+}
