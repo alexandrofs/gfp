@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alexandrofs.gfp.domain.Investimento;
-import com.alexandrofs.gfp.service.CalculoCotasService;
 import com.alexandrofs.gfp.service.InvestimentoService;
 import com.alexandrofs.gfp.web.rest.util.HeaderUtil;
 import com.codahale.metrics.annotation.Timed;
@@ -36,9 +35,6 @@ public class InvestimentoResource {
         
     @Inject
     private InvestimentoService investimentoService;
-    
-    @Inject
-    private CalculoCotasService calculoCotasService;
     
     /**
      * POST  /investimentos : Create a new investimento.
