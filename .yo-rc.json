@@ -6,7 +6,6 @@
     "packageFolder": "com/alexandrofs/gfp",
     "serverPort": "8080",
     "authenticationType": "session",
-    "hibernateCache": "no",
     "clusteredHttpSession": false,
     "websocket": false,
     "databaseType": "sql",

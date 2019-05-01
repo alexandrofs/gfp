@@ -5,6 +5,7 @@ import com.alexandrofs.gfp.GfpApp;
 import com.alexandrofs.gfp.domain.IndiceSerieDi;
 import com.alexandrofs.gfp.repository.IndiceSerieDiRepository;
 import com.alexandrofs.gfp.service.IndiceSerieDiService;
+import com.alexandrofs.gfp.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,11 +22,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.math.BigDecimal;
 import java.util.List;
 
+
+import static com.alexandrofs.gfp.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -55,6 +58,8 @@ public class IndiceSerieDiResourceIntTest {
     @Autowired
     private IndiceSerieDiRepository indiceSerieDiRepository;
 
+    
+
     @Autowired
     private IndiceSerieDiService indiceSerieDiService;
 
@@ -63,6 +68,9 @@ public class IndiceSerieDiResourceIntTest {
 
     @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
 
     @Autowired
     private EntityManager em;
@@ -74,9 +82,11 @@ public class IndiceSerieDiResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        IndiceSerieDiResource indiceSerieDiResource = new IndiceSerieDiResource(indiceSerieDiService);
+        final IndiceSerieDiResource indiceSerieDiResource = new IndiceSerieDiResource(indiceSerieDiService);
         this.restIndiceSerieDiMockMvc = MockMvcBuilders.standaloneSetup(indiceSerieDiResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -106,7 +116,6 @@ public class IndiceSerieDiResourceIntTest {
         int databaseSizeBeforeCreate = indiceSerieDiRepository.findAll().size();
 
         // Create the IndiceSerieDi
-
         restIndiceSerieDiMockMvc.perform(post("/api/indice-serie-dis")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(indiceSerieDi)))
@@ -128,16 +137,15 @@ public class IndiceSerieDiResourceIntTest {
         int databaseSizeBeforeCreate = indiceSerieDiRepository.findAll().size();
 
         // Create the IndiceSerieDi with an existing ID
-        IndiceSerieDi existingIndiceSerieDi = new IndiceSerieDi();
-        existingIndiceSerieDi.setId(1L);
+        indiceSerieDi.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restIndiceSerieDiMockMvc.perform(post("/api/indice-serie-dis")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(existingIndiceSerieDi)))
+            .content(TestUtil.convertObjectToJsonBytes(indiceSerieDi)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Alice in the database
+        // Validate the IndiceSerieDi in the database
         List<IndiceSerieDi> indiceSerieDiList = indiceSerieDiRepository.findAll();
         assertThat(indiceSerieDiList).hasSize(databaseSizeBeforeCreate);
     }
@@ -230,6 +238,7 @@ public class IndiceSerieDiResourceIntTest {
             .andExpect(jsonPath("$.[*].taxaSelic").value(hasItem(DEFAULT_TAXA_SELIC.intValue())))
             .andExpect(jsonPath("$.[*].fatorDiario").value(hasItem(DEFAULT_FATOR_DIARIO.intValue())));
     }
+    
 
     @Test
     @Transactional
@@ -247,7 +256,6 @@ public class IndiceSerieDiResourceIntTest {
             .andExpect(jsonPath("$.taxaSelic").value(DEFAULT_TAXA_SELIC.intValue()))
             .andExpect(jsonPath("$.fatorDiario").value(DEFAULT_FATOR_DIARIO.intValue()));
     }
-
     @Test
     @Transactional
     public void getNonExistingIndiceSerieDi() throws Exception {
@@ -265,7 +273,9 @@ public class IndiceSerieDiResourceIntTest {
         int databaseSizeBeforeUpdate = indiceSerieDiRepository.findAll().size();
 
         // Update the indiceSerieDi
-        IndiceSerieDi updatedIndiceSerieDi = indiceSerieDiRepository.findOne(indiceSerieDi.getId());
+        IndiceSerieDi updatedIndiceSerieDi = indiceSerieDiRepository.findById(indiceSerieDi.getId()).get();
+        // Disconnect from session so that the updates on updatedIndiceSerieDi are not directly saved in db
+        em.detach(updatedIndiceSerieDi);
         updatedIndiceSerieDi.setData(UPDATED_DATA);
         updatedIndiceSerieDi.setTaxaMediaAnual(UPDATED_TAXA_MEDIA_ANUAL);
         updatedIndiceSerieDi.setTaxaSelic(UPDATED_TAXA_SELIC);
@@ -297,11 +307,11 @@ public class IndiceSerieDiResourceIntTest {
         restIndiceSerieDiMockMvc.perform(put("/api/indice-serie-dis")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(indiceSerieDi)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the IndiceSerieDi in the database
         List<IndiceSerieDi> indiceSerieDiList = indiceSerieDiRepository.findAll();
-        assertThat(indiceSerieDiList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(indiceSerieDiList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -323,7 +333,17 @@ public class IndiceSerieDiResourceIntTest {
     }
 
     @Test
+    @Transactional
     public void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(IndiceSerieDi.class);
+        IndiceSerieDi indiceSerieDi1 = new IndiceSerieDi();
+        indiceSerieDi1.setId(1L);
+        IndiceSerieDi indiceSerieDi2 = new IndiceSerieDi();
+        indiceSerieDi2.setId(indiceSerieDi1.getId());
+        assertThat(indiceSerieDi1).isEqualTo(indiceSerieDi2);
+        indiceSerieDi2.setId(2L);
+        assertThat(indiceSerieDi1).isNotEqualTo(indiceSerieDi2);
+        indiceSerieDi1.setId(null);
+        assertThat(indiceSerieDi1).isNotEqualTo(indiceSerieDi2);
     }
 }

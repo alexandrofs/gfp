@@ -1,15 +1,15 @@
 package com.alexandrofs.gfp.repository;
 
 import com.alexandrofs.gfp.domain.TabelaImpostoRenda;
-
 import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
 
 /**
- * Spring Data JPA repository for the TabelaImpostoRenda entity.
+ * Spring Data  repository for the TabelaImpostoRenda entity.
  */
 @SuppressWarnings("unused")
-public interface TabelaImpostoRendaRepository extends JpaRepository<TabelaImpostoRenda,Long> {
+@Repository
+public interface TabelaImpostoRendaRepository extends JpaRepository<TabelaImpostoRenda, Long> {
 
 }

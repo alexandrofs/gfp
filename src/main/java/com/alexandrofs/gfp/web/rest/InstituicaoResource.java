@@ -2,8 +2,8 @@ package com.alexandrofs.gfp.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.alexandrofs.gfp.domain.Instituicao;
-
 import com.alexandrofs.gfp.repository.InstituicaoRepository;
+import com.alexandrofs.gfp.web.rest.errors.BadRequestAlertException;
 import com.alexandrofs.gfp.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +27,7 @@ public class InstituicaoResource {
     private final Logger log = LoggerFactory.getLogger(InstituicaoResource.class);
 
     private static final String ENTITY_NAME = "instituicao";
-        
+
     private final InstituicaoRepository instituicaoRepository;
 
     public InstituicaoResource(InstituicaoRepository instituicaoRepository) {
@@ -45,7 +46,7 @@ public class InstituicaoResource {
     public ResponseEntity<Instituicao> createInstituicao(@RequestBody Instituicao instituicao) throws URISyntaxException {
         log.debug("REST request to save Instituicao : {}", instituicao);
         if (instituicao.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new instituicao cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new instituicao cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Instituicao result = instituicaoRepository.save(instituicao);
         return ResponseEntity.created(new URI("/api/instituicaos/" + result.getId()))
@@ -59,7 +60,7 @@ public class InstituicaoResource {
      * @param instituicao the instituicao to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated instituicao,
      * or with status 400 (Bad Request) if the instituicao is not valid,
-     * or with status 500 (Internal Server Error) if the instituicao couldnt be updated
+     * or with status 500 (Internal Server Error) if the instituicao couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/instituicaos")
@@ -67,7 +68,7 @@ public class InstituicaoResource {
     public ResponseEntity<Instituicao> updateInstituicao(@RequestBody Instituicao instituicao) throws URISyntaxException {
         log.debug("REST request to update Instituicao : {}", instituicao);
         if (instituicao.getId() == null) {
-            return createInstituicao(instituicao);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Instituicao result = instituicaoRepository.save(instituicao);
         return ResponseEntity.ok()
@@ -84,8 +85,7 @@ public class InstituicaoResource {
     @Timed
     public List<Instituicao> getAllInstituicaos() {
         log.debug("REST request to get all Instituicaos");
-        List<Instituicao> instituicaos = instituicaoRepository.findAll();
-        return instituicaos;
+        return instituicaoRepository.findAll();
     }
 
     /**
@@ -98,8 +98,8 @@ public class InstituicaoResource {
     @Timed
     public ResponseEntity<Instituicao> getInstituicao(@PathVariable Long id) {
         log.debug("REST request to get Instituicao : {}", id);
-        Instituicao instituicao = instituicaoRepository.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(instituicao));
+        Optional<Instituicao> instituicao = instituicaoRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(instituicao);
     }
 
     /**
@@ -112,8 +112,8 @@ public class InstituicaoResource {
     @Timed
     public ResponseEntity<Void> deleteInstituicao(@PathVariable Long id) {
         log.debug("REST request to delete Instituicao : {}", id);
-        instituicaoRepository.delete(id);
+
+        instituicaoRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
-
 }

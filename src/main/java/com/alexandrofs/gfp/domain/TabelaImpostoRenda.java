@@ -1,8 +1,10 @@
 package com.alexandrofs.gfp.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -21,19 +23,21 @@ public class TabelaImpostoRenda implements Serializable {
     private Long id;
 
     @NotNull
-    @Min(value = 0)
+    @Min(value = 0L)
     @Column(name = "num_dias", nullable = false)
     private Long numDias;
 
     @NotNull
     @DecimalMin(value = "0")
-    @Column(name = "pct_aliquota", precision=10, scale=2, nullable = false)
+    @Column(name = "pct_aliquota", precision = 10, scale = 2, nullable = false)
     private BigDecimal pctAliquota;
 
     @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("tabelaImpostoRendas")
     private TipoImpostoRenda tipoImpostoRenda;
 
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -65,6 +69,7 @@ public class TabelaImpostoRenda implements Serializable {
     public void setTipoImpostoRenda(TipoImpostoRenda tipoImpostoRenda) {
         this.tipoImpostoRenda = tipoImpostoRenda;
     }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -75,23 +80,23 @@ public class TabelaImpostoRenda implements Serializable {
             return false;
         }
         TabelaImpostoRenda tabelaImpostoRenda = (TabelaImpostoRenda) o;
-        if (tabelaImpostoRenda.id == null || id == null) {
+        if (tabelaImpostoRenda.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(id, tabelaImpostoRenda.id);
+        return Objects.equals(getId(), tabelaImpostoRenda.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(getId());
     }
 
     @Override
     public String toString() {
         return "TabelaImpostoRenda{" +
-            "id=" + id +
-            ", numDias='" + numDias + "'" +
-            ", pctAliquota='" + pctAliquota + "'" +
-            '}';
+            "id=" + getId() +
+            ", numDias=" + getNumDias() +
+            ", pctAliquota=" + getPctAliquota() +
+            "}";
     }
 }

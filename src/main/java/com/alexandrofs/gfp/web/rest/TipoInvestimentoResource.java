@@ -2,8 +2,8 @@ package com.alexandrofs.gfp.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.alexandrofs.gfp.domain.TipoInvestimento;
-
 import com.alexandrofs.gfp.repository.TipoInvestimentoRepository;
+import com.alexandrofs.gfp.web.rest.errors.BadRequestAlertException;
 import com.alexandrofs.gfp.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +28,7 @@ public class TipoInvestimentoResource {
     private final Logger log = LoggerFactory.getLogger(TipoInvestimentoResource.class);
 
     private static final String ENTITY_NAME = "tipoInvestimento";
-        
+
     private final TipoInvestimentoRepository tipoInvestimentoRepository;
 
     public TipoInvestimentoResource(TipoInvestimentoRepository tipoInvestimentoRepository) {
@@ -46,7 +47,7 @@ public class TipoInvestimentoResource {
     public ResponseEntity<TipoInvestimento> createTipoInvestimento(@Valid @RequestBody TipoInvestimento tipoInvestimento) throws URISyntaxException {
         log.debug("REST request to save TipoInvestimento : {}", tipoInvestimento);
         if (tipoInvestimento.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new tipoInvestimento cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new tipoInvestimento cannot already have an ID", ENTITY_NAME, "idexists");
         }
         TipoInvestimento result = tipoInvestimentoRepository.save(tipoInvestimento);
         return ResponseEntity.created(new URI("/api/tipo-investimentos/" + result.getId()))
@@ -60,7 +61,7 @@ public class TipoInvestimentoResource {
      * @param tipoInvestimento the tipoInvestimento to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated tipoInvestimento,
      * or with status 400 (Bad Request) if the tipoInvestimento is not valid,
-     * or with status 500 (Internal Server Error) if the tipoInvestimento couldnt be updated
+     * or with status 500 (Internal Server Error) if the tipoInvestimento couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/tipo-investimentos")
@@ -68,7 +69,7 @@ public class TipoInvestimentoResource {
     public ResponseEntity<TipoInvestimento> updateTipoInvestimento(@Valid @RequestBody TipoInvestimento tipoInvestimento) throws URISyntaxException {
         log.debug("REST request to update TipoInvestimento : {}", tipoInvestimento);
         if (tipoInvestimento.getId() == null) {
-            return createTipoInvestimento(tipoInvestimento);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         TipoInvestimento result = tipoInvestimentoRepository.save(tipoInvestimento);
         return ResponseEntity.ok()
@@ -85,8 +86,7 @@ public class TipoInvestimentoResource {
     @Timed
     public List<TipoInvestimento> getAllTipoInvestimentos() {
         log.debug("REST request to get all TipoInvestimentos");
-        List<TipoInvestimento> tipoInvestimentos = tipoInvestimentoRepository.findAll();
-        return tipoInvestimentos;
+        return tipoInvestimentoRepository.findAll();
     }
 
     /**
@@ -99,8 +99,8 @@ public class TipoInvestimentoResource {
     @Timed
     public ResponseEntity<TipoInvestimento> getTipoInvestimento(@PathVariable Long id) {
         log.debug("REST request to get TipoInvestimento : {}", id);
-        TipoInvestimento tipoInvestimento = tipoInvestimentoRepository.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(tipoInvestimento));
+        Optional<TipoInvestimento> tipoInvestimento = tipoInvestimentoRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(tipoInvestimento);
     }
 
     /**
@@ -113,8 +113,8 @@ public class TipoInvestimentoResource {
     @Timed
     public ResponseEntity<Void> deleteTipoInvestimento(@PathVariable Long id) {
         log.debug("REST request to delete TipoInvestimento : {}", id);
-        tipoInvestimentoRepository.delete(id);
+
+        tipoInvestimentoRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
-
 }

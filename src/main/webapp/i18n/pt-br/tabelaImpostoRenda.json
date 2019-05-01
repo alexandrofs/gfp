@@ -1,15 +1,15 @@
+
 {
     "gfpApp": {
         "tabelaImpostoRenda" : {
             "home": {
                 "title": "Tabela Imposto Rendas",
                 "createLabel": "Criar novo Tabela Imposto Renda",
-                "createOrEditLabel": "Criar ou editar Tabela Imposto Renda",
-                "search": "Pesquisar por Tabela Imposto Renda"
+                "createOrEditLabel": "Criar ou editar Tabela Imposto Renda"
             },
-            "created": "Um novo Tabela Imposto Renda é criado com o identificador {{ param }}",
-            "updated": "Um Tabela Imposto Renda é atualizado com o identificador {{ param }}",
-            "deleted": "Um Tabela Imposto Renda é deletado com o identificador {{ param }}",
+            "created": "Um novo Tabela Imposto Renda foi criado com o identificador {{ param }}",
+            "updated": "Um Tabela Imposto Renda foi atualizado com o identificador {{ param }}",
+            "deleted": "Um Tabela Imposto Renda foi deletado com o identificador {{ param }}",
             "delete": {
                 "question": "Tem certeza de que deseja excluir Tabela Imposto Renda {{ id }}?"
             },

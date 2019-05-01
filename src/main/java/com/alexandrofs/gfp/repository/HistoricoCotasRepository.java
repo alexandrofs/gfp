@@ -1,15 +1,15 @@
 package com.alexandrofs.gfp.repository;
 
 import com.alexandrofs.gfp.domain.HistoricoCotas;
-
 import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
 
 /**
- * Spring Data JPA repository for the HistoricoCotas entity.
+ * Spring Data  repository for the HistoricoCotas entity.
  */
 @SuppressWarnings("unused")
-public interface HistoricoCotasRepository extends JpaRepository<HistoricoCotas,Long> {
+@Repository
+public interface HistoricoCotasRepository extends JpaRepository<HistoricoCotas, Long> {
 
 }

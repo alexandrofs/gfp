@@ -1,15 +1,15 @@
 package com.alexandrofs.gfp.repository;
 
 import com.alexandrofs.gfp.domain.Investimento;
-
 import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
 
 /**
- * Spring Data JPA repository for the Investimento entity.
+ * Spring Data  repository for the Investimento entity.
  */
 @SuppressWarnings("unused")
-public interface InvestimentoRepository extends JpaRepository<Investimento,Long> {
+@Repository
+public interface InvestimentoRepository extends JpaRepository<Investimento, Long> {
 
 }

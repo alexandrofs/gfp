@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -33,9 +34,9 @@ public class TipoImpostoRenda implements Serializable {
     private String descricao;
 
     @OneToMany(mappedBy = "tipoImpostoRenda")
-    @JsonIgnore
     private Set<TabelaImpostoRenda> tabelaImpostoRendas = new HashSet<>();
 
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -67,6 +68,7 @@ public class TipoImpostoRenda implements Serializable {
     public void setTabelaImpostoRendas(Set<TabelaImpostoRenda> tabelaImpostoRendas) {
         this.tabelaImpostoRendas = tabelaImpostoRendas;
     }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -77,23 +79,23 @@ public class TipoImpostoRenda implements Serializable {
             return false;
         }
         TipoImpostoRenda tipoImpostoRenda = (TipoImpostoRenda) o;
-        if (tipoImpostoRenda.id == null || id == null) {
+        if (tipoImpostoRenda.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(id, tipoImpostoRenda.id);
+        return Objects.equals(getId(), tipoImpostoRenda.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(getId());
     }
 
     @Override
     public String toString() {
         return "TipoImpostoRenda{" +
-            "id=" + id +
-            ", codigo='" + codigo + "'" +
-            ", descricao='" + descricao + "'" +
-            '}';
+            "id=" + getId() +
+            ", codigo='" + getCodigo() + "'" +
+            ", descricao='" + getDescricao() + "'" +
+            "}";
     }
 }

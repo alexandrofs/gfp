@@ -1,8 +1,10 @@
 package com.alexandrofs.gfp.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -26,13 +28,15 @@ public class HistoricoCotas implements Serializable {
     private LocalDate dataCota;
 
     @NotNull
-    @Column(name = "vlr_cota", precision=10, scale=2, nullable = false)
+    @Column(name = "vlr_cota", precision = 10, scale = 2, nullable = false)
     private BigDecimal vlrCota;
 
     @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("historicoCotas")
     private Investimento investimento;
 
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -64,6 +68,7 @@ public class HistoricoCotas implements Serializable {
     public void setInvestimento(Investimento investimento) {
         this.investimento = investimento;
     }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -74,23 +79,23 @@ public class HistoricoCotas implements Serializable {
             return false;
         }
         HistoricoCotas historicoCotas = (HistoricoCotas) o;
-        if (historicoCotas.id == null || id == null) {
+        if (historicoCotas.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(id, historicoCotas.id);
+        return Objects.equals(getId(), historicoCotas.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(getId());
     }
 
     @Override
     public String toString() {
         return "HistoricoCotas{" +
-            "id=" + id +
-            ", dataCota='" + dataCota + "'" +
-            ", vlrCota='" + vlrCota + "'" +
-            '}';
+            "id=" + getId() +
+            ", dataCota='" + getDataCota() + "'" +
+            ", vlrCota=" + getVlrCota() +
+            "}";
     }
 }

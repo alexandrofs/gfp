@@ -4,6 +4,7 @@ import com.alexandrofs.gfp.GfpApp;
 
 import com.alexandrofs.gfp.domain.Instituicao;
 import com.alexandrofs.gfp.repository.InstituicaoRepository;
+import com.alexandrofs.gfp.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static com.alexandrofs.gfp.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -42,11 +45,15 @@ public class InstituicaoResourceIntTest {
     @Autowired
     private InstituicaoRepository instituicaoRepository;
 
+
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
 
     @Autowired
     private EntityManager em;
@@ -58,9 +65,11 @@ public class InstituicaoResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-            InstituicaoResource instituicaoResource = new InstituicaoResource(instituicaoRepository);
+        final InstituicaoResource instituicaoResource = new InstituicaoResource(instituicaoRepository);
         this.restInstituicaoMockMvc = MockMvcBuilders.standaloneSetup(instituicaoResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -87,7 +96,6 @@ public class InstituicaoResourceIntTest {
         int databaseSizeBeforeCreate = instituicaoRepository.findAll().size();
 
         // Create the Instituicao
-
         restInstituicaoMockMvc.perform(post("/api/instituicaos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(instituicao)))
@@ -106,16 +114,15 @@ public class InstituicaoResourceIntTest {
         int databaseSizeBeforeCreate = instituicaoRepository.findAll().size();
 
         // Create the Instituicao with an existing ID
-        Instituicao existingInstituicao = new Instituicao();
-        existingInstituicao.setId(1L);
+        instituicao.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restInstituicaoMockMvc.perform(post("/api/instituicaos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(existingInstituicao)))
+            .content(TestUtil.convertObjectToJsonBytes(instituicao)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Alice in the database
+        // Validate the Instituicao in the database
         List<Instituicao> instituicaoList = instituicaoRepository.findAll();
         assertThat(instituicaoList).hasSize(databaseSizeBeforeCreate);
     }
@@ -133,6 +140,7 @@ public class InstituicaoResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(instituicao.getId().intValue())))
             .andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -147,7 +155,6 @@ public class InstituicaoResourceIntTest {
             .andExpect(jsonPath("$.id").value(instituicao.getId().intValue()))
             .andExpect(jsonPath("$.nome").value(DEFAULT_NOME.toString()));
     }
-
     @Test
     @Transactional
     public void getNonExistingInstituicao() throws Exception {
@@ -161,10 +168,13 @@ public class InstituicaoResourceIntTest {
     public void updateInstituicao() throws Exception {
         // Initialize the database
         instituicaoRepository.saveAndFlush(instituicao);
+
         int databaseSizeBeforeUpdate = instituicaoRepository.findAll().size();
 
         // Update the instituicao
-        Instituicao updatedInstituicao = instituicaoRepository.findOne(instituicao.getId());
+        Instituicao updatedInstituicao = instituicaoRepository.findById(instituicao.getId()).get();
+        // Disconnect from session so that the updates on updatedInstituicao are not directly saved in db
+        em.detach(updatedInstituicao);
         updatedInstituicao.setNome(UPDATED_NOME);
 
         restInstituicaoMockMvc.perform(put("/api/instituicaos")
@@ -190,11 +200,11 @@ public class InstituicaoResourceIntTest {
         restInstituicaoMockMvc.perform(put("/api/instituicaos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(instituicao)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the Instituicao in the database
         List<Instituicao> instituicaoList = instituicaoRepository.findAll();
-        assertThat(instituicaoList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(instituicaoList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -202,6 +212,7 @@ public class InstituicaoResourceIntTest {
     public void deleteInstituicao() throws Exception {
         // Initialize the database
         instituicaoRepository.saveAndFlush(instituicao);
+
         int databaseSizeBeforeDelete = instituicaoRepository.findAll().size();
 
         // Get the instituicao
@@ -215,7 +226,17 @@ public class InstituicaoResourceIntTest {
     }
 
     @Test
+    @Transactional
     public void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Instituicao.class);
+        Instituicao instituicao1 = new Instituicao();
+        instituicao1.setId(1L);
+        Instituicao instituicao2 = new Instituicao();
+        instituicao2.setId(instituicao1.getId());
+        assertThat(instituicao1).isEqualTo(instituicao2);
+        instituicao2.setId(2L);
+        assertThat(instituicao1).isNotEqualTo(instituicao2);
+        instituicao1.setId(null);
+        assertThat(instituicao1).isNotEqualTo(instituicao2);
     }
 }

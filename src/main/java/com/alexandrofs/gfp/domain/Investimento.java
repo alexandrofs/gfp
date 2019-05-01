@@ -1,9 +1,11 @@
 package com.alexandrofs.gfp.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -30,33 +32,36 @@ public class Investimento implements Serializable {
 
     @NotNull
     @DecimalMin(value = "0")
-    @Column(name = "qtde_cota", precision=10, scale=2, nullable = false)
+    @Column(name = "qtde_cota", precision = 10, scale = 2, nullable = false)
     private BigDecimal qtdeCota;
 
     @NotNull
     @DecimalMin(value = "0")
-    @Column(name = "vlr_cota", precision=10, scale=2, nullable = false)
+    @Column(name = "vlr_cota", precision = 10, scale = 2, nullable = false)
     private BigDecimal vlrCota;
 
-    @Column(name = "pct_pre_pos_fixado", precision=10, scale=2)
+    @Column(name = "pct_pre_pos_fixado", precision = 10, scale = 2)
     private BigDecimal pctPrePosFixado;
 
     @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("investimentos")
     private Carteira carteira;
 
     @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("")
     private TipoInvestimento tipoInvestimento;
 
     @OneToMany(mappedBy = "investimento")
-    @JsonIgnore
     private Set<HistoricoCotas> historicoCotas = new HashSet<>();
 
     @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("")
     private Instituicao instituicao;
 
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -128,6 +133,7 @@ public class Investimento implements Serializable {
     public void setInstituicao(Instituicao instituicao) {
         this.instituicao = instituicao;
     }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -138,25 +144,25 @@ public class Investimento implements Serializable {
             return false;
         }
         Investimento investimento = (Investimento) o;
-        if (investimento.id == null || id == null) {
+        if (investimento.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(id, investimento.id);
+        return Objects.equals(getId(), investimento.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(getId());
     }
 
     @Override
     public String toString() {
         return "Investimento{" +
-            "id=" + id +
-            ", dataAplicacao='" + dataAplicacao + "'" +
-            ", qtdeCota='" + qtdeCota + "'" +
-            ", vlrCota='" + vlrCota + "'" +
-            ", pctPrePosFixado='" + pctPrePosFixado + "'" +
-            '}';
+            "id=" + getId() +
+            ", dataAplicacao='" + getDataAplicacao() + "'" +
+            ", qtdeCota=" + getQtdeCota() +
+            ", vlrCota=" + getVlrCota() +
+            ", pctPrePosFixado=" + getPctPrePosFixado() +
+            "}";
     }
 }

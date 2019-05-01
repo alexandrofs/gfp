@@ -4,6 +4,7 @@ import com.alexandrofs.gfp.GfpApp;
 
 import com.alexandrofs.gfp.domain.Carteira;
 import com.alexandrofs.gfp.repository.CarteiraRepository;
+import com.alexandrofs.gfp.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static com.alexandrofs.gfp.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -45,11 +48,15 @@ public class CarteiraResourceIntTest {
     @Autowired
     private CarteiraRepository carteiraRepository;
 
+
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
     @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
 
     @Autowired
     private EntityManager em;
@@ -61,9 +68,11 @@ public class CarteiraResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-            CarteiraResource carteiraResource = new CarteiraResource(carteiraRepository);
+        final CarteiraResource carteiraResource = new CarteiraResource(carteiraRepository);
         this.restCarteiraMockMvc = MockMvcBuilders.standaloneSetup(carteiraResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -91,7 +100,6 @@ public class CarteiraResourceIntTest {
         int databaseSizeBeforeCreate = carteiraRepository.findAll().size();
 
         // Create the Carteira
-
         restCarteiraMockMvc.perform(post("/api/carteiras")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(carteira)))
@@ -111,16 +119,15 @@ public class CarteiraResourceIntTest {
         int databaseSizeBeforeCreate = carteiraRepository.findAll().size();
 
         // Create the Carteira with an existing ID
-        Carteira existingCarteira = new Carteira();
-        existingCarteira.setId(1L);
+        carteira.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restCarteiraMockMvc.perform(post("/api/carteiras")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(existingCarteira)))
+            .content(TestUtil.convertObjectToJsonBytes(carteira)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Alice in the database
+        // Validate the Carteira in the database
         List<Carteira> carteiraList = carteiraRepository.findAll();
         assertThat(carteiraList).hasSize(databaseSizeBeforeCreate);
     }
@@ -175,6 +182,7 @@ public class CarteiraResourceIntTest {
             .andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME.toString())))
             .andExpect(jsonPath("$.[*].descricao").value(hasItem(DEFAULT_DESCRICAO.toString())));
     }
+    
 
     @Test
     @Transactional
@@ -190,7 +198,6 @@ public class CarteiraResourceIntTest {
             .andExpect(jsonPath("$.nome").value(DEFAULT_NOME.toString()))
             .andExpect(jsonPath("$.descricao").value(DEFAULT_DESCRICAO.toString()));
     }
-
     @Test
     @Transactional
     public void getNonExistingCarteira() throws Exception {
@@ -204,10 +211,13 @@ public class CarteiraResourceIntTest {
     public void updateCarteira() throws Exception {
         // Initialize the database
         carteiraRepository.saveAndFlush(carteira);
+
         int databaseSizeBeforeUpdate = carteiraRepository.findAll().size();
 
         // Update the carteira
-        Carteira updatedCarteira = carteiraRepository.findOne(carteira.getId());
+        Carteira updatedCarteira = carteiraRepository.findById(carteira.getId()).get();
+        // Disconnect from session so that the updates on updatedCarteira are not directly saved in db
+        em.detach(updatedCarteira);
         updatedCarteira.setNome(UPDATED_NOME);
         updatedCarteira.setDescricao(UPDATED_DESCRICAO);
 
@@ -235,11 +245,11 @@ public class CarteiraResourceIntTest {
         restCarteiraMockMvc.perform(put("/api/carteiras")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(carteira)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the Carteira in the database
         List<Carteira> carteiraList = carteiraRepository.findAll();
-        assertThat(carteiraList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(carteiraList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -247,6 +257,7 @@ public class CarteiraResourceIntTest {
     public void deleteCarteira() throws Exception {
         // Initialize the database
         carteiraRepository.saveAndFlush(carteira);
+
         int databaseSizeBeforeDelete = carteiraRepository.findAll().size();
 
         // Get the carteira
@@ -260,7 +271,17 @@ public class CarteiraResourceIntTest {
     }
 
     @Test
+    @Transactional
     public void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Carteira.class);
+        Carteira carteira1 = new Carteira();
+        carteira1.setId(1L);
+        Carteira carteira2 = new Carteira();
+        carteira2.setId(carteira1.getId());
+        assertThat(carteira1).isEqualTo(carteira2);
+        carteira2.setId(2L);
+        assertThat(carteira1).isNotEqualTo(carteira2);
+        carteira1.setId(null);
+        assertThat(carteira1).isNotEqualTo(carteira2);
     }
 }

@@ -8,6 +8,7 @@ import com.alexandrofs.gfp.domain.TipoInvestimento;
 import com.alexandrofs.gfp.domain.Instituicao;
 import com.alexandrofs.gfp.repository.InvestimentoRepository;
 import com.alexandrofs.gfp.service.InvestimentoService;
+import com.alexandrofs.gfp.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -24,11 +25,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.math.BigDecimal;
 import java.util.List;
 
+
+import static com.alexandrofs.gfp.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -58,6 +61,8 @@ public class InvestimentoResourceIntTest {
     @Autowired
     private InvestimentoRepository investimentoRepository;
 
+    
+
     @Autowired
     private InvestimentoService investimentoService;
 
@@ -66,6 +71,9 @@ public class InvestimentoResourceIntTest {
 
     @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
 
     @Autowired
     private EntityManager em;
@@ -77,9 +85,11 @@ public class InvestimentoResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        InvestimentoResource investimentoResource = new InvestimentoResource(investimentoService);
+        final InvestimentoResource investimentoResource = new InvestimentoResource(investimentoService);
         this.restInvestimentoMockMvc = MockMvcBuilders.standaloneSetup(investimentoResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -124,7 +134,6 @@ public class InvestimentoResourceIntTest {
         int databaseSizeBeforeCreate = investimentoRepository.findAll().size();
 
         // Create the Investimento
-
         restInvestimentoMockMvc.perform(post("/api/investimentos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(investimento)))
@@ -146,16 +155,15 @@ public class InvestimentoResourceIntTest {
         int databaseSizeBeforeCreate = investimentoRepository.findAll().size();
 
         // Create the Investimento with an existing ID
-        Investimento existingInvestimento = new Investimento();
-        existingInvestimento.setId(1L);
+        investimento.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restInvestimentoMockMvc.perform(post("/api/investimentos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(existingInvestimento)))
+            .content(TestUtil.convertObjectToJsonBytes(investimento)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Alice in the database
+        // Validate the Investimento in the database
         List<Investimento> investimentoList = investimentoRepository.findAll();
         assertThat(investimentoList).hasSize(databaseSizeBeforeCreate);
     }
@@ -230,6 +238,7 @@ public class InvestimentoResourceIntTest {
             .andExpect(jsonPath("$.[*].vlrCota").value(hasItem(DEFAULT_VLR_COTA.intValue())))
             .andExpect(jsonPath("$.[*].pctPrePosFixado").value(hasItem(DEFAULT_PCT_PRE_POS_FIXADO.intValue())));
     }
+    
 
     @Test
     @Transactional
@@ -247,7 +256,6 @@ public class InvestimentoResourceIntTest {
             .andExpect(jsonPath("$.vlrCota").value(DEFAULT_VLR_COTA.intValue()))
             .andExpect(jsonPath("$.pctPrePosFixado").value(DEFAULT_PCT_PRE_POS_FIXADO.intValue()));
     }
-
     @Test
     @Transactional
     public void getNonExistingInvestimento() throws Exception {
@@ -265,7 +273,9 @@ public class InvestimentoResourceIntTest {
         int databaseSizeBeforeUpdate = investimentoRepository.findAll().size();
 
         // Update the investimento
-        Investimento updatedInvestimento = investimentoRepository.findOne(investimento.getId());
+        Investimento updatedInvestimento = investimentoRepository.findById(investimento.getId()).get();
+        // Disconnect from session so that the updates on updatedInvestimento are not directly saved in db
+        em.detach(updatedInvestimento);
         updatedInvestimento.setDataAplicacao(UPDATED_DATA_APLICACAO);
         updatedInvestimento.setQtdeCota(UPDATED_QTDE_COTA);
         updatedInvestimento.setVlrCota(UPDATED_VLR_COTA);
@@ -297,11 +307,11 @@ public class InvestimentoResourceIntTest {
         restInvestimentoMockMvc.perform(put("/api/investimentos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(investimento)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the Investimento in the database
         List<Investimento> investimentoList = investimentoRepository.findAll();
-        assertThat(investimentoList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(investimentoList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -323,7 +333,17 @@ public class InvestimentoResourceIntTest {
     }
 
     @Test
+    @Transactional
     public void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(Investimento.class);
+        Investimento investimento1 = new Investimento();
+        investimento1.setId(1L);
+        Investimento investimento2 = new Investimento();
+        investimento2.setId(investimento1.getId());
+        assertThat(investimento1).isEqualTo(investimento2);
+        investimento2.setId(2L);
+        assertThat(investimento1).isNotEqualTo(investimento2);
+        investimento1.setId(null);
+        assertThat(investimento1).isNotEqualTo(investimento2);
     }
 }

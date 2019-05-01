@@ -2,8 +2,8 @@ package com.alexandrofs.gfp.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.alexandrofs.gfp.domain.TipoImpostoRenda;
-
 import com.alexandrofs.gfp.repository.TipoImpostoRendaRepository;
+import com.alexandrofs.gfp.web.rest.errors.BadRequestAlertException;
 import com.alexandrofs.gfp.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +28,7 @@ public class TipoImpostoRendaResource {
     private final Logger log = LoggerFactory.getLogger(TipoImpostoRendaResource.class);
 
     private static final String ENTITY_NAME = "tipoImpostoRenda";
-        
+
     private final TipoImpostoRendaRepository tipoImpostoRendaRepository;
 
     public TipoImpostoRendaResource(TipoImpostoRendaRepository tipoImpostoRendaRepository) {
@@ -46,7 +47,7 @@ public class TipoImpostoRendaResource {
     public ResponseEntity<TipoImpostoRenda> createTipoImpostoRenda(@Valid @RequestBody TipoImpostoRenda tipoImpostoRenda) throws URISyntaxException {
         log.debug("REST request to save TipoImpostoRenda : {}", tipoImpostoRenda);
         if (tipoImpostoRenda.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new tipoImpostoRenda cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new tipoImpostoRenda cannot already have an ID", ENTITY_NAME, "idexists");
         }
         TipoImpostoRenda result = tipoImpostoRendaRepository.save(tipoImpostoRenda);
         return ResponseEntity.created(new URI("/api/tipo-imposto-rendas/" + result.getId()))
@@ -60,7 +61,7 @@ public class TipoImpostoRendaResource {
      * @param tipoImpostoRenda the tipoImpostoRenda to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated tipoImpostoRenda,
      * or with status 400 (Bad Request) if the tipoImpostoRenda is not valid,
-     * or with status 500 (Internal Server Error) if the tipoImpostoRenda couldnt be updated
+     * or with status 500 (Internal Server Error) if the tipoImpostoRenda couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/tipo-imposto-rendas")
@@ -68,7 +69,7 @@ public class TipoImpostoRendaResource {
     public ResponseEntity<TipoImpostoRenda> updateTipoImpostoRenda(@Valid @RequestBody TipoImpostoRenda tipoImpostoRenda) throws URISyntaxException {
         log.debug("REST request to update TipoImpostoRenda : {}", tipoImpostoRenda);
         if (tipoImpostoRenda.getId() == null) {
-            return createTipoImpostoRenda(tipoImpostoRenda);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         TipoImpostoRenda result = tipoImpostoRendaRepository.save(tipoImpostoRenda);
         return ResponseEntity.ok()
@@ -85,8 +86,7 @@ public class TipoImpostoRendaResource {
     @Timed
     public List<TipoImpostoRenda> getAllTipoImpostoRendas() {
         log.debug("REST request to get all TipoImpostoRendas");
-        List<TipoImpostoRenda> tipoImpostoRendas = tipoImpostoRendaRepository.findAll();
-        return tipoImpostoRendas;
+        return tipoImpostoRendaRepository.findAll();
     }
 
     /**
@@ -99,8 +99,8 @@ public class TipoImpostoRendaResource {
     @Timed
     public ResponseEntity<TipoImpostoRenda> getTipoImpostoRenda(@PathVariable Long id) {
         log.debug("REST request to get TipoImpostoRenda : {}", id);
-        TipoImpostoRenda tipoImpostoRenda = tipoImpostoRendaRepository.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(tipoImpostoRenda));
+        Optional<TipoImpostoRenda> tipoImpostoRenda = tipoImpostoRendaRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(tipoImpostoRenda);
     }
 
     /**
@@ -113,8 +113,8 @@ public class TipoImpostoRendaResource {
     @Timed
     public ResponseEntity<Void> deleteTipoImpostoRenda(@PathVariable Long id) {
         log.debug("REST request to delete TipoImpostoRenda : {}", id);
-        tipoImpostoRendaRepository.delete(id);
+
+        tipoImpostoRendaRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
-
 }
