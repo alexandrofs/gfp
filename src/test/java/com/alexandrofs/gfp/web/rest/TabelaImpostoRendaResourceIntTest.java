@@ -2,7 +2,7 @@ package com.alexandrofs.gfp.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import com.alexandrofs.gfp.domain.TipoImpostoRenda;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -15,6 +15,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,10 +31,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alexandrofs.gfp.AbstractTest;
 import com.alexandrofs.gfp.GfpApp;
-import javax.persistence.EntityManager;
-import java.math.BigDecimal;
+import com.alexandrofs.gfp.domain.TabelaImpostoRenda;
+import com.alexandrofs.gfp.domain.TipoImpostoRenda;
+import com.alexandrofs.gfp.repository.TabelaImpostoRendaRepository;
 
 /**
  * Test class for the TabelaImpostoRendaResource REST controller.
@@ -42,6 +43,7 @@ import java.math.BigDecimal;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = GfpApp.class)
+public class TabelaImpostoRendaResourceIntTest {
 
     private static final Long DEFAULT_NUM_DIAS = 0L;
     private static final Long UPDATED_NUM_DIAS = 1L;

@@ -8,8 +8,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import com.alexandrofs.gfp.service.dto.UserDTO;
-import com.alexandrofs.gfp.web.rest.vm.ManagedUserVM;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -21,6 +21,7 @@ import javax.transaction.Transactional;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -30,7 +31,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.alexandrofs.gfp.AbstractTest;
+import com.alexandrofs.gfp.GfpApp;
 import com.alexandrofs.gfp.domain.Authority;
 import com.alexandrofs.gfp.domain.User;
 import com.alexandrofs.gfp.repository.AuthorityRepository;
@@ -38,8 +39,8 @@ import com.alexandrofs.gfp.repository.UserRepository;
 import com.alexandrofs.gfp.security.AuthoritiesConstants;
 import com.alexandrofs.gfp.service.MailService;
 import com.alexandrofs.gfp.service.UserService;
-import com.alexandrofs.gfp.web.rest.dto.ManagedUserDTO;
-import com.alexandrofs.gfp.web.rest.dto.UserDTO;
+import com.alexandrofs.gfp.service.dto.UserDTO;
+import com.alexandrofs.gfp.web.rest.vm.ManagedUserVM;
 
 /**
  * Test class for the AccountResource REST controller.
@@ -48,6 +49,7 @@ import com.alexandrofs.gfp.web.rest.dto.UserDTO;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = GfpApp.class)
+public class AccountResourceIntTest {
 
     @Inject
     private UserRepository userRepository;

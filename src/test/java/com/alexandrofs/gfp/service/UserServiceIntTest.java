@@ -10,16 +10,18 @@ import java.util.Optional;
 import javax.inject.Inject;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alexandrofs.gfp.AbstractTest;
+import com.alexandrofs.gfp.GfpApp;
 import com.alexandrofs.gfp.domain.PersistentToken;
 import com.alexandrofs.gfp.domain.User;
 import com.alexandrofs.gfp.repository.PersistentTokenRepository;
 import com.alexandrofs.gfp.repository.UserRepository;
 import com.alexandrofs.gfp.service.util.RandomUtil;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * Test class for the UserResource REST controller.

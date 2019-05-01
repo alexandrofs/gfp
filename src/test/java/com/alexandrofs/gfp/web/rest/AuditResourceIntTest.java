@@ -14,6 +14,7 @@ import javax.inject.Inject;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
@@ -24,7 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alexandrofs.gfp.AbstractTest;
+import com.alexandrofs.gfp.GfpApp;
 import com.alexandrofs.gfp.config.audit.AuditEventConverter;
 import com.alexandrofs.gfp.domain.PersistentAuditEvent;
 import com.alexandrofs.gfp.repository.PersistenceAuditEventRepository;
@@ -37,7 +38,7 @@ import com.alexandrofs.gfp.service.AuditEventService;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = GfpApp.class)
 @Transactional
-public class AuditResourceIntTest extends AbstractTest {
+public class AuditResourceIntTest {
 
     private static final String SAMPLE_PRINCIPAL = "SAMPLE_PRINCIPAL";
     private static final String SAMPLE_TYPE = "SAMPLE_TYPE";

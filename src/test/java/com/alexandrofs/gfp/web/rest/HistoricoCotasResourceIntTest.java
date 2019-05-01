@@ -2,7 +2,7 @@ package com.alexandrofs.gfp.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import com.alexandrofs.gfp.domain.Investimento;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -17,11 +17,14 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -30,10 +33,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alexandrofs.gfp.AbstractTest;
+import com.alexandrofs.gfp.GfpApp;
 import com.alexandrofs.gfp.domain.HistoricoCotas;
-import javax.persistence.EntityManager;
-import java.math.BigDecimal;
+import com.alexandrofs.gfp.domain.Investimento;
+import com.alexandrofs.gfp.repository.HistoricoCotasRepository;
 
 /**
  * Test class for the HistoricoCotasResource REST controller.
@@ -42,6 +45,7 @@ import java.math.BigDecimal;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = GfpApp.class)
+public class HistoricoCotasResourceIntTest {
 
     private static final LocalDate DEFAULT_DATA_COTA = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_DATA_COTA = LocalDate.now(ZoneId.systemDefault());
@@ -204,7 +208,6 @@ import java.math.BigDecimal;
         HistoricoCotas updatedHistoricoCotas = historicoCotasRepository.findOne(historicoCotas.getId());
         updatedHistoricoCotas.setDataCota(UPDATED_DATA_COTA);
         updatedHistoricoCotas.setVlrCota(UPDATED_VLR_COTA);
-        updatedHistoricoCotas.setInvestimento(historicoCotas.getInvestimento());
 
         restHistoricoCotasMockMvc.perform(put("/api/historico-cotas")
                 .contentType(TestUtil.APPLICATION_JSON_UTF8)

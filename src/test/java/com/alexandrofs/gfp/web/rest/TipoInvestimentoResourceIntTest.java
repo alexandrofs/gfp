@@ -2,7 +2,7 @@ package com.alexandrofs.gfp.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import com.alexandrofs.gfp.domain.TipoImpostoRenda;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -14,11 +14,14 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -28,8 +31,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alexandrofs.gfp.AbstractTest;
+import com.alexandrofs.gfp.GfpApp;
 import com.alexandrofs.gfp.domain.TipoImpostoRenda;
-import javax.persistence.EntityManager;
+import com.alexandrofs.gfp.domain.TipoInvestimento;
 import com.alexandrofs.gfp.domain.fixed.ModalidadeEnum;
 import com.alexandrofs.gfp.domain.fixed.TipoIndexadorEnum;
 import com.alexandrofs.gfp.repository.TipoInvestimentoRepository;
@@ -41,6 +45,8 @@ import com.alexandrofs.gfp.repository.TipoInvestimentoRepository;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = GfpApp.class)
+public class TipoInvestimentoResourceIntTest extends AbstractTest {
+	
     private static final String DEFAULT_NOME = "AAAAAAAAAAAAAAAAAAAA";
     private static final String UPDATED_NOME = "BBBBBBBBBBBBBBBBBBBB";
     private static final String DEFAULT_DESCRICAO = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";

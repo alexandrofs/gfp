@@ -10,7 +10,10 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +26,8 @@ import com.alexandrofs.gfp.repository.HistoricoCotasRepository;
 import com.alexandrofs.gfp.repository.IndiceSerieDiRepository;
 import com.alexandrofs.gfp.service.CalculoCotasService;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = GfpApp.class)
 public class CalculoCotasTest extends AbstractTest {
 	
 	@Autowired

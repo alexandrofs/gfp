@@ -6,12 +6,7 @@ import java.time.ZoneId;
 
 import javax.inject.Inject;
 
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 
 import com.alexandrofs.gfp.dsl.Dsl;
 import com.alexandrofs.gfp.repository.CarteiraRepository;
@@ -19,10 +14,6 @@ import com.alexandrofs.gfp.repository.InstituicaoRepository;
 import com.alexandrofs.gfp.repository.InvestimentoRepository;
 
 @ActiveProfiles("test")
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = GfpApp.class)
-@WebAppConfiguration
-@IntegrationTest
 public abstract class AbstractTest {
 	
     protected static final LocalDate DEFAULT_DATA_APLICACAO = LocalDate.ofEpochDay(0L);

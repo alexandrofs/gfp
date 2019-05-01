@@ -2,23 +2,29 @@ package com.alexandrofs.gfp.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import com.alexandrofs.gfp.domain.Carteira;
-import com.alexandrofs.gfp.domain.TipoInvestimento;
-import com.alexandrofs.gfp.domain.Instituicao;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -27,12 +33,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alexandrofs.gfp.AbstractTest;
+import com.alexandrofs.gfp.GfpApp;
 import com.alexandrofs.gfp.domain.Carteira;
-import javax.persistence.EntityManager;
+import com.alexandrofs.gfp.domain.Instituicao;
 import com.alexandrofs.gfp.domain.Investimento;
+import com.alexandrofs.gfp.domain.TipoInvestimento;
+import com.alexandrofs.gfp.repository.InvestimentoRepository;
 import com.alexandrofs.gfp.service.InvestimentoService;
-import java.math.BigDecimal;
 
 /**
  * Test class for the InvestimentoResource REST controller.
@@ -41,6 +48,22 @@ import java.math.BigDecimal;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = GfpApp.class)
+public class InvestimentoResourceIntTest {
+
+    private static final LocalDate DEFAULT_DATA_APLICACAO = LocalDate.ofEpochDay(0L);
+    private static final LocalDate UPDATED_DATA_APLICACAO = LocalDate.now(ZoneId.systemDefault());
+
+    private static final BigDecimal DEFAULT_QTDE_COTA = new BigDecimal(0);
+    private static final BigDecimal UPDATED_QTDE_COTA = new BigDecimal(1);
+
+    private static final BigDecimal DEFAULT_VLR_COTA = new BigDecimal(0);
+    private static final BigDecimal UPDATED_VLR_COTA = new BigDecimal(1);
+
+    private static final BigDecimal DEFAULT_PCT_PRE_POS_FIXADO = new BigDecimal(1);
+    private static final BigDecimal UPDATED_PCT_PRE_POS_FIXADO = new BigDecimal(2);
+
+    @Inject
+    private InvestimentoRepository investimentoRepository;
 
     @Inject
     private InvestimentoService investimentoService;

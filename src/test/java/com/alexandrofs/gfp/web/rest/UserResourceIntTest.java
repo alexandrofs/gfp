@@ -1,10 +1,12 @@
 package com.alexandrofs.gfp.web.rest;
 
-import com.alexandrofs.gfp.AbstractTest;
-import com.alexandrofs.gfp.GfpApp;
-import com.alexandrofs.gfp.domain.User;
-import com.alexandrofs.gfp.repository.UserRepository;
-import com.alexandrofs.gfp.service.UserService;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import javax.inject.Inject;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,12 +17,9 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import javax.inject.Inject;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.alexandrofs.gfp.GfpApp;
+import com.alexandrofs.gfp.repository.UserRepository;
+import com.alexandrofs.gfp.service.UserService;
 
 /**
  * Test class for the UserResource REST controller.
@@ -29,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = GfpApp.class)
+public class UserResourceIntTest {
 
     @Inject
     private UserRepository userRepository;

@@ -17,11 +17,14 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -30,11 +33,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alexandrofs.gfp.AbstractTest;
+import com.alexandrofs.gfp.GfpApp;
 import com.alexandrofs.gfp.domain.IndiceSerieDi;
-import javax.persistence.EntityManager;
+import com.alexandrofs.gfp.repository.IndiceSerieDiRepository;
 import com.alexandrofs.gfp.service.IndiceSerieDiService;
-import java.math.BigDecimal;
 
 /**
  * Test class for the IndiceSerieDiResource REST controller.
@@ -43,6 +45,7 @@ import java.math.BigDecimal;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = GfpApp.class)
+public class IndiceSerieDiResourceIntTest {
 
     private static final LocalDate DEFAULT_DATA = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_DATA = LocalDate.now(ZoneId.systemDefault());

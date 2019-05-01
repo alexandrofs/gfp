@@ -11,13 +11,18 @@ import javax.transaction.Transactional;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import com.alexandrofs.gfp.domain.TabelaImpostoRenda;
 import com.alexandrofs.gfp.domain.TipoImpostoRenda;
 import com.alexandrofs.gfp.repository.TipoImpostoRendaRepository;
 import com.alexandrofs.gfp.service.CalculoImpostoService;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = GfpApp.class)
 @Transactional
 public class CalculoImpostoTest extends AbstractTest {
 	
