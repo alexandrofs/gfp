@@ -5,6 +5,7 @@ import com.alexandrofs.gfp.domain.User;
 import com.alexandrofs.gfp.repository.AuthorityRepository;
 import com.alexandrofs.gfp.repository.PersistentTokenRepository;
 import com.alexandrofs.gfp.repository.UserRepository;
+import com.alexandrofs.gfp.security.AuthoritiesConstants;
 import com.alexandrofs.gfp.security.SecurityUtils;
 import com.alexandrofs.gfp.service.util.RandomUtil;
 import com.alexandrofs.gfp.web.rest.dto.ManagedUserDTO;
@@ -89,7 +90,7 @@ public class UserService {
         String langKey) {
 
         User newUser = new User();
-        Authority authority = authorityRepository.findOne("ROLE_USER");
+        Authority authority = authorityRepository.findOne(AuthoritiesConstants.USER);
         Set<Authority> authorities = new HashSet<>();
         String encryptedPassword = passwordEncoder.encode(password);
         newUser.setLogin(login);
