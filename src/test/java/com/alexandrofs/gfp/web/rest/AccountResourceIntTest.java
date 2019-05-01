@@ -8,8 +8,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.alexandrofs.gfp.service.dto.UserDTO;
+import com.alexandrofs.gfp.web.rest.vm.ManagedUserVM;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -23,7 +23,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -44,7 +46,8 @@ import com.alexandrofs.gfp.web.rest.dto.UserDTO;
  *
  * @see UserService
  */
-public class AccountResourceIntTest extends AbstractTest {
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = GfpApp.class)
 
     @Inject
     private UserRepository userRepository;
@@ -122,7 +125,7 @@ public class AccountResourceIntTest extends AbstractTest {
         restUserMockMvc.perform(get("/api/account")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.login").value("test"))
                 .andExpect(jsonPath("$.firstName").value("john"))
                 .andExpect(jsonPath("$.lastName").value("doe"))
@@ -142,7 +145,7 @@ public class AccountResourceIntTest extends AbstractTest {
     @Test
     @Transactional
     public void testRegisterValid() throws Exception {
-        ManagedUserDTO validUser = new ManagedUserDTO(
+        ManagedUserVM validUser = new ManagedUserVM(
             null,                   // id
             "joe",                  // login
             "password",             // password
@@ -150,7 +153,7 @@ public class AccountResourceIntTest extends AbstractTest {
             "Shmoe",                // lastName
             "joe@example.com",      // e-mail
             true,                   // activated
-            "pt-br",               // langKey
+            "pt-br",                   // langKey
             new HashSet<>(Arrays.asList(AuthoritiesConstants.USER)),
             null,                   // createdDate
             null,                   // lastModifiedBy
@@ -170,7 +173,7 @@ public class AccountResourceIntTest extends AbstractTest {
     @Test
     @Transactional
     public void testRegisterInvalidLogin() throws Exception {
-        ManagedUserDTO invalidUser = new ManagedUserDTO(
+        ManagedUserVM invalidUser = new ManagedUserVM(
             null,                   // id
             "funky-log!n",          // login <-- invalid
             "password",             // password
@@ -178,7 +181,7 @@ public class AccountResourceIntTest extends AbstractTest {
             "One",                  // lastName
             "funky@example.com",    // e-mail
             true,                   // activated
-            "pt-br",               // langKey
+            "pt-br",                   // langKey
             new HashSet<>(Arrays.asList(AuthoritiesConstants.USER)),
             null,                   // createdDate
             null,                   // lastModifiedBy
@@ -198,8 +201,8 @@ public class AccountResourceIntTest extends AbstractTest {
     @Test
     @Transactional
     public void testRegisterInvalidEmail() throws Exception {
-        ManagedUserDTO invalidUser = new ManagedUserDTO(
-            null,                   // id
+        ManagedUserVM invalidUser = new ManagedUserVM(
+            null,               // id
             "bob",              // login
             "password",         // password
             "Bob",              // firstName
@@ -208,9 +211,9 @@ public class AccountResourceIntTest extends AbstractTest {
             true,               // activated
             "pt-br",               // langKey
             new HashSet<>(Arrays.asList(AuthoritiesConstants.USER)),
-            null,                   // createdDate
-            null,                   // lastModifiedBy
-            null                    // lastModifiedDate
+            null,               // createdDate
+            null,               // lastModifiedBy
+            null                // lastModifiedDate
         );
 
         restUserMockMvc.perform(
@@ -226,8 +229,8 @@ public class AccountResourceIntTest extends AbstractTest {
     @Test
     @Transactional
     public void testRegisterInvalidPassword() throws Exception {
-        ManagedUserDTO invalidUser = new ManagedUserDTO(
-            null,                   // id
+        ManagedUserVM invalidUser = new ManagedUserVM(
+            null,               // id
             "bob",              // login
             "123",              // password with only 3 digits
             "Bob",              // firstName
@@ -236,9 +239,9 @@ public class AccountResourceIntTest extends AbstractTest {
             true,               // activated
             "pt-br",               // langKey
             new HashSet<>(Arrays.asList(AuthoritiesConstants.USER)),
-            null,                   // createdDate
-            null,                   // lastModifiedBy
-            null                    // lastModifiedDate
+            null,               // createdDate
+            null,               // lastModifiedBy
+            null                // lastModifiedDate
         );
 
         restUserMockMvc.perform(
@@ -255,7 +258,7 @@ public class AccountResourceIntTest extends AbstractTest {
     @Transactional
     public void testRegisterDuplicateLogin() throws Exception {
         // Good
-        ManagedUserDTO validUser = new ManagedUserDTO(
+        ManagedUserVM validUser = new ManagedUserVM(
             null,                   // id
             "alice",                // login
             "password",             // password
@@ -263,7 +266,7 @@ public class AccountResourceIntTest extends AbstractTest {
             "Something",            // lastName
             "alice@example.com",    // e-mail
             true,                   // activated
-            "pt-br",               // langKey
+            "pt-br",                   // langKey
             new HashSet<>(Arrays.asList(AuthoritiesConstants.USER)),
             null,                   // createdDate
             null,                   // lastModifiedBy
@@ -271,7 +274,7 @@ public class AccountResourceIntTest extends AbstractTest {
         );
 
         // Duplicate login, different e-mail
-        ManagedUserDTO duplicatedUser = new ManagedUserDTO(validUser.getId(), validUser.getLogin(), validUser.getPassword(), validUser.getLogin(), validUser.getLastName(),
+        ManagedUserVM duplicatedUser = new ManagedUserVM(validUser.getId(), validUser.getLogin(), validUser.getPassword(), validUser.getLogin(), validUser.getLastName(),
             "alicejr@example.com", true, validUser.getLangKey(), validUser.getAuthorities(), validUser.getCreatedDate(), validUser.getLastModifiedBy(), validUser.getLastModifiedDate());
 
         // Good user
@@ -296,7 +299,7 @@ public class AccountResourceIntTest extends AbstractTest {
     @Transactional
     public void testRegisterDuplicateEmail() throws Exception {
         // Good
-        ManagedUserDTO validUser = new ManagedUserDTO(
+        ManagedUserVM validUser = new ManagedUserVM(
             null,                   // id
             "john",                 // login
             "password",             // password
@@ -304,7 +307,7 @@ public class AccountResourceIntTest extends AbstractTest {
             "Doe",                  // lastName
             "john@example.com",     // e-mail
             true,                   // activated
-            "pt-br",               // langKey
+            "pt-br",                   // langKey
             new HashSet<>(Arrays.asList(AuthoritiesConstants.USER)),
             null,                   // createdDate
             null,                   // lastModifiedBy
@@ -312,7 +315,7 @@ public class AccountResourceIntTest extends AbstractTest {
         );
 
         // Duplicate e-mail, different login
-        ManagedUserDTO duplicatedUser = new ManagedUserDTO(validUser.getId(), "johnjr", validUser.getPassword(), validUser.getLogin(), validUser.getLastName(),
+        ManagedUserVM duplicatedUser = new ManagedUserVM(validUser.getId(), "johnjr", validUser.getPassword(), validUser.getLogin(), validUser.getLastName(),
             validUser.getEmail(), true, validUser.getLangKey(), validUser.getAuthorities(), validUser.getCreatedDate(), validUser.getLastModifiedBy(), validUser.getLastModifiedDate());
 
         // Good user
@@ -336,7 +339,7 @@ public class AccountResourceIntTest extends AbstractTest {
     @Test
     @Transactional
     public void testRegisterAdminIsIgnored() throws Exception {
-        ManagedUserDTO validUser = new ManagedUserDTO(
+        ManagedUserVM validUser = new ManagedUserVM(
             null,                   // id
             "badguy",               // login
             "password",             // password
@@ -344,7 +347,7 @@ public class AccountResourceIntTest extends AbstractTest {
             "Guy",                  // lastName
             "badguy@example.com",   // e-mail
             true,                   // activated
-            "pt-br",               // langKey
+            "pt-br",                   // langKey
             new HashSet<>(Arrays.asList(AuthoritiesConstants.ADMIN)),
             null,                   // createdDate
             null,                   // lastModifiedBy
@@ -372,7 +375,7 @@ public class AccountResourceIntTest extends AbstractTest {
             "One",                  // lastName
             "funky@example.com",    // e-mail
             true,                   // activated
-            "pt-br",               // langKey
+            "pt-br",                   // langKey
             new HashSet<>(Arrays.asList(AuthoritiesConstants.USER))
         );
 

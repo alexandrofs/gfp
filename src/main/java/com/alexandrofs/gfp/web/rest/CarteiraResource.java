@@ -2,7 +2,7 @@ package com.alexandrofs.gfp.web.rest;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
+
 import java.util.Optional;
 
 import javax.inject.Inject;
@@ -35,7 +35,7 @@ public class CarteiraResource {
         
     @Inject
     private CarteiraRepository carteiraRepository;
-    
+
     /**
      * POST  /carteiras : Create a new carteira.
      *

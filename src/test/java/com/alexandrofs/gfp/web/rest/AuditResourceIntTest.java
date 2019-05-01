@@ -15,9 +15,11 @@ import javax.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +34,8 @@ import com.alexandrofs.gfp.service.AuditEventService;
  * Test class for the AuditResource REST controller.
  *
  */
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = GfpApp.class)
 @Transactional
 public class AuditResourceIntTest extends AbstractTest {
 
@@ -64,7 +68,7 @@ public class AuditResourceIntTest extends AbstractTest {
         AuditResource auditResource = new AuditResource(auditEventService);
         this.restAuditMockMvc = MockMvcBuilders.standaloneSetup(auditResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setMessageConverters(jacksonMessageConverter).build();;
+            .setMessageConverters(jacksonMessageConverter).build();
     }
 
     @Before
@@ -84,7 +88,7 @@ public class AuditResourceIntTest extends AbstractTest {
         // Get all the audits
         restAuditMockMvc.perform(get("/management/jhipster/audits"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.[*].principal").value(hasItem(SAMPLE_PRINCIPAL)));
     }
 
@@ -96,7 +100,7 @@ public class AuditResourceIntTest extends AbstractTest {
         // Get the audit
         restAuditMockMvc.perform(get("/management/jhipster/audits/{id}", auditEvent.getId()))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.principal").value(SAMPLE_PRINCIPAL));
     }
 
@@ -112,7 +116,7 @@ public class AuditResourceIntTest extends AbstractTest {
         // Get the audit
         restAuditMockMvc.perform(get("/management/jhipster/audits?fromDate="+fromDate+"&toDate="+toDate))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].principal").value(hasItem(SAMPLE_PRINCIPAL)));
     }
 
@@ -128,7 +132,7 @@ public class AuditResourceIntTest extends AbstractTest {
         // Query audits but expect no results
         restAuditMockMvc.perform(get("/management/jhipster/audits?fromDate=" + fromDate + "&toDate=" + toDate))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(header().string("X-Total-Count", "0"));
     }
 

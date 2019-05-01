@@ -39,7 +39,7 @@ public class IndiceSerieDiResource {
         
     @Inject
     private IndiceSerieDiService indiceSerieDiService;
-    
+
     /**
      * POST  /indice-serie-dis : Create a new indiceSerieDi.
      *
@@ -100,7 +100,7 @@ public class IndiceSerieDiResource {
     public ResponseEntity<List<IndiceSerieDi>> getAllIndiceSerieDis(Pageable pageable)
         throws URISyntaxException {
         log.debug("REST request to get a page of IndiceSerieDis");
-        Page<IndiceSerieDi> page = indiceSerieDiService.findAll(pageable); 
+        Page<IndiceSerieDi> page = indiceSerieDiService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/indice-serie-dis");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }

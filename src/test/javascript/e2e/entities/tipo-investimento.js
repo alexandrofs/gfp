@@ -29,7 +29,7 @@ describe('TipoInvestimento e2e test', function () {
 
     it('should load create TipoInvestimento dialog', function () {
         element(by.css('[ui-sref="tipo-investimento.new"]')).click().then(function() {
-            expect(element(by.css('h4.modal-title')).getText()).toMatch(/Create or edit a Tipo Investimento/);
+            expect(element(by.css('h4.modal-title')).getAttribute("translate")).toMatch(/gfpApp.tipoInvestimento.home.createOrEditLabel/);
             element(by.css('button.close')).click();
         });
     });

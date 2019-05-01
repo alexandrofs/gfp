@@ -29,7 +29,7 @@ describe('IndiceSerieDi e2e test', function () {
 
     it('should load create IndiceSerieDi dialog', function () {
         element(by.css('[ui-sref="indice-serie-di.new"]')).click().then(function() {
-            expect(element(by.css('h4.modal-title')).getText()).toMatch(/Create or edit a Indice Serie Di/);
+            expect(element(by.css('h4.modal-title')).getAttribute("translate")).toMatch(/gfpApp.indiceSerieDi.home.createOrEditLabel/);
             element(by.css('button.close')).click();
         });
     });

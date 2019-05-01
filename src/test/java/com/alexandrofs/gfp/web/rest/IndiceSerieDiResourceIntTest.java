@@ -21,9 +21,10 @@ import javax.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -31,17 +32,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alexandrofs.gfp.AbstractTest;
 import com.alexandrofs.gfp.domain.IndiceSerieDi;
-import com.alexandrofs.gfp.repository.IndiceSerieDiRepository;
+import javax.persistence.EntityManager;
 import com.alexandrofs.gfp.service.IndiceSerieDiService;
-
+import java.math.BigDecimal;
 
 /**
  * Test class for the IndiceSerieDiResource REST controller.
  *
  * @see IndiceSerieDiResource
  */
-public class IndiceSerieDiResourceIntTest extends AbstractTest {
-
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = GfpApp.class)
 
     private static final LocalDate DEFAULT_DATA = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_DATA = LocalDate.now(ZoneId.systemDefault());
@@ -67,6 +68,9 @@ public class IndiceSerieDiResourceIntTest extends AbstractTest {
     @Inject
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
+    @Inject
+    private EntityManager em;
+
     private MockMvc restIndiceSerieDiMockMvc;
 
     private IndiceSerieDi indiceSerieDi;
@@ -81,13 +85,25 @@ public class IndiceSerieDiResourceIntTest extends AbstractTest {
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
-    @Before
-    public void initTest() {
+    /**
+     * Create an entity for this test.
+     *
+     * This is a static method, as tests for other entities might also need it,
+     * if they test an entity which requires the current entity.
+     */
+    public static IndiceSerieDi createEntity(EntityManager em) {
+        IndiceSerieDi indiceSerieDi = new IndiceSerieDi();
         indiceSerieDi = new IndiceSerieDi();
         indiceSerieDi.setData(DEFAULT_DATA);
         indiceSerieDi.setTaxaMediaAnual(DEFAULT_TAXA_MEDIA_ANUAL);
         indiceSerieDi.setTaxaSelic(DEFAULT_TAXA_SELIC);
         indiceSerieDi.setFatorDiario(DEFAULT_FATOR_DIARIO);
+        return indiceSerieDi;
+    }
+
+    @Before
+    public void initTest() {
+        indiceSerieDi = createEntity(em);
     }
     
     @Test
@@ -193,7 +209,7 @@ public class IndiceSerieDiResourceIntTest extends AbstractTest {
         // Get all the indiceSerieDis
         restIndiceSerieDiMockMvc.perform(get("/api/indice-serie-dis?sort=id,desc"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(indiceSerieDi.getId().intValue())))
                 .andExpect(jsonPath("$.[*].data").value(hasItem(DEFAULT_DATA.toString())))
                 .andExpect(jsonPath("$.[*].taxaMediaAnual").value(hasItem(DEFAULT_TAXA_MEDIA_ANUAL.intValue())))
@@ -210,7 +226,7 @@ public class IndiceSerieDiResourceIntTest extends AbstractTest {
         // Get the indiceSerieDi
         restIndiceSerieDiMockMvc.perform(get("/api/indice-serie-dis/{id}", indiceSerieDi.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(indiceSerieDi.getId().intValue()))
             .andExpect(jsonPath("$.data").value(DEFAULT_DATA.toString()))
             .andExpect(jsonPath("$.taxaMediaAnual").value(DEFAULT_TAXA_MEDIA_ANUAL.intValue()))
@@ -235,8 +251,7 @@ public class IndiceSerieDiResourceIntTest extends AbstractTest {
         int databaseSizeBeforeUpdate = indiceSerieDiRepository.findAll().size();
 
         // Update the indiceSerieDi
-        IndiceSerieDi updatedIndiceSerieDi = new IndiceSerieDi();
-        updatedIndiceSerieDi.setId(indiceSerieDi.getId());
+        IndiceSerieDi updatedIndiceSerieDi = indiceSerieDiRepository.findOne(indiceSerieDi.getId());
         updatedIndiceSerieDi.setData(UPDATED_DATA);
         updatedIndiceSerieDi.setTaxaMediaAnual(UPDATED_TAXA_MEDIA_ANUAL);
         updatedIndiceSerieDi.setTaxaSelic(UPDATED_TAXA_SELIC);

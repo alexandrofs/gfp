@@ -18,9 +18,10 @@ import javax.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -28,16 +29,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alexandrofs.gfp.AbstractTest;
 import com.alexandrofs.gfp.domain.Instituicao;
-import com.alexandrofs.gfp.repository.InstituicaoRepository;
-
+import javax.persistence.EntityManager;
 
 /**
  * Test class for the InstituicaoResource REST controller.
  *
  * @see InstituicaoResource
  */
-public class InstituicaoResourceIntTest extends AbstractTest {
-
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = GfpApp.class)
     private static final String DEFAULT_NOME = "AAAAA";
     private static final String UPDATED_NOME = "BBBBB";
 
@@ -49,6 +49,9 @@ public class InstituicaoResourceIntTest extends AbstractTest {
 
     @Inject
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
+
+    @Inject
+    private EntityManager em;
 
     private MockMvc restInstituicaoMockMvc;
 
@@ -64,10 +67,22 @@ public class InstituicaoResourceIntTest extends AbstractTest {
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
-    @Before
-    public void initTest() {
+    /**
+     * Create an entity for this test.
+     *
+     * This is a static method, as tests for other entities might also need it,
+     * if they test an entity which requires the current entity.
+     */
+    public static Instituicao createEntity(EntityManager em) {
+        Instituicao instituicao = new Instituicao();
         instituicao = new Instituicao();
         instituicao.setNome(DEFAULT_NOME);
+        return instituicao;
+    }
+
+    @Before
+    public void initTest() {
+        instituicao = createEntity(em);
     }
 
     @Test
@@ -98,7 +113,7 @@ public class InstituicaoResourceIntTest extends AbstractTest {
         // Get all the instituicaos
         restInstituicaoMockMvc.perform(get("/api/instituicaos?sort=id,desc"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(instituicao.getId().intValue())))
                 .andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME.toString())));
     }
@@ -112,7 +127,7 @@ public class InstituicaoResourceIntTest extends AbstractTest {
         // Get the instituicao
         restInstituicaoMockMvc.perform(get("/api/instituicaos/{id}", instituicao.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(instituicao.getId().intValue()))
             .andExpect(jsonPath("$.nome").value(DEFAULT_NOME.toString()));
     }
@@ -133,8 +148,7 @@ public class InstituicaoResourceIntTest extends AbstractTest {
         int databaseSizeBeforeUpdate = instituicaoRepository.findAll().size();
 
         // Update the instituicao
-        Instituicao updatedInstituicao = new Instituicao();
-        updatedInstituicao.setId(instituicao.getId());
+        Instituicao updatedInstituicao = instituicaoRepository.findOne(instituicao.getId());
         updatedInstituicao.setNome(UPDATED_NOME);
 
         restInstituicaoMockMvc.perform(put("/api/instituicaos")

@@ -2,6 +2,7 @@ package com.alexandrofs.gfp.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.alexandrofs.gfp.domain.TipoImpostoRenda;
+
 import com.alexandrofs.gfp.repository.TipoImpostoRendaRepository;
 import com.alexandrofs.gfp.web.rest.util.HeaderUtil;
 import org.slf4j.Logger;
@@ -30,7 +31,7 @@ public class TipoImpostoRendaResource {
         
     @Inject
     private TipoImpostoRendaRepository tipoImpostoRendaRepository;
-    
+
     /**
      * POST  /tipo-imposto-rendas : Create a new tipoImpostoRenda.
      *

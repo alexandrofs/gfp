@@ -52,8 +52,41 @@
                 }],
                 entity: ['$stateParams', 'Investimento', function($stateParams, Investimento) {
                     return Investimento.get({id : $stateParams.id}).$promise;
+                }],
+                previousState: ["$state", function ($state) {
+                    var currentStateData = {
+                        name: $state.current.name || 'investimento',
+                        params: $state.params,
+                        url: $state.href($state.current.name, $state.params)
+                    };
+                    return currentStateData;
                 }]
             }
+        })
+        .state('investimento-detail.edit', {
+            parent: 'investimento-detail',
+            url: '/detail/edit',
+            data: {
+                authorities: ['ROLE_USER']
+            },
+            onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
+                $uibModal.open({
+                    templateUrl: 'app/entities/investimento/investimento-dialog.html',
+                    controller: 'InvestimentoDialogController',
+                    controllerAs: 'vm',
+                    backdrop: 'static',
+                    size: 'lg',
+                    resolve: {
+                        entity: ['Investimento', function(Investimento) {
+                            return Investimento.get({id : $stateParams.id}).$promise;
+                        }]
+                    }
+                }).result.then(function() {
+                    $state.go('^', {}, { reload: false });
+                }, function() {
+                    $state.go('^');
+                });
+            }]
         })
         .state('investimento.new', {
             parent: 'investimento',
@@ -81,7 +114,7 @@
                         }
                     }
                 }).result.then(function() {
-                    $state.go('investimento', null, { reload: true });
+                    $state.go('investimento', null, { reload: 'investimento' });
                 }, function() {
                     $state.go('investimento');
                 });
@@ -106,7 +139,7 @@
                         }]
                     }
                 }).result.then(function() {
-                    $state.go('investimento', null, { reload: true });
+                    $state.go('investimento', null, { reload: 'investimento' });
                 }, function() {
                     $state.go('^');
                 });
@@ -130,7 +163,7 @@
                         }]
                     }
                 }).result.then(function() {
-                    $state.go('investimento', null, { reload: true });
+                    $state.go('investimento', null, { reload: 'investimento' });
                 }, function() {
                     $state.go('^');
                 });

@@ -23,10 +23,10 @@ public class IndiceSerieDiService {
     
     @Inject
     private IndiceSerieDiRepository indiceSerieDiRepository;
-    
+
     /**
      * Save a indiceSerieDi.
-     * 
+     *
      * @param indiceSerieDi the entity to save
      * @return the persisted entity
      */
@@ -45,7 +45,7 @@ public class IndiceSerieDiService {
     @Transactional(readOnly = true) 
     public Page<IndiceSerieDi> findAll(Pageable pageable) {
         log.debug("Request to get all IndiceSerieDis");
-        Page<IndiceSerieDi> result = indiceSerieDiRepository.findAll(pageable); 
+        Page<IndiceSerieDi> result = indiceSerieDiRepository.findAll(pageable);
         return result;
     }
 
@@ -64,7 +64,7 @@ public class IndiceSerieDiService {
 
     /**
      *  Delete the  indiceSerieDi by id.
-     *  
+     *
      *  @param id the id of the entity
      */
     public void delete(Long id) {

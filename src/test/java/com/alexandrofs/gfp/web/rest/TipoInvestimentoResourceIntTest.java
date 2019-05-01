@@ -2,7 +2,7 @@ package com.alexandrofs.gfp.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import com.alexandrofs.gfp.domain.TipoImpostoRenda;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -18,9 +18,10 @@ import javax.inject.Inject;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.MockitoAnnotations;
-import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -28,19 +29,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alexandrofs.gfp.AbstractTest;
 import com.alexandrofs.gfp.domain.TipoImpostoRenda;
-import com.alexandrofs.gfp.domain.TipoInvestimento;
+import javax.persistence.EntityManager;
 import com.alexandrofs.gfp.domain.fixed.ModalidadeEnum;
 import com.alexandrofs.gfp.domain.fixed.TipoIndexadorEnum;
 import com.alexandrofs.gfp.repository.TipoInvestimentoRepository;
-
 
 /**
  * Test class for the TipoInvestimentoResource REST controller.
  *
  * @see TipoInvestimentoResource
  */
-public class TipoInvestimentoResourceIntTest extends AbstractTest {
-
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = GfpApp.class)
     private static final String DEFAULT_NOME = "AAAAAAAAAAAAAAAAAAAA";
     private static final String UPDATED_NOME = "BBBBBBBBBBBBBBBBBBBB";
     private static final String DEFAULT_DESCRICAO = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
@@ -61,6 +61,9 @@ public class TipoInvestimentoResourceIntTest extends AbstractTest {
     @Inject
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
+    @Inject
+    private EntityManager em;
+
     private MockMvc restTipoInvestimentoMockMvc;
 
     private TipoInvestimento tipoInvestimento;
@@ -75,15 +78,31 @@ public class TipoInvestimentoResourceIntTest extends AbstractTest {
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
-    @Before
-    public void initTest() {
+    /**
+     * Create an entity for this test.
+     *
+     * This is a static method, as tests for other entities might also need it,
+     * if they test an entity which requires the current entity.
+     */
+    public static TipoInvestimento createEntity(EntityManager em) {
+        TipoInvestimento tipoInvestimento = new TipoInvestimento();
         tipoInvestimento = new TipoInvestimento();
         tipoInvestimento.setNome(DEFAULT_NOME);
         tipoInvestimento.setDescricao(DEFAULT_DESCRICAO);
         tipoInvestimento.setModalidade(DEFAULT_MODALIDADE);
         tipoInvestimento.setTipoIndexador(DEFAULT_TIPO_INDEXADOR);
         tipoInvestimento.setIndice(DEFAULT_INDICE);
-        tipoInvestimento.setTipoImpostoRenda(dsl.dado().tipoImpostoRenda().salva());
+        // Add required entity
+        TipoImpostoRenda tipoImpostoRenda = TipoImpostoRendaResourceIntTest.createEntity(em);
+        em.persist(tipoImpostoRenda);
+        em.flush();
+        tipoInvestimento.setTipoImpostoRenda(tipoImpostoRenda);
+        return tipoInvestimento;
+    }
+
+    @Before
+    public void initTest() {
+        tipoInvestimento = createEntity(em);
     }
 
     @Test
@@ -265,7 +284,7 @@ public class TipoInvestimentoResourceIntTest extends AbstractTest {
         // Get all the tipoInvestimentos
         restTipoInvestimentoMockMvc.perform(get("/api/tipo-investimentos?sort=id,desc"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
                 .andExpect(jsonPath("$.[*].id").value(hasItem(tipoInvestimento.getId().intValue())))
                 .andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME.toString())))
                 .andExpect(jsonPath("$.[*].descricao").value(hasItem(DEFAULT_DESCRICAO.toString())))
@@ -283,7 +302,7 @@ public class TipoInvestimentoResourceIntTest extends AbstractTest {
         // Get the tipoInvestimento
         restTipoInvestimentoMockMvc.perform(get("/api/tipo-investimentos/{id}", tipoInvestimento.getId()))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(tipoInvestimento.getId().intValue()))
             .andExpect(jsonPath("$.nome").value(DEFAULT_NOME.toString()))
             .andExpect(jsonPath("$.descricao").value(DEFAULT_DESCRICAO.toString()))
@@ -310,8 +329,7 @@ public class TipoInvestimentoResourceIntTest extends AbstractTest {
         TipoImpostoRenda updatedTipoImpostoRenda = dsl.dado().tipoImpostoRenda().salva();
         
         // Update the tipoInvestimento
-        TipoInvestimento updatedTipoInvestimento = new TipoInvestimento();
-        updatedTipoInvestimento.setId(tipoInvestimento.getId());
+        TipoInvestimento updatedTipoInvestimento = tipoInvestimentoRepository.findOne(tipoInvestimento.getId());
         updatedTipoInvestimento.setNome(UPDATED_NOME);
         updatedTipoInvestimento.setDescricao(UPDATED_DESCRICAO);
         updatedTipoInvestimento.setModalidade(UPDATED_MODALIDADE);

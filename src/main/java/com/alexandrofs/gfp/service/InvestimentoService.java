@@ -25,13 +25,13 @@ public class InvestimentoService {
     
     @Inject
     private InvestimentoRepository investimentoRepository;
-    
+
     @Autowired
     private CalculoCotasService calculoCotasService;
     
     /**
      * Save a investimento.
-     * 
+     *
      * @param investimento the entity to save
      * @return the persisted entity
      */
@@ -68,7 +68,7 @@ public class InvestimentoService {
 
     /**
      *  Delete the  investimento by id.
-     *  
+     *
      *  @param id the id of the entity
      */
     public void delete(Long id) {

@@ -1,8 +1,8 @@
-package com.alexandrofs.gfp.web.rest.mapper;
+package com.alexandrofs.gfp.service.mapper;
 
 import com.alexandrofs.gfp.domain.Authority;
 import com.alexandrofs.gfp.domain.User;
-import com.alexandrofs.gfp.web.rest.dto.UserDTO;
+import com.alexandrofs.gfp.service.dto.UserDTO;
 import org.mapstruct.*;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public interface UserMapper {
     UserDTO userToUserDTO(User user);
 
     List<UserDTO> usersToUserDTOs(List<User> users);
-    
+
     @Mapping(target = "createdBy", ignore = true)
     @Mapping(target = "createdDate", ignore = true)
     @Mapping(target = "lastModifiedBy", ignore = true)

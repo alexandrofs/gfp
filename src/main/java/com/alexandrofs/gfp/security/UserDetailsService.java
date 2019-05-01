@@ -1,4 +1,5 @@
 package com.alexandrofs.gfp.security;
+
 import com.alexandrofs.gfp.domain.User;
 import com.alexandrofs.gfp.repository.UserRepository;
 import org.slf4j.Logger;

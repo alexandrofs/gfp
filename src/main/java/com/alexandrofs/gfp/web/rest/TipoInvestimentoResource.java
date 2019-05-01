@@ -2,7 +2,7 @@ package com.alexandrofs.gfp.web.rest;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
+
 import java.util.Optional;
 
 import javax.inject.Inject;
@@ -37,7 +37,7 @@ public class TipoInvestimentoResource {
         
     @Inject
     private TipoInvestimentoRepository tipoInvestimentoRepository;
-    
+
     /**
      * POST  /tipo-investimentos : Create a new tipoInvestimento.
      *
