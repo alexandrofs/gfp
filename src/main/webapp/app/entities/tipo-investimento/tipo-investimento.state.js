@@ -32,7 +32,7 @@
             }
         })
         .state('tipo-investimento-detail', {
-            parent: 'entity',
+            parent: 'tipo-investimento',
             url: '/tipo-investimento/{id}',
             data: {
                 authorities: ['ROLE_USER'],

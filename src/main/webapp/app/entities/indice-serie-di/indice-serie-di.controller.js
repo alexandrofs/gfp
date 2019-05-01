@@ -5,13 +5,14 @@
         .module('gfpApp')
         .controller('IndiceSerieDiController', IndiceSerieDiController);
 
-    IndiceSerieDiController.$inject = ['$scope', '$state', 'IndiceSerieDi', 'ParseLinks', 'AlertService'];
+    IndiceSerieDiController.$inject = ['$scope', '$state', 'IndiceSerieDi', 'ParseLinks', 'AlertService', 'paginationConstants'];
 
-    function IndiceSerieDiController ($scope, $state, IndiceSerieDi, ParseLinks, AlertService) {
+    function IndiceSerieDiController ($scope, $state, IndiceSerieDi, ParseLinks, AlertService, paginationConstants) {
         var vm = this;
-        
+
         vm.indiceSerieDis = [];
         vm.loadPage = loadPage;
+        vm.itemsPerPage = paginationConstants.itemsPerPage;
         vm.page = 0;
         vm.predicate = 'data';
         vm.links = {
@@ -25,7 +26,7 @@
         function loadAll () {
             IndiceSerieDi.query({
                 page: vm.page,
-                size: 20,
+                size: vm.itemsPerPage,
                 sort: sort()
             }, onSuccess, onError);
             function sort() {

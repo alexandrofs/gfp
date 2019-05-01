@@ -23,8 +23,11 @@ public class InvestimentoService {
 
     private final Logger log = LoggerFactory.getLogger(InvestimentoService.class);
     
-    @Inject
-    private InvestimentoRepository investimentoRepository;
+    private final InvestimentoRepository investimentoRepository;
+
+    public InvestimentoService(InvestimentoRepository investimentoRepository) {
+        this.investimentoRepository = investimentoRepository;
+    }
 
     @Autowired
     private CalculoCotasService calculoCotasService;
@@ -46,7 +49,7 @@ public class InvestimentoService {
      *  
      *  @return the list of entities
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public List<Investimento> findAll() {
         log.debug("Request to get all Investimentos");
         List<Investimento> result = investimentoRepository.findAll();
@@ -59,7 +62,7 @@ public class InvestimentoService {
      *  @param id the id of the entity
      *  @return the entity
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public Investimento findOne(Long id) {
         log.debug("Request to get Investimento : {}", id);
         Investimento investimento = investimentoRepository.findOne(id);

@@ -1,29 +1,56 @@
+#!/usr/bin/env groovy
+
 node {
-    // uncomment these 2 lines and edit the name 'node-4.4.7' according to what you choose in configuration
-    // def nodeHome = tool name: 'node-4.4.7', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
-    // env.PATH = "${nodeHome}/bin:${env.PATH}"
+    stage('checkout') {
+        checkout scm
+    }
 
-    stage 'check tools'
-    sh "node -v"
-    sh "npm -v"
-    sh "bower -v"
-    sh "gulp -v"
+    stage('check java') {
+        sh "java -version"
+    }
 
-    stage 'checkout'
-    checkout scm
+    stage('clean') {
+        sh "./mvnw clean"
+    }
 
-    stage 'npm install'
-    sh "npm install"
+    stage('install tools') {
+        sh "./mvnw com.github.eirslett:frontend-maven-plugin:install-node-and-npm -DnodeVersion=v6.9.4 -DnpmVersion=3.10.9"
+    }
 
-    stage 'clean'
-    sh "./mvnw clean"
+    stage('npm install') {
+        sh "./mvnw com.github.eirslett:frontend-maven-plugin:npm"
+    }
 
-    stage 'backend tests'
-    sh "./mvnw test"
+    stage('backend tests') {
+        try {
+            sh "./mvnw test"
+        } catch(err) {
+            throw err
+        } finally {
+            junit '**/target/surefire-reports/TEST-*.xml'
+        }
+    }
 
-    stage 'frontend tests'
-    sh "gulp test"
+    stage('frontend tests') {
+        try {
+            sh "./mvnw com.github.eirslett:frontend-maven-plugin:gulp -Dfrontend.gulp.arguments=test"
+        } catch(err) {
+            throw err
+        } finally {
+            junit '**/target/test-results/karma/TESTS-*.xml'
+        }
+    }
 
-    stage 'packaging'
-    sh "./mvnw package -Pprod -DskipTests"
+    stage('packaging') {
+        sh "./mvnw package -Pprod -DskipTests"
+        archiveArtifacts artifacts: '**/target/*.war', fingerprint: true
+    }
+
+    // Uncomment the following block to add Sonar analysis.
+    /*stage('quality analysis') {
+        withSonarQubeEnv('Sonar Server') {
+            sh "./mvnw sonar:sonar"
+        }
+    }*/
+
 }

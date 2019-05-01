@@ -22,14 +22,18 @@ describe('Instituicao e2e test', function () {
 
     it('should load Instituicaos', function () {
         entityMenu.click();
-        element(by.css('[ui-sref="instituicao"]')).click().then(function() {
-            expect(element.all(by.css('h2')).first().getText()).toMatch(/Instituicaos/);
+        element.all(by.css('[ui-sref="instituicao"]')).first().click().then(function() {
+            element.all(by.css('h2')).first().getAttribute('data-translate').then(function (value) {
+                expect(value).toMatch(/gfpApp.instituicao.home.title/);
+            });
         });
     });
 
     it('should load create Instituicao dialog', function () {
         element(by.css('[ui-sref="instituicao.new"]')).click().then(function() {
-            expect(element(by.css('h4.modal-title')).getAttribute("translate")).toMatch(/gfpApp.instituicao.home.createOrEditLabel/);
+            element(by.css('h4.modal-title')).getAttribute('data-translate').then(function (value) {
+                expect(value).toMatch(/gfpApp.instituicao.home.createOrEditLabel/);
+            });
             element(by.css('button.close')).click();
         });
     });

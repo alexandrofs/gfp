@@ -17,7 +17,7 @@ public class TabelaImpostoRenda implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
@@ -30,7 +30,7 @@ public class TabelaImpostoRenda implements Serializable {
     @Column(name = "pct_aliquota", precision=10, scale=2, nullable = false)
     private BigDecimal pctAliquota;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @NotNull
     private TipoImpostoRenda tipoImpostoRenda;
 
@@ -75,7 +75,7 @@ public class TabelaImpostoRenda implements Serializable {
             return false;
         }
         TabelaImpostoRenda tabelaImpostoRenda = (TabelaImpostoRenda) o;
-        if(tabelaImpostoRenda.id == null || id == null) {
+        if (tabelaImpostoRenda.id == null || id == null) {
             return false;
         }
         return Objects.equals(id, tabelaImpostoRenda.id);

@@ -1,12 +1,12 @@
 <div>
-    <h2 translate="gfpApp.investimento.home.title">Investimentos</h2>
+    <h2 data-translate="gfpApp.investimento.home.title">Investimentos</h2>
     <jhi-alert></jhi-alert>
     <div class="container-fluid">
         <div class="row">
             <div class="col-xs-4 no-padding-left">
                 <button class="btn btn-primary" ui-sref="investimento.new" >
                     <span class="glyphicon glyphicon-plus"></span>
-                    <span  translate="gfpApp.investimento.home.createLabel">
+                    <span  data-translate="gfpApp.investimento.home.createLabel">
                         Create new Investimento
                     </span>
                 </button>
@@ -18,13 +18,13 @@
         <table class="jh-table table table-striped">
             <thead>
                 <tr>
-                    <th><span translate="gfpApp.investimento.dataAplicacao">Data Aplicacao</span></th>
-                    <th><span translate="gfpApp.investimento.qtdeCota">Qtde Cota</span></th>
-                    <th><span translate="gfpApp.investimento.vlrCota">Vlr Cota</span></th>
-                    <th><span translate="gfpApp.investimento.pctPrePosFixado">Pct Pre Pos Fixado</span></th>
-                    <th><span translate="gfpApp.investimento.carteira">Carteira</span></th>
-                    <th><span translate="gfpApp.investimento.tipoInvestimento">Tipo Investimento</span></th>
-                    <th><span translate="gfpApp.investimento.instituicao">Instituicao</span></th>
+                    <th><span data-translate="gfpApp.investimento.dataAplicacao">Data Aplicacao</span></th>
+                    <th><span data-translate="gfpApp.investimento.qtdeCota">Qtde Cota</span></th>
+                    <th><span data-translate="gfpApp.investimento.vlrCota">Vlr Cota</span></th>
+                    <th><span data-translate="gfpApp.investimento.pctPrePosFixado">Pct Pre Pos Fixado</span></th>
+                    <th><span data-translate="gfpApp.investimento.carteira">Carteira</span></th>
+                    <th><span data-translate="gfpApp.investimento.tipoInvestimento">Tipo Investimento</span></th>
+                    <th><span data-translate="gfpApp.investimento.instituicao">Instituicao</span></th>
                     <th><span translate="gfpApp.investimento.vlrSaldoBruto">Saldo Bruto</span></th>
                     <th></th>
                 </tr>
@@ -51,19 +51,19 @@
                                     ui-sref="investimento-detail({id:investimento.id})"
                                     class="btn btn-info btn-sm">
                                 <span class="glyphicon glyphicon-eye-open"></span>
-                                <span class="hidden-xs hidden-sm" translate="entity.action.view"></span>
+                                <span class="hidden-sm-down" data-translate="entity.action.view"></span>
                             </button>
                             <button type="submit"
                                     ui-sref="investimento.edit({id:investimento.id})"
                                     class="btn btn-primary btn-sm">
                                 <span class="glyphicon glyphicon-pencil"></span>
-                                <span class="hidden-xs hidden-sm" translate="entity.action.edit"></span>
+                                <span class="hidden-sm-down" data-translate="entity.action.edit"></span>
                             </button>
                             <button type="submit"
                                     ui-sref="investimento.delete({id:investimento.id})"
                                     class="btn btn-danger btn-sm">
                                 <span class="glyphicon glyphicon-remove-circle"></span>
-                                <span class="hidden-xs hidden-sm" translate="entity.action.delete"></span>
+                                <span class="hidden-sm-down" data-translate="entity.action.delete"></span>
                             </button>
                         </div>
                     </td>

@@ -1,5 +1,4 @@
 'use strict';
-
 describe('account', function () {
 
     var username = element(by.id('username'));
@@ -13,7 +12,10 @@ describe('account', function () {
     });
 
     it('should fail to login with bad password', function () {
-        expect(element.all(by.css('h1')).first().getAttribute("translate")).toMatch(/home.title/);
+        const expect1 = /home.title/;
+        element.all(by.css('h1')).first().getAttribute('data-translate').then((value) => {
+            expect(value).toMatch(expect1);
+        });
         accountMenu.click();
         login.click();
 
@@ -21,39 +23,60 @@ describe('account', function () {
         password.sendKeys('foo');
         element(by.css('button[type=submit]')).click();
 
-        expect(element(by.css('.alert-danger')).getAttribute("translate")).toMatch(/login.messages.error.authentication/);
+        const expect2 = /login.messages.error.authentication/;
+        element.all(by.css('.alert-danger')).first().getAttribute('data-translate').then((value) => {
+            expect(value).toMatch(expect2);
+        });
     });
 
     it('should login successfully with admin account', function () {
-        expect(element.all(by.css('h1')).first().getText()).toMatch(/Sign in/);
+        const expect1 = /login.title/;
+        element.all(by.css('h1')).first().getAttribute('data-translate').then((value) => {
+            expect(value).toMatch(expect1);
+        });
 
         username.clear().sendKeys('admin');
         password.clear().sendKeys('admin');
         element(by.css('button[type=submit]')).click();
 
-        expect(element(by.css('.alert-success')).getAttribute("translate")).toMatch(/home.logged.message/);
+        const expect2 = /home.logged.message/;
+        element.all(by.css('.alert-success')).getAttribute('data-translate').then((value) => {
+            expect(value).toMatch(expect2);
+        });
     });
 
     it('should be able to update settings', function () {
         accountMenu.click();
         element(by.css('[ui-sref="settings"]')).click();
 
-        expect(element(by.css('h2')).getAttribute("translate")).toMatch(/settings.title/);
+        const expect1 = /settings.title/;
+        element.all(by.css('h2')).first().getAttribute('data-translate').then((value) => {
+            expect(value).toMatch(expect1);
+        });
         element(by.css('button[type=submit]')).click();
 
-        expect(element(by.css('.alert-success')).getAttribute("translate")).toMatch(/settings.messages.success/);
+        const expect2 = /settings.messages.success/;
+        element.all(by.css('.alert-success')).first().getAttribute('data-translate').then((value) => {
+            expect(value).toMatch(expect2);
+        });
     });
 
     it('should be able to update password', function () {
         accountMenu.click();
         element(by.css('[ui-sref="password"]')).click();
 
-        expect(element.all(by.css('h2')).first().getAttribute("translate")).toMatch(/password.title/);
+        const expect1 = /password.title/;
+        element.all(by.css('h2')).first().getAttribute('data-translate').then((value) => {
+            expect(value).toMatch(expect1);
+        });
         password.sendKeys('newpassword');
         element(by.id('confirmPassword')).sendKeys('newpassword');
         element(by.css('button[type=submit]')).click();
 
-        expect(element(by.css('.alert-success')).getAttribute("translate")).toMatch(/password.messages.success/);
+        const expect2 = /password.messages.success/;
+        element.all(by.css('.alert-success')).first().getAttribute('data-translate').then((value) => {
+            expect(value).toMatch(expect2);
+        });
         accountMenu.click();
         logout.click();
 

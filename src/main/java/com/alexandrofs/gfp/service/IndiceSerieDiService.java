@@ -21,8 +21,11 @@ public class IndiceSerieDiService {
 
     private final Logger log = LoggerFactory.getLogger(IndiceSerieDiService.class);
     
-    @Inject
-    private IndiceSerieDiRepository indiceSerieDiRepository;
+    private final IndiceSerieDiRepository indiceSerieDiRepository;
+
+    public IndiceSerieDiService(IndiceSerieDiRepository indiceSerieDiRepository) {
+        this.indiceSerieDiRepository = indiceSerieDiRepository;
+    }
 
     /**
      * Save a indiceSerieDi.
@@ -42,7 +45,7 @@ public class IndiceSerieDiService {
      *  @param pageable the pagination information
      *  @return the list of entities
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public Page<IndiceSerieDi> findAll(Pageable pageable) {
         log.debug("Request to get all IndiceSerieDis");
         Page<IndiceSerieDi> result = indiceSerieDiRepository.findAll(pageable);
@@ -55,7 +58,7 @@ public class IndiceSerieDiService {
      *  @param id the id of the entity
      *  @return the entity
      */
-    @Transactional(readOnly = true) 
+    @Transactional(readOnly = true)
     public IndiceSerieDi findOne(Long id) {
         log.debug("Request to get IndiceSerieDi : {}", id);
         IndiceSerieDi indiceSerieDi = indiceSerieDiRepository.findOne(id);

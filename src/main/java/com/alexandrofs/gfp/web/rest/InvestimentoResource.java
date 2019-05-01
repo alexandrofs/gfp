@@ -5,24 +5,26 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
-import javax.inject.Inject;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alexandrofs.gfp.domain.Investimento;
 import com.alexandrofs.gfp.service.InvestimentoService;
 import com.alexandrofs.gfp.web.rest.util.HeaderUtil;
 import com.codahale.metrics.annotation.Timed;
+
+import io.github.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing Investimento.
@@ -32,9 +34,14 @@ import com.codahale.metrics.annotation.Timed;
 public class InvestimentoResource {
 
     private final Logger log = LoggerFactory.getLogger(InvestimentoResource.class);
+
+    private static final String ENTITY_NAME = "investimento";
         
-    @Inject
-    private InvestimentoService investimentoService;
+    private final InvestimentoService investimentoService;
+
+    public InvestimentoResource(InvestimentoService investimentoService) {
+        this.investimentoService = investimentoService;
+    }
 
     /**
      * POST  /investimentos : Create a new investimento.
@@ -43,18 +50,16 @@ public class InvestimentoResource {
      * @return the ResponseEntity with status 201 (Created) and with body the new investimento, or with status 400 (Bad Request) if the investimento has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @RequestMapping(value = "/investimentos",
-        method = RequestMethod.POST,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping("/investimentos")
     @Timed
     public ResponseEntity<Investimento> createInvestimento(@Valid @RequestBody Investimento investimento) throws URISyntaxException {
         log.debug("REST request to save Investimento : {}", investimento);
         if (investimento.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("investimento", "idexists", "A new investimento cannot already have an ID")).body(null);
+            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new investimento cannot already have an ID")).body(null);
         }
         Investimento result = investimentoService.save(investimento);
         return ResponseEntity.created(new URI("/api/investimentos/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert("investimento", result.getId().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
@@ -67,9 +72,7 @@ public class InvestimentoResource {
      * or with status 500 (Internal Server Error) if the investimento couldnt be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @RequestMapping(value = "/investimentos",
-        method = RequestMethod.PUT,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping("/investimentos")
     @Timed
     public ResponseEntity<Investimento> updateInvestimento(@Valid @RequestBody Investimento investimento) throws URISyntaxException {
         log.debug("REST request to update Investimento : {}", investimento);
@@ -78,7 +81,7 @@ public class InvestimentoResource {
         }
         Investimento result = investimentoService.save(investimento);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert("investimento", investimento.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, investimento.getId().toString()))
             .body(result);
     }
 
@@ -87,9 +90,7 @@ public class InvestimentoResource {
      *
      * @return the ResponseEntity with status 200 (OK) and the list of investimentos in body
      */
-    @RequestMapping(value = "/investimentos",
-        method = RequestMethod.GET,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping("/investimentos")
     @Timed
     public List<Investimento> getAllInvestimentos() {
         log.debug("REST request to get all Investimentos");
@@ -102,18 +103,12 @@ public class InvestimentoResource {
      * @param id the id of the investimento to retrieve
      * @return the ResponseEntity with status 200 (OK) and with body the investimento, or with status 404 (Not Found)
      */
-    @RequestMapping(value = "/investimentos/{id}",
-        method = RequestMethod.GET,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping("/investimentos/{id}")
     @Timed
     public ResponseEntity<Investimento> getInvestimento(@PathVariable Long id) {
         log.debug("REST request to get Investimento : {}", id);
         Investimento investimento = investimentoService.findOne(id);
-        return Optional.ofNullable(investimento)
-            .map(result -> new ResponseEntity<>(
-                result,
-                HttpStatus.OK))
-            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(investimento));
     }
 
     /**
@@ -122,14 +117,12 @@ public class InvestimentoResource {
      * @param id the id of the investimento to delete
      * @return the ResponseEntity with status 200 (OK)
      */
-    @RequestMapping(value = "/investimentos/{id}",
-        method = RequestMethod.DELETE,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping("/investimentos/{id}")
     @Timed
     public ResponseEntity<Void> deleteInvestimento(@PathVariable Long id) {
         log.debug("REST request to delete Investimento : {}", id);
         investimentoService.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("investimento", id.toString())).build();
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
 }
