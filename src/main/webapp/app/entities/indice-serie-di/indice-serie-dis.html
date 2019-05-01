@@ -1,18 +1,18 @@
 <div>
-    <h2 translate="gfpApp.indiceSerieDi.home.title">Indice Serie Dis</h2>
+    <h2 data-translate="gfpApp.indiceSerieDi.home.title">Indice Serie Dis</h2>
     <jhi-alert></jhi-alert>
     <div class="container-fluid">
         <div class="row">
             <div class="col-xs-4 no-padding-left">
                 <button class="btn btn-primary" ui-sref="indice-serie-di.new" >
                     <span class="glyphicon glyphicon-plus"></span>
-                    <span  translate="gfpApp.indiceSerieDi.home.createLabel">
+                    <span  data-translate="gfpApp.indiceSerieDi.home.createLabel">
                         Create new Indice Serie Di
                     </span>
                 </button>
                 <button class="btn btn-primary" ui-sref="indice-serie-di.import" >
                     <span class="glyphicon glyphicon-plus"></span>
-                    <span  translate="gfpApp.indiceSerieDi.home.import">
+                    <span  data-translate="gfpApp.indiceSerieDi.home.import">
                         Create new Indice Serie Di
                     </span>
                 </button>                
@@ -24,10 +24,11 @@
         <table class="jh-table table table-striped">
             <thead>
                 <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.reset()">
-                    <th jh-sort-by="data"><span translate="gfpApp.indiceSerieDi.data">Data</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="taxaMediaAnual"><span translate="gfpApp.indiceSerieDi.taxaMediaAnual">Taxa Media Anual</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="taxaSelic"><span translate="gfpApp.indiceSerieDi.taxaSelic">Taxa Selic</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="fatorDiario"><span translate="gfpApp.indiceSerieDi.fatorDiario">Fator Diario</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="id"><span data-translate="global.field.id">ID</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="data"><span data-translate="gfpApp.indiceSerieDi.data">Data</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="taxaMediaAnual"><span data-translate="gfpApp.indiceSerieDi.taxaMediaAnual">Taxa Media Anual</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="taxaSelic"><span data-translate="gfpApp.indiceSerieDi.taxaSelic">Taxa Selic</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="fatorDiario"><span data-translate="gfpApp.indiceSerieDi.fatorDiario">Fator Diario</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th></th>
                 </tr>
             </thead>
@@ -43,19 +44,19 @@
                                     ui-sref="indice-serie-di-detail({id:indiceSerieDi.id})"
                                     class="btn btn-info btn-sm">
                                 <span class="glyphicon glyphicon-eye-open"></span>
-                                <span class="hidden-xs hidden-sm" translate="entity.action.view"></span>
+                                <span class="hidden-sm-down" data-translate="entity.action.view"></span>
                             </button>
                             <button type="submit"
                                     ui-sref="indice-serie-di.edit({id:indiceSerieDi.id})"
                                     class="btn btn-primary btn-sm">
                                 <span class="glyphicon glyphicon-pencil"></span>
-                                <span class="hidden-xs hidden-sm" translate="entity.action.edit"></span>
+                                <span class="hidden-sm-down" data-translate="entity.action.edit"></span>
                             </button>
                             <button type="submit"
                                     ui-sref="indice-serie-di.delete({id:indiceSerieDi.id})"
                                     class="btn btn-danger btn-sm">
                                 <span class="glyphicon glyphicon-remove-circle"></span>
-                                <span class="hidden-xs hidden-sm" translate="entity.action.delete"></span>
+                                <span class="hidden-sm-down" data-translate="entity.action.delete"></span>
                             </button>
                         </div>
                     </td>

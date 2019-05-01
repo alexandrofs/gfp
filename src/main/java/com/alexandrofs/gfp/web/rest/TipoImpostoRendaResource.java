@@ -5,15 +5,12 @@ import com.alexandrofs.gfp.domain.TipoImpostoRenda;
 
 import com.alexandrofs.gfp.repository.TipoImpostoRendaRepository;
 import com.alexandrofs.gfp.web.rest.util.HeaderUtil;
+import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -28,9 +25,14 @@ import java.util.Optional;
 public class TipoImpostoRendaResource {
 
     private final Logger log = LoggerFactory.getLogger(TipoImpostoRendaResource.class);
+
+    private static final String ENTITY_NAME = "tipoImpostoRenda";
         
-    @Inject
-    private TipoImpostoRendaRepository tipoImpostoRendaRepository;
+    private final TipoImpostoRendaRepository tipoImpostoRendaRepository;
+
+    public TipoImpostoRendaResource(TipoImpostoRendaRepository tipoImpostoRendaRepository) {
+        this.tipoImpostoRendaRepository = tipoImpostoRendaRepository;
+    }
 
     /**
      * POST  /tipo-imposto-rendas : Create a new tipoImpostoRenda.
@@ -39,18 +41,16 @@ public class TipoImpostoRendaResource {
      * @return the ResponseEntity with status 201 (Created) and with body the new tipoImpostoRenda, or with status 400 (Bad Request) if the tipoImpostoRenda has already an ID
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @RequestMapping(value = "/tipo-imposto-rendas",
-        method = RequestMethod.POST,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping("/tipo-imposto-rendas")
     @Timed
     public ResponseEntity<TipoImpostoRenda> createTipoImpostoRenda(@Valid @RequestBody TipoImpostoRenda tipoImpostoRenda) throws URISyntaxException {
         log.debug("REST request to save TipoImpostoRenda : {}", tipoImpostoRenda);
         if (tipoImpostoRenda.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("tipoImpostoRenda", "idexists", "A new tipoImpostoRenda cannot already have an ID")).body(null);
+            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new tipoImpostoRenda cannot already have an ID")).body(null);
         }
         TipoImpostoRenda result = tipoImpostoRendaRepository.save(tipoImpostoRenda);
         return ResponseEntity.created(new URI("/api/tipo-imposto-rendas/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert("tipoImpostoRenda", result.getId().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
@@ -63,9 +63,7 @@ public class TipoImpostoRendaResource {
      * or with status 500 (Internal Server Error) if the tipoImpostoRenda couldnt be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
-    @RequestMapping(value = "/tipo-imposto-rendas",
-        method = RequestMethod.PUT,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping("/tipo-imposto-rendas")
     @Timed
     public ResponseEntity<TipoImpostoRenda> updateTipoImpostoRenda(@Valid @RequestBody TipoImpostoRenda tipoImpostoRenda) throws URISyntaxException {
         log.debug("REST request to update TipoImpostoRenda : {}", tipoImpostoRenda);
@@ -74,7 +72,7 @@ public class TipoImpostoRendaResource {
         }
         TipoImpostoRenda result = tipoImpostoRendaRepository.save(tipoImpostoRenda);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert("tipoImpostoRenda", tipoImpostoRenda.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, tipoImpostoRenda.getId().toString()))
             .body(result);
     }
 
@@ -83,9 +81,7 @@ public class TipoImpostoRendaResource {
      *
      * @return the ResponseEntity with status 200 (OK) and the list of tipoImpostoRendas in body
      */
-    @RequestMapping(value = "/tipo-imposto-rendas",
-        method = RequestMethod.GET,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping("/tipo-imposto-rendas")
     @Timed
     public List<TipoImpostoRenda> getAllTipoImpostoRendas() {
         log.debug("REST request to get all TipoImpostoRendas");
@@ -99,18 +95,12 @@ public class TipoImpostoRendaResource {
      * @param id the id of the tipoImpostoRenda to retrieve
      * @return the ResponseEntity with status 200 (OK) and with body the tipoImpostoRenda, or with status 404 (Not Found)
      */
-    @RequestMapping(value = "/tipo-imposto-rendas/{id}",
-        method = RequestMethod.GET,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping("/tipo-imposto-rendas/{id}")
     @Timed
     public ResponseEntity<TipoImpostoRenda> getTipoImpostoRenda(@PathVariable Long id) {
         log.debug("REST request to get TipoImpostoRenda : {}", id);
         TipoImpostoRenda tipoImpostoRenda = tipoImpostoRendaRepository.findOne(id);
-        return Optional.ofNullable(tipoImpostoRenda)
-            .map(result -> new ResponseEntity<>(
-                result,
-                HttpStatus.OK))
-            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(tipoImpostoRenda));
     }
 
     /**
@@ -119,14 +109,12 @@ public class TipoImpostoRendaResource {
      * @param id the id of the tipoImpostoRenda to delete
      * @return the ResponseEntity with status 200 (OK)
      */
-    @RequestMapping(value = "/tipo-imposto-rendas/{id}",
-        method = RequestMethod.DELETE,
-        produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping("/tipo-imposto-rendas/{id}")
     @Timed
     public ResponseEntity<Void> deleteTipoImpostoRenda(@PathVariable Long id) {
         log.debug("REST request to delete TipoImpostoRenda : {}", id);
         tipoImpostoRendaRepository.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("tipoImpostoRenda", id.toString())).build();
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
 }

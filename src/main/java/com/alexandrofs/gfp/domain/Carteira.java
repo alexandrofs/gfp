@@ -19,7 +19,7 @@ public class Carteira implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
@@ -77,7 +77,7 @@ public class Carteira implements Serializable {
             return false;
         }
         Carteira carteira = (Carteira) o;
-        if(carteira.id == null || id == null) {
+        if (carteira.id == null || id == null) {
             return false;
         }
         return Objects.equals(id, carteira.id);

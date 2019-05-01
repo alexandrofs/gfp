@@ -1,34 +1,34 @@
 
 <div>
-    <h2><span translate="gfpApp.investimento.detail.title">Investimento</span> {{vm.investimento.id}}</h2>
+    <h2><span data-translate="gfpApp.investimento.detail.title">Investimento</span> {{vm.investimento.id}}</h2>
     <hr>
     <jhi-alert-error></jhi-alert-error>
-    <dl class="dl-horizontal jh-entity-details">
-        <dt><span translate="gfpApp.investimento.dataAplicacao">Data Aplicacao</span></dt>
+    <dl class="row jh-entity-details">
+        <dt><span data-translate="gfpApp.investimento.dataAplicacao">Data Aplicacao</span></dt>
         <dd>
             <span>{{vm.investimento.dataAplicacao | date:'dd/MM/yyyy'}}</span>
         </dd>
-        <dt><span translate="gfpApp.investimento.qtdeCota">Qtde Cota</span></dt>
+        <dt><span data-translate="gfpApp.investimento.qtdeCota">Qtde Cota</span></dt>
         <dd>
             <span>{{vm.investimento.qtdeCota}}</span>
         </dd>
-        <dt><span translate="gfpApp.investimento.vlrCota">Vlr Cota</span></dt>
+        <dt><span data-translate="gfpApp.investimento.vlrCota">Vlr Cota</span></dt>
         <dd>
             <span>{{vm.investimento.vlrCota | number:2}}</span>
         </dd>
-        <dt><span translate="gfpApp.investimento.pctPrePosFixado">Pct Pre Pos Fixado</span></dt>
+        <dt><span data-translate="gfpApp.investimento.pctPrePosFixado">Pct Pre Pos Fixado</span></dt>
         <dd>
             <span>{{vm.investimento.pctPrePosFixado}}</span>
         </dd>
-        <dt><span translate="gfpApp.investimento.carteira">Carteira</span></dt>
+        <dt><span data-translate="gfpApp.investimento.carteira">Carteira</span></dt>
         <dd>
             <a ui-sref="carteira-detail({id:vm.investimento.carteira.id})">{{vm.investimento.carteira.nome}}</a>
         </dd>
-        <dt><span translate="gfpApp.investimento.tipoInvestimento">Tipo Investimento</span></dt>
+        <dt><span data-translate="gfpApp.investimento.tipoInvestimento">Tipo Investimento</span></dt>
         <dd>
             <a ui-sref="tipo-investimento-detail({id:vm.investimento.tipoInvestimento.id})">{{vm.investimento.tipoInvestimento.nome}}</a>
         </dd>
-        <dt><span translate="gfpApp.investimento.instituicao">Instituicao</span></dt>
+        <dt><span data-translate="gfpApp.investimento.instituicao">Instituicao</span></dt>
         <dd>
             <a ui-sref="instituicao-detail({id:vm.investimento.instituicao.id})">{{vm.investimento.instituicao.nome}}</a>
         </dd>
@@ -41,11 +41,11 @@
     <button type="submit"
             ui-sref="{{ vm.previousState }}"
             class="btn btn-info">
-        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span translate="entity.action.back"> Back</span>
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span data-translate="entity.action.back"> Back</span>
     </button>
 
     <button type="button" ui-sref="investimento-detail.edit({id:vm.investimento.id})" class="btn btn-primary">
         <span class="glyphicon glyphicon-pencil"></span>
-        <span class="hidden-xs hidden-sm" translate="entity.action.edit"> Edit</span>
+        <span class="hidden-sm-down" data-translate="entity.action.edit"> Edit</span>
     </button>
 </div>

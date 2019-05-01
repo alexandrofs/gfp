@@ -20,12 +20,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,10 +47,15 @@ import com.alexandrofs.gfp.repository.TipoInvestimentoRepository;
 @SpringBootTest(classes = GfpApp.class)
 public class TipoInvestimentoResourceIntTest extends AbstractTest {
 	
-    private static final String DEFAULT_NOME = "AAAAAAAAAAAAAAAAAAAA";
-    private static final String UPDATED_NOME = "BBBBBBBBBBBBBBBBBBBB";
-    private static final String DEFAULT_DESCRICAO = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-    private static final String UPDATED_DESCRICAO = "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB";
+    private static final String DEFAULT_NOME = "AAAAAAAAAA";
+    private static final String UPDATED_NOME = "BBBBBBBBBB";
+
+    private static final String DEFAULT_DESCRICAO = "AAAAAAAAAA";
+    private static final String UPDATED_DESCRICAO = "BBBBBBBBBB";
+
+    private static final String DEFAULT_MODALIDADE = "AAAAAAAAAA";
+    private static final String UPDATED_MODALIDADE = "BBBBBBBBBB";
+
     private static final ModalidadeEnum DEFAULT_MODALIDADE = ModalidadeEnum.CDB;
     private static final ModalidadeEnum UPDATED_MODALIDADE = ModalidadeEnum.LCI;
     private static final TipoIndexadorEnum DEFAULT_TIPO_INDEXADOR = TipoIndexadorEnum.PRE;
@@ -58,27 +63,27 @@ public class TipoInvestimentoResourceIntTest extends AbstractTest {
     private static final String DEFAULT_INDICE = "AAAAAAAA";
     private static final String UPDATED_INDICE = "BBBBBBBB";
 
-    @Inject
+
+    @Autowired
     private TipoInvestimentoRepository tipoInvestimentoRepository;
 
-    @Inject
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Inject
+    @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Inject
+    @Autowired
     private EntityManager em;
 
     private MockMvc restTipoInvestimentoMockMvc;
 
     private TipoInvestimento tipoInvestimento;
 
-    @PostConstruct
+    @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        TipoInvestimentoResource tipoInvestimentoResource = new TipoInvestimentoResource();
-        ReflectionTestUtils.setField(tipoInvestimentoResource, "tipoInvestimentoRepository", tipoInvestimentoRepository);
+            TipoInvestimentoResource tipoInvestimentoResource = new TipoInvestimentoResource(tipoInvestimentoRepository);
         this.restTipoInvestimentoMockMvc = MockMvcBuilders.standaloneSetup(tipoInvestimentoResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setMessageConverters(jacksonMessageConverter).build();
@@ -92,7 +97,6 @@ public class TipoInvestimentoResourceIntTest extends AbstractTest {
      */
     public static TipoInvestimento createEntity(EntityManager em) {
         TipoInvestimento tipoInvestimento = new TipoInvestimento();
-        tipoInvestimento = new TipoInvestimento();
         tipoInvestimento.setNome(DEFAULT_NOME);
         tipoInvestimento.setDescricao(DEFAULT_DESCRICAO);
         tipoInvestimento.setModalidade(DEFAULT_MODALIDADE);
@@ -119,19 +123,39 @@ public class TipoInvestimentoResourceIntTest extends AbstractTest {
         // Create the TipoInvestimento
 
         restTipoInvestimentoMockMvc.perform(post("/api/tipo-investimentos")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(tipoInvestimento)))
-                .andExpect(status().isCreated());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(tipoInvestimento)))
+            .andExpect(status().isCreated());
 
         // Validate the TipoInvestimento in the database
-        List<TipoInvestimento> tipoInvestimentos = tipoInvestimentoRepository.findAll();
-        assertThat(tipoInvestimentos).hasSize(databaseSizeBeforeCreate + 1);
-        TipoInvestimento testTipoInvestimento = tipoInvestimentos.get(tipoInvestimentos.size() - 1);
+        List<TipoInvestimento> tipoInvestimentoList = tipoInvestimentoRepository.findAll();
+        assertThat(tipoInvestimentoList).hasSize(databaseSizeBeforeCreate + 1);
+        TipoInvestimento testTipoInvestimento = tipoInvestimentoList.get(tipoInvestimentoList.size() - 1);
         assertThat(testTipoInvestimento.getNome()).isEqualTo(DEFAULT_NOME);
         assertThat(testTipoInvestimento.getDescricao()).isEqualTo(DEFAULT_DESCRICAO);
         assertThat(testTipoInvestimento.getModalidade()).isEqualTo(DEFAULT_MODALIDADE);
         assertThat(testTipoInvestimento.getTipoIndexador()).isEqualTo(DEFAULT_TIPO_INDEXADOR);
         assertThat(testTipoInvestimento.getIndice()).isEqualTo(DEFAULT_INDICE);
+    }
+
+    @Test
+    @Transactional
+    public void createTipoInvestimentoWithExistingId() throws Exception {
+        int databaseSizeBeforeCreate = tipoInvestimentoRepository.findAll().size();
+
+        // Create the TipoInvestimento with an existing ID
+        TipoInvestimento existingTipoInvestimento = new TipoInvestimento();
+        existingTipoInvestimento.setId(1L);
+
+        // An entity with an existing ID cannot be created, so this API call must fail
+        restTipoInvestimentoMockMvc.perform(post("/api/tipo-investimentos")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(existingTipoInvestimento)))
+            .andExpect(status().isBadRequest());
+
+        // Validate the Alice in the database
+        List<TipoInvestimento> tipoInvestimentoList = tipoInvestimentoRepository.findAll();
+        assertThat(tipoInvestimentoList).hasSize(databaseSizeBeforeCreate);
     }
 
     @Test
@@ -144,12 +168,12 @@ public class TipoInvestimentoResourceIntTest extends AbstractTest {
         // Create the TipoInvestimento, which fails.
 
         restTipoInvestimentoMockMvc.perform(post("/api/tipo-investimentos")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(tipoInvestimento)))
-                .andExpect(status().isBadRequest());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(tipoInvestimento)))
+            .andExpect(status().isBadRequest());
 
-        List<TipoInvestimento> tipoInvestimentos = tipoInvestimentoRepository.findAll();
-        assertThat(tipoInvestimentos).hasSize(databaseSizeBeforeTest);
+        List<TipoInvestimento> tipoInvestimentoList = tipoInvestimentoRepository.findAll();
+        assertThat(tipoInvestimentoList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -162,12 +186,12 @@ public class TipoInvestimentoResourceIntTest extends AbstractTest {
         // Create the TipoInvestimento, which fails.
 
         restTipoInvestimentoMockMvc.perform(post("/api/tipo-investimentos")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(tipoInvestimento)))
-                .andExpect(status().isBadRequest());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(tipoInvestimento)))
+            .andExpect(status().isBadRequest());
 
-        List<TipoInvestimento> tipoInvestimentos = tipoInvestimentoRepository.findAll();
-        assertThat(tipoInvestimentos).hasSize(databaseSizeBeforeTest);
+        List<TipoInvestimento> tipoInvestimentoList = tipoInvestimentoRepository.findAll();
+        assertThat(tipoInvestimentoList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -180,12 +204,12 @@ public class TipoInvestimentoResourceIntTest extends AbstractTest {
         // Create the TipoInvestimento, which fails.
 
         restTipoInvestimentoMockMvc.perform(post("/api/tipo-investimentos")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(tipoInvestimento)))
-                .andExpect(status().isBadRequest());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(tipoInvestimento)))
+            .andExpect(status().isBadRequest());
 
-        List<TipoInvestimento> tipoInvestimentos = tipoInvestimentoRepository.findAll();
-        assertThat(tipoInvestimentos).hasSize(databaseSizeBeforeTest);
+        List<TipoInvestimento> tipoInvestimentoList = tipoInvestimentoRepository.findAll();
+        assertThat(tipoInvestimentoList).hasSize(databaseSizeBeforeTest);
     }
 
     @Test
@@ -199,12 +223,12 @@ public class TipoInvestimentoResourceIntTest extends AbstractTest {
         // Create the TipoInvestimento, which fails.
 
         restTipoInvestimentoMockMvc.perform(post("/api/tipo-investimentos")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(tipoInvestimento)))
-                .andExpect(status().isBadRequest());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(tipoInvestimento)))
+            .andExpect(status().isBadRequest());
 
-        List<TipoInvestimento> tipoInvestimentos = tipoInvestimentoRepository.findAll();
-        assertThat(tipoInvestimentos).hasSize(databaseSizeBeforeTest);
+        List<TipoInvestimento> tipoInvestimentoList = tipoInvestimentoRepository.findAll();
+        assertThat(tipoInvestimentoList).hasSize(databaseSizeBeforeTest);
     }
     
     @Test
@@ -246,12 +270,12 @@ public class TipoInvestimentoResourceIntTest extends AbstractTest {
         // Create the TipoInvestimento, which fails.
 
         restTipoInvestimentoMockMvc.perform(post("/api/tipo-investimentos")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(tipoInvestimento)))
-                .andExpect(status().isBadRequest());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(tipoInvestimento)))
+            .andExpect(status().isBadRequest());
 
-        List<TipoInvestimento> tipoInvestimentos = tipoInvestimentoRepository.findAll();
-        assertThat(tipoInvestimentos).hasSize(databaseSizeBeforeTest);
+        List<TipoInvestimento> tipoInvestimentoList = tipoInvestimentoRepository.findAll();
+        assertThat(tipoInvestimentoList).hasSize(databaseSizeBeforeTest);
     }
     
     @Test
@@ -287,16 +311,16 @@ public class TipoInvestimentoResourceIntTest extends AbstractTest {
         // Initialize the database
         tipoInvestimentoRepository.saveAndFlush(tipoInvestimento);
 
-        // Get all the tipoInvestimentos
+        // Get all the tipoInvestimentoList
         restTipoInvestimentoMockMvc.perform(get("/api/tipo-investimentos?sort=id,desc"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
-                .andExpect(jsonPath("$.[*].id").value(hasItem(tipoInvestimento.getId().intValue())))
-                .andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME.toString())))
-                .andExpect(jsonPath("$.[*].descricao").value(hasItem(DEFAULT_DESCRICAO.toString())))
-                .andExpect(jsonPath("$.[*].modalidade").value(hasItem(DEFAULT_MODALIDADE.toString())))
-                .andExpect(jsonPath("$.[*].tipoIndexador").value(hasItem(DEFAULT_TIPO_INDEXADOR.toString())))
-                .andExpect(jsonPath("$.[*].indice").value(hasItem(DEFAULT_INDICE.toString())));
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
+            .andExpect(jsonPath("$.[*].id").value(hasItem(tipoInvestimento.getId().intValue())))
+            .andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME.toString())))
+            .andExpect(jsonPath("$.[*].descricao").value(hasItem(DEFAULT_DESCRICAO.toString())))
+            .andExpect(jsonPath("$.[*].modalidade").value(hasItem(DEFAULT_MODALIDADE.toString())))
+            .andExpect(jsonPath("$.[*].tipoIndexador").value(hasItem(DEFAULT_TIPO_INDEXADOR.toString())))
+            .andExpect(jsonPath("$.[*].indice").value(hasItem(DEFAULT_INDICE.toString())));
     }
 
     @Test
@@ -322,7 +346,7 @@ public class TipoInvestimentoResourceIntTest extends AbstractTest {
     public void getNonExistingTipoInvestimento() throws Exception {
         // Get the tipoInvestimento
         restTipoInvestimentoMockMvc.perform(get("/api/tipo-investimentos/{id}", Long.MAX_VALUE))
-                .andExpect(status().isNotFound());
+            .andExpect(status().isNotFound());
     }
 
     @Test
@@ -344,20 +368,38 @@ public class TipoInvestimentoResourceIntTest extends AbstractTest {
         updatedTipoInvestimento.setTipoImpostoRenda(updatedTipoImpostoRenda);
 
         restTipoInvestimentoMockMvc.perform(put("/api/tipo-investimentos")
-                .contentType(TestUtil.APPLICATION_JSON_UTF8)
-                .content(TestUtil.convertObjectToJsonBytes(updatedTipoInvestimento)))
-                .andExpect(status().isOk());
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(updatedTipoInvestimento)))
+            .andExpect(status().isOk());
 
         // Validate the TipoInvestimento in the database
-        List<TipoInvestimento> tipoInvestimentos = tipoInvestimentoRepository.findAll();
-        assertThat(tipoInvestimentos).hasSize(databaseSizeBeforeUpdate);
-        TipoInvestimento testTipoInvestimento = tipoInvestimentos.get(tipoInvestimentos.size() - 1);
+        List<TipoInvestimento> tipoInvestimentoList = tipoInvestimentoRepository.findAll();
+        assertThat(tipoInvestimentoList).hasSize(databaseSizeBeforeUpdate);
+        TipoInvestimento testTipoInvestimento = tipoInvestimentoList.get(tipoInvestimentoList.size() - 1);
         assertThat(testTipoInvestimento.getNome()).isEqualTo(UPDATED_NOME);
         assertThat(testTipoInvestimento.getDescricao()).isEqualTo(UPDATED_DESCRICAO);
         assertThat(testTipoInvestimento.getModalidade()).isEqualTo(UPDATED_MODALIDADE);
         assertThat(testTipoInvestimento.getTipoIndexador()).isEqualTo(UPDATED_TIPO_INDEXADOR);
         assertThat(testTipoInvestimento.getIndice()).isEqualTo(UPDATED_INDICE);
         assertThat(testTipoInvestimento.getTipoImpostoRenda()).isEqualTo(updatedTipoImpostoRenda);
+    }
+
+    @Test
+    @Transactional
+    public void updateNonExistingTipoInvestimento() throws Exception {
+        int databaseSizeBeforeUpdate = tipoInvestimentoRepository.findAll().size();
+
+        // Create the TipoInvestimento
+
+        // If the entity doesn't have an ID, it will be created instead of just being updated
+        restTipoInvestimentoMockMvc.perform(put("/api/tipo-investimentos")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(tipoInvestimento)))
+            .andExpect(status().isCreated());
+
+        // Validate the TipoInvestimento in the database
+        List<TipoInvestimento> tipoInvestimentoList = tipoInvestimentoRepository.findAll();
+        assertThat(tipoInvestimentoList).hasSize(databaseSizeBeforeUpdate + 1);
     }
 
     @Test
@@ -369,11 +411,16 @@ public class TipoInvestimentoResourceIntTest extends AbstractTest {
 
         // Get the tipoInvestimento
         restTipoInvestimentoMockMvc.perform(delete("/api/tipo-investimentos/{id}", tipoInvestimento.getId())
-                .accept(TestUtil.APPLICATION_JSON_UTF8))
-                .andExpect(status().isOk());
+            .accept(TestUtil.APPLICATION_JSON_UTF8))
+            .andExpect(status().isOk());
 
         // Validate the database is empty
-        List<TipoInvestimento> tipoInvestimentos = tipoInvestimentoRepository.findAll();
-        assertThat(tipoInvestimentos).hasSize(databaseSizeBeforeDelete - 1);
+        List<TipoInvestimento> tipoInvestimentoList = tipoInvestimentoRepository.findAll();
+        assertThat(tipoInvestimentoList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(TipoInvestimento.class);
     }
 }

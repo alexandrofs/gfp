@@ -24,15 +24,17 @@
             'update': {
                 method: 'PUT',
                 transformRequest: function (data) {
-                    data.dataAplicacao = DateUtils.convertLocalDateToServer(data.dataAplicacao);
-                    return angular.toJson(data);
+                    var copy = angular.copy(data);
+                    copy.dataAplicacao = DateUtils.convertLocalDateToServer(copy.dataAplicacao);
+                    return angular.toJson(copy);
                 }
             },
             'save': {
                 method: 'POST',
                 transformRequest: function (data) {
-                    data.dataAplicacao = DateUtils.convertLocalDateToServer(data.dataAplicacao);
-                    return angular.toJson(data);
+                    var copy = angular.copy(data);
+                    copy.dataAplicacao = DateUtils.convertLocalDateToServer(copy.dataAplicacao);
+                    return angular.toJson(copy);
                 }
             }
         });

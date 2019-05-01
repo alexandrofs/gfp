@@ -9,7 +9,7 @@
 
     function InvestimentoController ($scope, $state, Investimento) {
         var vm = this;
-        
+
         vm.investimentos = [];
 
         loadAll();
@@ -17,6 +17,7 @@
         function loadAll() {
             Investimento.query(function(result) {
                 vm.investimentos = result;
+                vm.searchQuery = null;
             });
         }
     }

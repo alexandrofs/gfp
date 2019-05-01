@@ -15,7 +15,7 @@ public class Instituicao implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "nome")
@@ -46,7 +46,7 @@ public class Instituicao implements Serializable {
             return false;
         }
         Instituicao instituicao = (Instituicao) o;
-        if(instituicao.id == null || id == null) {
+        if (instituicao.id == null || id == null) {
             return false;
         }
         return Objects.equals(id, instituicao.id);

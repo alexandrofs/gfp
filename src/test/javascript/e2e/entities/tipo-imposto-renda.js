@@ -22,14 +22,18 @@ describe('TipoImpostoRenda e2e test', function () {
 
     it('should load TipoImpostoRendas', function () {
         entityMenu.click();
-        element(by.css('[ui-sref="tipo-imposto-renda"]')).click().then(function() {
-            expect(element.all(by.css('h2')).first().getText()).toMatch(/Tipo Imposto Rendas/);
+        element.all(by.css('[ui-sref="tipo-imposto-renda"]')).first().click().then(function() {
+            element.all(by.css('h2')).first().getAttribute('data-translate').then(function (value) {
+                expect(value).toMatch(/gfpApp.tipoImpostoRenda.home.title/);
+            });
         });
     });
 
     it('should load create TipoImpostoRenda dialog', function () {
         element(by.css('[ui-sref="tipo-imposto-renda.new"]')).click().then(function() {
-            expect(element(by.css('h4.modal-title')).getAttribute("translate")).toMatch(/gfpApp.tipoImpostoRenda.home.createOrEditLabel/);
+            element(by.css('h4.modal-title')).getAttribute('data-translate').then(function (value) {
+                expect(value).toMatch(/gfpApp.tipoImpostoRenda.home.createOrEditLabel/);
+            });
             element(by.css('button.close')).click();
         });
     });

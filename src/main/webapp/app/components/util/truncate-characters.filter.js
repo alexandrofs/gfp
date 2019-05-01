@@ -4,7 +4,7 @@
     angular
         .module('gfpApp')
         .filter('characters', characters);
-        
+
     function characters () {
         return charactersFilter;
 

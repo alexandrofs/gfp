@@ -9,7 +9,7 @@
 
     function TabelaImpostoRendaController ($scope, $state, TabelaImpostoRenda) {
         var vm = this;
-        
+
         vm.tabelaImpostoRendas = [];
 
         loadAll();
@@ -17,6 +17,7 @@
         function loadAll() {
             TabelaImpostoRenda.query(function(result) {
                 vm.tabelaImpostoRendas = result;
+                vm.searchQuery = null;
             });
         }
     }
