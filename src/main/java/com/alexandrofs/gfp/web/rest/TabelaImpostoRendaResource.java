@@ -1,5 +1,4 @@
 package com.alexandrofs.gfp.web.rest;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -21,8 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alexandrofs.gfp.domain.TabelaImpostoRenda;
 import com.alexandrofs.gfp.repository.TabelaImpostoRendaRepository;
+import com.alexandrofs.gfp.web.rest.errors.BadRequestAlertException;
 import com.alexandrofs.gfp.web.rest.util.HeaderUtil;
-import com.codahale.metrics.annotation.Timed;
 
 import io.github.jhipster.web.util.ResponseUtil;
 
@@ -36,7 +35,7 @@ public class TabelaImpostoRendaResource {
     private final Logger log = LoggerFactory.getLogger(TabelaImpostoRendaResource.class);
 
     private static final String ENTITY_NAME = "tabelaImpostoRenda";
-        
+
     private final TabelaImpostoRendaRepository tabelaImpostoRendaRepository;
 
     public TabelaImpostoRendaResource(TabelaImpostoRendaRepository tabelaImpostoRendaRepository) {
@@ -51,11 +50,10 @@ public class TabelaImpostoRendaResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/tabela-imposto-rendas")
-    @Timed
     public ResponseEntity<TabelaImpostoRenda> createTabelaImpostoRenda(@Valid @RequestBody TabelaImpostoRenda tabelaImpostoRenda) throws URISyntaxException {
         log.debug("REST request to save TabelaImpostoRenda : {}", tabelaImpostoRenda);
         if (tabelaImpostoRenda.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new tabelaImpostoRenda cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new tabelaImpostoRenda cannot already have an ID", ENTITY_NAME, "idexists");
         }
         TabelaImpostoRenda result = tabelaImpostoRendaRepository.save(tabelaImpostoRenda);
         return ResponseEntity.created(new URI("/api/tabela-imposto-rendas/" + result.getId()))
@@ -69,15 +67,14 @@ public class TabelaImpostoRendaResource {
      * @param tabelaImpostoRenda the tabelaImpostoRenda to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated tabelaImpostoRenda,
      * or with status 400 (Bad Request) if the tabelaImpostoRenda is not valid,
-     * or with status 500 (Internal Server Error) if the tabelaImpostoRenda couldnt be updated
+     * or with status 500 (Internal Server Error) if the tabelaImpostoRenda couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/tabela-imposto-rendas")
-    @Timed
     public ResponseEntity<TabelaImpostoRenda> updateTabelaImpostoRenda(@Valid @RequestBody TabelaImpostoRenda tabelaImpostoRenda) throws URISyntaxException {
         log.debug("REST request to update TabelaImpostoRenda : {}", tabelaImpostoRenda);
         if (tabelaImpostoRenda.getId() == null) {
-            return createTabelaImpostoRenda(tabelaImpostoRenda);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         TabelaImpostoRenda result = tabelaImpostoRendaRepository.save(tabelaImpostoRenda);
         return ResponseEntity.ok()
@@ -91,11 +88,9 @@ public class TabelaImpostoRendaResource {
      * @return the ResponseEntity with status 200 (OK) and the list of tabelaImpostoRendas in body
      */
     @GetMapping("/tabela-imposto-rendas")
-    @Timed
     public List<TabelaImpostoRenda> getAllTabelaImpostoRendas() {
         log.debug("REST request to get all TabelaImpostoRendas");
-        List<TabelaImpostoRenda> tabelaImpostoRendas = tabelaImpostoRendaRepository.findAll();
-        return tabelaImpostoRendas;
+        return tabelaImpostoRendaRepository.findAll();
     }
 
     /**
@@ -105,11 +100,10 @@ public class TabelaImpostoRendaResource {
      * @return the ResponseEntity with status 200 (OK) and with body the tabelaImpostoRenda, or with status 404 (Not Found)
      */
     @GetMapping("/tabela-imposto-rendas/{id}")
-    @Timed
     public ResponseEntity<TabelaImpostoRenda> getTabelaImpostoRenda(@PathVariable Long id) {
         log.debug("REST request to get TabelaImpostoRenda : {}", id);
-        TabelaImpostoRenda tabelaImpostoRenda = tabelaImpostoRendaRepository.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(tabelaImpostoRenda));
+        Optional<TabelaImpostoRenda> tabelaImpostoRenda = tabelaImpostoRendaRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(tabelaImpostoRenda);
     }
 
     /**
@@ -119,11 +113,9 @@ public class TabelaImpostoRendaResource {
      * @return the ResponseEntity with status 200 (OK)
      */
     @DeleteMapping("/tabela-imposto-rendas/{id}")
-    @Timed
     public ResponseEntity<Void> deleteTabelaImpostoRenda(@PathVariable Long id) {
         log.debug("REST request to delete TabelaImpostoRenda : {}", id);
-        tabelaImpostoRendaRepository.delete(id);
+        tabelaImpostoRendaRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
-
 }

@@ -1,5 +1,4 @@
 package com.alexandrofs.gfp.web.rest;
-
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -12,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,12 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alexandrofs.gfp.domain.IndiceSerieDi;
 import com.alexandrofs.gfp.service.IndiceSerieDiService;
+import com.alexandrofs.gfp.web.rest.errors.BadRequestAlertException;
 import com.alexandrofs.gfp.web.rest.util.HeaderUtil;
 import com.alexandrofs.gfp.web.rest.util.PaginationUtil;
-import com.codahale.metrics.annotation.Timed;
 
 import io.github.jhipster.web.util.ResponseUtil;
-import io.swagger.annotations.ApiParam;
 
 /**
  * REST controller for managing IndiceSerieDi.
@@ -42,7 +39,7 @@ public class IndiceSerieDiResource {
     private final Logger log = LoggerFactory.getLogger(IndiceSerieDiResource.class);
 
     private static final String ENTITY_NAME = "indiceSerieDi";
-        
+
     private final IndiceSerieDiService indiceSerieDiService;
 
     public IndiceSerieDiResource(IndiceSerieDiService indiceSerieDiService) {
@@ -57,11 +54,10 @@ public class IndiceSerieDiResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/indice-serie-dis")
-    @Timed
     public ResponseEntity<IndiceSerieDi> createIndiceSerieDi(@Valid @RequestBody IndiceSerieDi indiceSerieDi) throws URISyntaxException {
         log.debug("REST request to save IndiceSerieDi : {}", indiceSerieDi);
         if (indiceSerieDi.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new indiceSerieDi cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new indiceSerieDi cannot already have an ID", ENTITY_NAME, "idexists");
         }
         IndiceSerieDi result = indiceSerieDiService.save(indiceSerieDi);
         return ResponseEntity.created(new URI("/api/indice-serie-dis/" + result.getId()))
@@ -75,15 +71,14 @@ public class IndiceSerieDiResource {
      * @param indiceSerieDi the indiceSerieDi to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated indiceSerieDi,
      * or with status 400 (Bad Request) if the indiceSerieDi is not valid,
-     * or with status 500 (Internal Server Error) if the indiceSerieDi couldnt be updated
+     * or with status 500 (Internal Server Error) if the indiceSerieDi couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/indice-serie-dis")
-    @Timed
     public ResponseEntity<IndiceSerieDi> updateIndiceSerieDi(@Valid @RequestBody IndiceSerieDi indiceSerieDi) throws URISyntaxException {
         log.debug("REST request to update IndiceSerieDi : {}", indiceSerieDi);
         if (indiceSerieDi.getId() == null) {
-            return createIndiceSerieDi(indiceSerieDi);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         IndiceSerieDi result = indiceSerieDiService.save(indiceSerieDi);
         return ResponseEntity.ok()
@@ -96,16 +91,13 @@ public class IndiceSerieDiResource {
      *
      * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of indiceSerieDis in body
-     * @throws URISyntaxException if there is an error to generate the pagination HTTP headers
      */
     @GetMapping("/indice-serie-dis")
-    @Timed
-    public ResponseEntity<List<IndiceSerieDi>> getAllIndiceSerieDis(@ApiParam Pageable pageable)
-        throws URISyntaxException {
+    public ResponseEntity<List<IndiceSerieDi>> getAllIndiceSerieDis(Pageable pageable) {
         log.debug("REST request to get a page of IndiceSerieDis");
         Page<IndiceSerieDi> page = indiceSerieDiService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/indice-serie-dis");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
@@ -115,11 +107,10 @@ public class IndiceSerieDiResource {
      * @return the ResponseEntity with status 200 (OK) and with body the indiceSerieDi, or with status 404 (Not Found)
      */
     @GetMapping("/indice-serie-dis/{id}")
-    @Timed
     public ResponseEntity<IndiceSerieDi> getIndiceSerieDi(@PathVariable Long id) {
         log.debug("REST request to get IndiceSerieDi : {}", id);
-        IndiceSerieDi indiceSerieDi = indiceSerieDiService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(indiceSerieDi));
+        Optional<IndiceSerieDi> indiceSerieDi = indiceSerieDiService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(indiceSerieDi);
     }
 
     /**
@@ -129,11 +120,9 @@ public class IndiceSerieDiResource {
      * @return the ResponseEntity with status 200 (OK)
      */
     @DeleteMapping("/indice-serie-dis/{id}")
-    @Timed
     public ResponseEntity<Void> deleteIndiceSerieDi(@PathVariable Long id) {
         log.debug("REST request to delete IndiceSerieDi : {}", id);
         indiceSerieDiService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
-
 }

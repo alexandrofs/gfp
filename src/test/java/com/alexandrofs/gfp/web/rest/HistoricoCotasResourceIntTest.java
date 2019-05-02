@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
+import com.alexandrofs.gfp.web.rest.errors.ExceptionTranslator;
 
 import javax.persistence.EntityManager;
 
@@ -30,11 +31,15 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.Validator;
 
 import com.alexandrofs.gfp.GfpApp;
 import com.alexandrofs.gfp.domain.HistoricoCotas;
+import java.math.BigDecimal;
 import com.alexandrofs.gfp.domain.Investimento;
 import com.alexandrofs.gfp.repository.HistoricoCotasRepository;
+
+import static com.alexandrofs.gfp.web.rest.TestUtil.createFormattingConversionService;
 
 /**
  * Test class for the HistoricoCotasResource REST controller.
@@ -62,7 +67,13 @@ public class HistoricoCotasResourceIntTest {
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
     @Autowired
+    private ExceptionTranslator exceptionTranslator;
+
+    @Autowired
     private EntityManager em;
+
+    @Autowired
+    private Validator validator;
 
     private MockMvc restHistoricoCotasMockMvc;
 
@@ -71,10 +82,13 @@ public class HistoricoCotasResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-            HistoricoCotasResource historicoCotasResource = new HistoricoCotasResource(historicoCotasRepository);
+        final HistoricoCotasResource historicoCotasResource = new HistoricoCotasResource(historicoCotasRepository);
         this.restHistoricoCotasMockMvc = MockMvcBuilders.standaloneSetup(historicoCotasResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setMessageConverters(jacksonMessageConverter).build();
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
+            .setMessageConverters(jacksonMessageConverter)
+            .setValidator(validator).build();
     }
 
     /**
@@ -106,7 +120,6 @@ public class HistoricoCotasResourceIntTest {
         int databaseSizeBeforeCreate = historicoCotasRepository.findAll().size();
 
         // Create the HistoricoCotas
-
         restHistoricoCotasMockMvc.perform(post("/api/historico-cotas")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(historicoCotas)))
@@ -126,16 +139,15 @@ public class HistoricoCotasResourceIntTest {
         int databaseSizeBeforeCreate = historicoCotasRepository.findAll().size();
 
         // Create the HistoricoCotas with an existing ID
-        HistoricoCotas existingHistoricoCotas = new HistoricoCotas();
-        existingHistoricoCotas.setId(1L);
+        historicoCotas.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restHistoricoCotasMockMvc.perform(post("/api/historico-cotas")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(existingHistoricoCotas)))
+            .content(TestUtil.convertObjectToJsonBytes(historicoCotas)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Alice in the database
+        // Validate the HistoricoCotas in the database
         List<HistoricoCotas> historicoCotasList = historicoCotasRepository.findAll();
         assertThat(historicoCotasList).hasSize(databaseSizeBeforeCreate);
     }
@@ -190,7 +202,7 @@ public class HistoricoCotasResourceIntTest {
             .andExpect(jsonPath("$.[*].dataCota").value(hasItem(DEFAULT_DATA_COTA.toString())))
             .andExpect(jsonPath("$.[*].vlrCota").value(hasItem(DEFAULT_VLR_COTA.intValue())));
     }
-
+    
     @Test
     @Transactional
     public void getHistoricoCotas() throws Exception {
@@ -219,10 +231,13 @@ public class HistoricoCotasResourceIntTest {
     public void updateHistoricoCotas() throws Exception {
         // Initialize the database
         historicoCotasRepository.saveAndFlush(historicoCotas);
+
         int databaseSizeBeforeUpdate = historicoCotasRepository.findAll().size();
 
         // Update the historicoCotas
-        HistoricoCotas updatedHistoricoCotas = historicoCotasRepository.findOne(historicoCotas.getId());
+        HistoricoCotas updatedHistoricoCotas = historicoCotasRepository.findById(historicoCotas.getId()).get();
+        // Disconnect from session so that the updates on updatedHistoricoCotas are not directly saved in db
+        em.detach(updatedHistoricoCotas);
         updatedHistoricoCotas.setDataCota(UPDATED_DATA_COTA);
         updatedHistoricoCotas.setVlrCota(UPDATED_VLR_COTA);
 
@@ -246,15 +261,15 @@ public class HistoricoCotasResourceIntTest {
 
         // Create the HistoricoCotas
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restHistoricoCotasMockMvc.perform(put("/api/historico-cotas")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(historicoCotas)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the HistoricoCotas in the database
         List<HistoricoCotas> historicoCotasList = historicoCotasRepository.findAll();
-        assertThat(historicoCotasList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(historicoCotasList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -262,9 +277,10 @@ public class HistoricoCotasResourceIntTest {
     public void deleteHistoricoCotas() throws Exception {
         // Initialize the database
         historicoCotasRepository.saveAndFlush(historicoCotas);
+
         int databaseSizeBeforeDelete = historicoCotasRepository.findAll().size();
 
-        // Get the historicoCotas
+        // Delete the historicoCotas
         restHistoricoCotasMockMvc.perform(delete("/api/historico-cotas/{id}", historicoCotas.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());
@@ -275,7 +291,17 @@ public class HistoricoCotasResourceIntTest {
     }
 
     @Test
+    @Transactional
     public void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(HistoricoCotas.class);
+        HistoricoCotas historicoCotas1 = new HistoricoCotas();
+        historicoCotas1.setId(1L);
+        HistoricoCotas historicoCotas2 = new HistoricoCotas();
+        historicoCotas2.setId(historicoCotas1.getId());
+        assertThat(historicoCotas1).isEqualTo(historicoCotas2);
+        historicoCotas2.setId(2L);
+        assertThat(historicoCotas1).isNotEqualTo(historicoCotas2);
+        historicoCotas1.setId(null);
+        assertThat(historicoCotas1).isNotEqualTo(historicoCotas2);
     }
 }

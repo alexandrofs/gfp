@@ -1,7 +1,6 @@
 package com.alexandrofs.gfp.dsl;
 
-import javax.inject.Inject;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -9,7 +8,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class Dsl {
 	
-	@Inject
+	@Autowired
 	private PreparacaoAmbiente preparacaoAmbiente;
 
 	public PreparacaoAmbiente dado() {

@@ -14,6 +14,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import com.alexandrofs.gfp.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -28,11 +29,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.Validator;
 
 import com.alexandrofs.gfp.GfpApp;
 import com.alexandrofs.gfp.domain.TabelaImpostoRenda;
 import com.alexandrofs.gfp.domain.TipoImpostoRenda;
 import com.alexandrofs.gfp.repository.TabelaImpostoRendaRepository;
+
+import static com.alexandrofs.gfp.web.rest.TestUtil.createFormattingConversionService;
 
 /**
  * Test class for the TabelaImpostoRendaResource REST controller.
@@ -60,7 +64,13 @@ public class TabelaImpostoRendaResourceIntTest {
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
     @Autowired
+    private ExceptionTranslator exceptionTranslator;
+
+    @Autowired
     private EntityManager em;
+
+    @Autowired
+    private Validator validator;
 
     private MockMvc restTabelaImpostoRendaMockMvc;
 
@@ -69,10 +79,13 @@ public class TabelaImpostoRendaResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-            TabelaImpostoRendaResource tabelaImpostoRendaResource = new TabelaImpostoRendaResource(tabelaImpostoRendaRepository);
+        final TabelaImpostoRendaResource tabelaImpostoRendaResource = new TabelaImpostoRendaResource(tabelaImpostoRendaRepository);
         this.restTabelaImpostoRendaMockMvc = MockMvcBuilders.standaloneSetup(tabelaImpostoRendaResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
-            .setMessageConverters(jacksonMessageConverter).build();
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
+            .setMessageConverters(jacksonMessageConverter)
+            .setValidator(validator).build();
     }
 
     /**
@@ -104,7 +117,6 @@ public class TabelaImpostoRendaResourceIntTest {
         int databaseSizeBeforeCreate = tabelaImpostoRendaRepository.findAll().size();
 
         // Create the TabelaImpostoRenda
-
         restTabelaImpostoRendaMockMvc.perform(post("/api/tabela-imposto-rendas")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(tabelaImpostoRenda)))
@@ -124,16 +136,15 @@ public class TabelaImpostoRendaResourceIntTest {
         int databaseSizeBeforeCreate = tabelaImpostoRendaRepository.findAll().size();
 
         // Create the TabelaImpostoRenda with an existing ID
-        TabelaImpostoRenda existingTabelaImpostoRenda = new TabelaImpostoRenda();
-        existingTabelaImpostoRenda.setId(1L);
+        tabelaImpostoRenda.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restTabelaImpostoRendaMockMvc.perform(post("/api/tabela-imposto-rendas")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(existingTabelaImpostoRenda)))
+            .content(TestUtil.convertObjectToJsonBytes(tabelaImpostoRenda)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Alice in the database
+        // Validate the TabelaImpostoRenda in the database
         List<TabelaImpostoRenda> tabelaImpostoRendaList = tabelaImpostoRendaRepository.findAll();
         assertThat(tabelaImpostoRendaList).hasSize(databaseSizeBeforeCreate);
     }
@@ -188,7 +199,7 @@ public class TabelaImpostoRendaResourceIntTest {
             .andExpect(jsonPath("$.[*].numDias").value(hasItem(DEFAULT_NUM_DIAS.intValue())))
             .andExpect(jsonPath("$.[*].pctAliquota").value(hasItem(DEFAULT_PCT_ALIQUOTA.intValue())));
     }
-
+    
     @Test
     @Transactional
     public void getTabelaImpostoRenda() throws Exception {
@@ -217,10 +228,13 @@ public class TabelaImpostoRendaResourceIntTest {
     public void updateTabelaImpostoRenda() throws Exception {
         // Initialize the database
         tabelaImpostoRendaRepository.saveAndFlush(tabelaImpostoRenda);
+
         int databaseSizeBeforeUpdate = tabelaImpostoRendaRepository.findAll().size();
 
         // Update the tabelaImpostoRenda
-        TabelaImpostoRenda updatedTabelaImpostoRenda = tabelaImpostoRendaRepository.findOne(tabelaImpostoRenda.getId());
+        TabelaImpostoRenda updatedTabelaImpostoRenda = tabelaImpostoRendaRepository.findById(tabelaImpostoRenda.getId()).get();
+        // Disconnect from session so that the updates on updatedTabelaImpostoRenda are not directly saved in db
+        em.detach(updatedTabelaImpostoRenda);
         updatedTabelaImpostoRenda.setNumDias(UPDATED_NUM_DIAS);
         updatedTabelaImpostoRenda.setPctAliquota(UPDATED_PCT_ALIQUOTA);
         updatedTabelaImpostoRenda.setTipoImpostoRenda(tabelaImpostoRenda.getTipoImpostoRenda());
@@ -245,15 +259,15 @@ public class TabelaImpostoRendaResourceIntTest {
 
         // Create the TabelaImpostoRenda
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restTabelaImpostoRendaMockMvc.perform(put("/api/tabela-imposto-rendas")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(tabelaImpostoRenda)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the TabelaImpostoRenda in the database
         List<TabelaImpostoRenda> tabelaImpostoRendaList = tabelaImpostoRendaRepository.findAll();
-        assertThat(tabelaImpostoRendaList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(tabelaImpostoRendaList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -261,9 +275,10 @@ public class TabelaImpostoRendaResourceIntTest {
     public void deleteTabelaImpostoRenda() throws Exception {
         // Initialize the database
         tabelaImpostoRendaRepository.saveAndFlush(tabelaImpostoRenda);
+
         int databaseSizeBeforeDelete = tabelaImpostoRendaRepository.findAll().size();
 
-        // Get the tabelaImpostoRenda
+        // Delete the tabelaImpostoRenda
         restTabelaImpostoRendaMockMvc.perform(delete("/api/tabela-imposto-rendas/{id}", tabelaImpostoRenda.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());
@@ -274,7 +289,17 @@ public class TabelaImpostoRendaResourceIntTest {
     }
 
     @Test
+    @Transactional
     public void equalsVerifier() throws Exception {
         TestUtil.equalsVerifier(TabelaImpostoRenda.class);
+        TabelaImpostoRenda tabelaImpostoRenda1 = new TabelaImpostoRenda();
+        tabelaImpostoRenda1.setId(1L);
+        TabelaImpostoRenda tabelaImpostoRenda2 = new TabelaImpostoRenda();
+        tabelaImpostoRenda2.setId(tabelaImpostoRenda1.getId());
+        assertThat(tabelaImpostoRenda1).isEqualTo(tabelaImpostoRenda2);
+        tabelaImpostoRenda2.setId(2L);
+        assertThat(tabelaImpostoRenda1).isNotEqualTo(tabelaImpostoRenda2);
+        tabelaImpostoRenda1.setId(null);
+        assertThat(tabelaImpostoRenda1).isNotEqualTo(tabelaImpostoRenda2);
     }
 }

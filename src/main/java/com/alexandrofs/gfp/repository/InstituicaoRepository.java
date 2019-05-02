@@ -1,15 +1,15 @@
 package com.alexandrofs.gfp.repository;
 
 import com.alexandrofs.gfp.domain.Instituicao;
-
 import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
 
 /**
- * Spring Data JPA repository for the Instituicao entity.
+ * Spring Data  repository for the Instituicao entity.
  */
 @SuppressWarnings("unused")
-public interface InstituicaoRepository extends JpaRepository<Instituicao,Long> {
+@Repository
+public interface InstituicaoRepository extends JpaRepository<Instituicao, Long> {
 
 }

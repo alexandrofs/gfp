@@ -1,15 +1,14 @@
 {
     "gfpApp": {
-        "tipoImpostoRenda" : {
+        "tipoImpostoRenda": {
             "home": {
                 "title": "Tipo Imposto Rendas",
                 "createLabel": "Criar novo Tipo Imposto Renda",
-                "createOrEditLabel": "Criar ou editar Tipo Imposto Renda",
-                "search": "Pesquisar por Tipo Imposto Renda"
+                "createOrEditLabel": "Criar ou editar Tipo Imposto Renda"
             },
-            "created": "Um novo Tipo Imposto Renda é criado com o identificador {{ param }}",
-            "updated": "Um Tipo Imposto Renda é atualizado com o identificador {{ param }}",
-            "deleted": "Um Tipo Imposto Renda é deletado com o identificador {{ param }}",
+            "created": "Um novo Tipo Imposto Renda foi criado com o identificador {{ param }}",
+            "updated": "Um Tipo Imposto Renda foi atualizado com o identificador {{ param }}",
+            "deleted": "Um Tipo Imposto Renda foi deletado com o identificador {{ param }}",
             "delete": {
                 "question": "Tem certeza de que deseja excluir Tipo Imposto Renda {{ id }}?"
             },

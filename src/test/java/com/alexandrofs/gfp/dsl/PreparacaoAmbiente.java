@@ -1,7 +1,6 @@
 package com.alexandrofs.gfp.dsl;
 
-import javax.inject.Inject;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -15,19 +14,19 @@ import com.alexandrofs.gfp.repository.TipoInvestimentoRepository;
 @Component
 public class PreparacaoAmbiente {
 
-	@Inject
+	@Autowired
 	private TipoImpostoRendaRepository tipoImpostoRendaRepository;
 	
-	@Inject
+	@Autowired
 	private TipoInvestimentoRepository tipoInvestimentoRepository;
 	
-	@Inject
+	@Autowired
 	private CarteiraRepository carteiraRepository;
 	
-	@Inject
+	@Autowired
 	private InstituicaoRepository instituicaoRepository;
 	
-	@Inject
+	@Autowired
 	private InvestimentoRepository investimentoRepository;
 	
 	public TipoImpostoRendaDsl tipoImpostoRenda() {

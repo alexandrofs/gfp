@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,14 +15,15 @@ import com.alexandrofs.gfp.domain.IndiceSerieDi;
 import com.alexandrofs.gfp.domain.Investimento;
 import com.alexandrofs.gfp.repository.HistoricoCotasRepository;
 import com.alexandrofs.gfp.repository.ImportaIndiceSerieDiRepository;
+import com.alexandrofs.gfp.web.rest.errors.BadRequestAlertException;
 
 
 @Service
 @Transactional
 public class CalculoCotasService {
-
-	private static Logger LOG = Logger.getLogger(CalculoCotasService.class);
 	
+	private static org.slf4j.Logger LOG = LoggerFactory.getLogger(CalculoCotasService.class);
+
 	@Autowired
 	private HistoricoCotasRepository cotasRepository;
 	
@@ -34,7 +35,8 @@ public class CalculoCotasService {
 	
 	public void calcula(Long idInvestimento) {
 		
-		Investimento investimento = investimentoService.findOne(idInvestimento);
+		Investimento investimento = investimentoService.findOne(idInvestimento)
+				.orElseThrow(() -> new BadRequestAlertException("Id não encontrado", "Investimento", "idnotfound"));
 		
 		Optional<HistoricoCotas> ultimaCota = cotasRepository.findFirstByInvestimentoOrderByDataCotaDesc(investimento);
 		

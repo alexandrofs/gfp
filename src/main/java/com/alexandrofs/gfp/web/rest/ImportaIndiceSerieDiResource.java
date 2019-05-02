@@ -3,10 +3,9 @@ package com.alexandrofs.gfp.web.rest;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import javax.inject.Inject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,7 +16,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.alexandrofs.gfp.service.ImportaIndiceSerieDiService;
 import com.alexandrofs.gfp.web.rest.util.HeaderUtil;
-import com.codahale.metrics.annotation.Timed;
+
+import io.micrometer.core.annotation.Timed;
 
 /**
  * REST controller for managing IndiceSerieDi.
@@ -28,7 +28,7 @@ public class ImportaIndiceSerieDiResource {
 
     private final Logger log = LoggerFactory.getLogger(ImportaIndiceSerieDiResource.class);
         
-    @Inject
+    @Autowired
     private ImportaIndiceSerieDiService indiceSerieDiService;
     
     @RequestMapping(value = "/indice-serie-dis/import",

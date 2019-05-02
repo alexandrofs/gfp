@@ -4,8 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
 
-import javax.inject.Inject;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 
 import com.alexandrofs.gfp.dsl.Dsl;
@@ -28,15 +27,15 @@ public abstract class AbstractTest {
     protected static final BigDecimal DEFAULT_PCT_PRE_POS_FIXADO = new BigDecimal(1);
     protected static final BigDecimal UPDATED_PCT_PRE_POS_FIXADO = new BigDecimal(2);
 
-	@Inject
+	@Autowired
 	protected Dsl dsl;
 	
-    @Inject
+	@Autowired
     protected InvestimentoRepository investimentoRepository;
     
-    @Inject
+	@Autowired
     protected CarteiraRepository carteiraRepository;
     
-    @Inject
+	@Autowired
     protected InstituicaoRepository instituicaoRepository; 
 }

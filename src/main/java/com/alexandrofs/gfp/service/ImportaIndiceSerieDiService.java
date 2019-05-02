@@ -9,10 +9,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +28,7 @@ public class ImportaIndiceSerieDiService {
 
     private final Logger log = LoggerFactory.getLogger(ImportaIndiceSerieDiService.class);
     
-    @Inject
+    @Autowired
     private ImportaIndiceSerieDiRepository indiceSerieDiRepository;
     
 	public void importa(InputStream inputStream) throws IOException {
@@ -77,6 +76,6 @@ public class ImportaIndiceSerieDiService {
     		throw new RuntimeException("Arquivo com formato inválido");
     	}
     	
-    	indiceSerieDiRepository.save(lista);
+    	indiceSerieDiRepository.saveAll(lista);
 	}
 }

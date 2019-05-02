@@ -1,9 +1,7 @@
 package com.alexandrofs.gfp.web.rest;
-
-import com.codahale.metrics.annotation.Timed;
 import com.alexandrofs.gfp.domain.HistoricoCotas;
-
 import com.alexandrofs.gfp.repository.HistoricoCotasRepository;
+import com.alexandrofs.gfp.web.rest.errors.BadRequestAlertException;
 import com.alexandrofs.gfp.web.rest.util.HeaderUtil;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
@@ -14,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +26,7 @@ public class HistoricoCotasResource {
     private final Logger log = LoggerFactory.getLogger(HistoricoCotasResource.class);
 
     private static final String ENTITY_NAME = "historicoCotas";
-        
+
     private final HistoricoCotasRepository historicoCotasRepository;
 
     public HistoricoCotasResource(HistoricoCotasRepository historicoCotasRepository) {
@@ -42,11 +41,10 @@ public class HistoricoCotasResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/historico-cotas")
-    @Timed
     public ResponseEntity<HistoricoCotas> createHistoricoCotas(@Valid @RequestBody HistoricoCotas historicoCotas) throws URISyntaxException {
         log.debug("REST request to save HistoricoCotas : {}", historicoCotas);
         if (historicoCotas.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new historicoCotas cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new historicoCotas cannot already have an ID", ENTITY_NAME, "idexists");
         }
         HistoricoCotas result = historicoCotasRepository.save(historicoCotas);
         return ResponseEntity.created(new URI("/api/historico-cotas/" + result.getId()))
@@ -60,15 +58,14 @@ public class HistoricoCotasResource {
      * @param historicoCotas the historicoCotas to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated historicoCotas,
      * or with status 400 (Bad Request) if the historicoCotas is not valid,
-     * or with status 500 (Internal Server Error) if the historicoCotas couldnt be updated
+     * or with status 500 (Internal Server Error) if the historicoCotas couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/historico-cotas")
-    @Timed
     public ResponseEntity<HistoricoCotas> updateHistoricoCotas(@Valid @RequestBody HistoricoCotas historicoCotas) throws URISyntaxException {
         log.debug("REST request to update HistoricoCotas : {}", historicoCotas);
         if (historicoCotas.getId() == null) {
-            return createHistoricoCotas(historicoCotas);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         HistoricoCotas result = historicoCotasRepository.save(historicoCotas);
         return ResponseEntity.ok()
@@ -82,11 +79,9 @@ public class HistoricoCotasResource {
      * @return the ResponseEntity with status 200 (OK) and the list of historicoCotas in body
      */
     @GetMapping("/historico-cotas")
-    @Timed
     public List<HistoricoCotas> getAllHistoricoCotas() {
         log.debug("REST request to get all HistoricoCotas");
-        List<HistoricoCotas> historicoCotas = historicoCotasRepository.findAll();
-        return historicoCotas;
+        return historicoCotasRepository.findAll();
     }
 
     /**
@@ -96,11 +91,10 @@ public class HistoricoCotasResource {
      * @return the ResponseEntity with status 200 (OK) and with body the historicoCotas, or with status 404 (Not Found)
      */
     @GetMapping("/historico-cotas/{id}")
-    @Timed
     public ResponseEntity<HistoricoCotas> getHistoricoCotas(@PathVariable Long id) {
         log.debug("REST request to get HistoricoCotas : {}", id);
-        HistoricoCotas historicoCotas = historicoCotasRepository.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(historicoCotas));
+        Optional<HistoricoCotas> historicoCotas = historicoCotasRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(historicoCotas);
     }
 
     /**
@@ -110,11 +104,9 @@ public class HistoricoCotasResource {
      * @return the ResponseEntity with status 200 (OK)
      */
     @DeleteMapping("/historico-cotas/{id}")
-    @Timed
     public ResponseEntity<Void> deleteHistoricoCotas(@PathVariable Long id) {
         log.debug("REST request to delete HistoricoCotas : {}", id);
-        historicoCotasRepository.delete(id);
+        historicoCotasRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
-
 }

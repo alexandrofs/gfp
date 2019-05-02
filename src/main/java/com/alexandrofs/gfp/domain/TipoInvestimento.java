@@ -1,6 +1,9 @@
 package com.alexandrofs.gfp.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -27,7 +30,7 @@ import com.alexandrofs.gfp.domain.fixed.TipoIndexadorEnum;
 public class TipoInvestimento implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -57,8 +60,10 @@ public class TipoInvestimento implements Serializable {
 
     @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("tipoInvestimentos")
     private TipoImpostoRenda tipoImpostoRenda;
 
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -114,6 +119,7 @@ public class TipoInvestimento implements Serializable {
     public void setTipoImpostoRenda(TipoImpostoRenda tipoImpostoRenda) {
         this.tipoImpostoRenda = tipoImpostoRenda;
     }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -124,26 +130,26 @@ public class TipoInvestimento implements Serializable {
             return false;
         }
         TipoInvestimento tipoInvestimento = (TipoInvestimento) o;
-        if (tipoInvestimento.id == null || id == null) {
+        if (tipoInvestimento.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(id, tipoInvestimento.id);
+        return Objects.equals(getId(), tipoInvestimento.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(getId());
     }
 
     @Override
     public String toString() {
         return "TipoInvestimento{" +
-            "id=" + id +
-            ", nome='" + nome + "'" +
-            ", descricao='" + descricao + "'" +
-            ", modalidade='" + modalidade + "'" +
-            ", tipoIndexador='" + tipoIndexador + "'" +
-            ", indice='" + indice + "'" +
-            '}';
+            "id=" + getId() +
+            ", nome='" + getNome() + "'" +
+            ", descricao='" + getDescricao() + "'" +
+            ", modalidade='" + getModalidade() + "'" +
+            ", tipoIndexador='" + getTipoIndexador() + "'" +
+            ", indice='" + getIndice() + "'" +
+            "}";
     }
 }

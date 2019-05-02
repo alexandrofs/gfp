@@ -1,9 +1,8 @@
 package com.alexandrofs.gfp.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
-
-import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +21,9 @@ import com.alexandrofs.gfp.repository.InvestimentoRepository;
 public class InvestimentoService {
 
     private final Logger log = LoggerFactory.getLogger(InvestimentoService.class);
-    
-    private final InvestimentoRepository investimentoRepository;
 
+    private final InvestimentoRepository investimentoRepository;
+    
     public InvestimentoService(InvestimentoRepository investimentoRepository) {
         this.investimentoRepository = investimentoRepository;
     }
@@ -40,14 +39,13 @@ public class InvestimentoService {
      */
     public Investimento save(Investimento investimento) {
         log.debug("Request to save Investimento : {}", investimento);
-        Investimento result = investimentoRepository.save(investimento);
-        return result;
+        return investimentoRepository.save(investimento);
     }
 
     /**
-     *  Get all the investimentos.
-     *  
-     *  @return the list of entities
+     * Get all the investimentos.
+     *
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public List<Investimento> findAll() {
@@ -56,26 +54,26 @@ public class InvestimentoService {
         return result.stream().map(calculoCotasService::calculaSaldoBruto).collect(Collectors.toList());
     }
 
+
     /**
-     *  Get one investimento by id.
+     * Get one investimento by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Transactional(readOnly = true)
-    public Investimento findOne(Long id) {
+    public Optional<Investimento> findOne(Long id) {
         log.debug("Request to get Investimento : {}", id);
-        Investimento investimento = investimentoRepository.findOne(id);
-        return investimento != null ? calculoCotasService.calculaSaldoBruto(investimento) : investimento;
+        Optional<Investimento> investimento = investimentoRepository.findById(id);
+        return investimento.isPresent() ? Optional.ofNullable(calculoCotasService.calculaSaldoBruto(investimento.get())) : investimento;
     }
 
     /**
-     *  Delete the  investimento by id.
+     * Delete the investimento by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
-        log.debug("Request to delete Investimento : {}", id);
-        investimentoRepository.delete(id);
+        log.debug("Request to delete Investimento : {}", id);        investimentoRepository.deleteById(id);
     }
 }

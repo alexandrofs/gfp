@@ -1,15 +1,14 @@
 {
     "gfpApp": {
-        "investimento" : {
+        "investimento": {
             "home": {
                 "title": "Investimentos",
                 "createLabel": "Criar novo Investimento",
-                "createOrEditLabel": "Criar ou editar Investimento",
-                "search": "Pesquisar por Investimento"
+                "createOrEditLabel": "Criar ou editar Investimento"
             },
-            "created": "Um novo Investimento é criado com o identificador {{ param }}",
-            "updated": "Um Investimento é atualizado com o identificador {{ param }}",
-            "deleted": "Um Investimento é deletado com o identificador {{ param }}",
+            "created": "Um novo Investimento foi criado com o identificador {{ param }}",
+            "updated": "Um Investimento foi atualizado com o identificador {{ param }}",
+            "deleted": "Um Investimento foi deletado com o identificador {{ param }}",
             "delete": {
                 "question": "Tem certeza de que deseja excluir Investimento {{ id }}?"
             },
