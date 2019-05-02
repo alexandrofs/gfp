@@ -1,6 +1,4 @@
 package com.alexandrofs.gfp.web.rest;
-
-import com.codahale.metrics.annotation.Timed;
 import com.alexandrofs.gfp.domain.Investimento;
 import com.alexandrofs.gfp.service.InvestimentoService;
 import com.alexandrofs.gfp.web.rest.errors.BadRequestAlertException;
@@ -43,7 +41,6 @@ public class InvestimentoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/investimentos")
-    @Timed
     public ResponseEntity<Investimento> createInvestimento(@Valid @RequestBody Investimento investimento) throws URISyntaxException {
         log.debug("REST request to save Investimento : {}", investimento);
         if (investimento.getId() != null) {
@@ -65,7 +62,6 @@ public class InvestimentoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/investimentos")
-    @Timed
     public ResponseEntity<Investimento> updateInvestimento(@Valid @RequestBody Investimento investimento) throws URISyntaxException {
         log.debug("REST request to update Investimento : {}", investimento);
         if (investimento.getId() == null) {
@@ -83,7 +79,6 @@ public class InvestimentoResource {
      * @return the ResponseEntity with status 200 (OK) and the list of investimentos in body
      */
     @GetMapping("/investimentos")
-    @Timed
     public List<Investimento> getAllInvestimentos() {
         log.debug("REST request to get all Investimentos");
         return investimentoService.findAll();
@@ -96,7 +91,6 @@ public class InvestimentoResource {
      * @return the ResponseEntity with status 200 (OK) and with body the investimento, or with status 404 (Not Found)
      */
     @GetMapping("/investimentos/{id}")
-    @Timed
     public ResponseEntity<Investimento> getInvestimento(@PathVariable Long id) {
         log.debug("REST request to get Investimento : {}", id);
         Optional<Investimento> investimento = investimentoService.findOne(id);
@@ -110,7 +104,6 @@ public class InvestimentoResource {
      * @return the ResponseEntity with status 200 (OK)
      */
     @DeleteMapping("/investimentos/{id}")
-    @Timed
     public ResponseEntity<Void> deleteInvestimento(@PathVariable Long id) {
         log.debug("REST request to delete Investimento : {}", id);
         investimentoService.delete(id);

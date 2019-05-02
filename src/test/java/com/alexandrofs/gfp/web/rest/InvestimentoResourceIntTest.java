@@ -23,6 +23,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
 import java.math.BigDecimal;
@@ -61,8 +62,6 @@ public class InvestimentoResourceIntTest {
     @Autowired
     private InvestimentoRepository investimentoRepository;
 
-    
-
     @Autowired
     private InvestimentoService investimentoService;
 
@@ -78,6 +77,9 @@ public class InvestimentoResourceIntTest {
     @Autowired
     private EntityManager em;
 
+    @Autowired
+    private Validator validator;
+
     private MockMvc restInvestimentoMockMvc;
 
     private Investimento investimento;
@@ -90,7 +92,8 @@ public class InvestimentoResourceIntTest {
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
             .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter).build();
+            .setMessageConverters(jacksonMessageConverter)
+            .setValidator(validator).build();
     }
 
     /**
@@ -239,7 +242,6 @@ public class InvestimentoResourceIntTest {
             .andExpect(jsonPath("$.[*].pctPrePosFixado").value(hasItem(DEFAULT_PCT_PRE_POS_FIXADO.intValue())));
     }
     
-
     @Test
     @Transactional
     public void getInvestimento() throws Exception {
@@ -256,6 +258,7 @@ public class InvestimentoResourceIntTest {
             .andExpect(jsonPath("$.vlrCota").value(DEFAULT_VLR_COTA.intValue()))
             .andExpect(jsonPath("$.pctPrePosFixado").value(DEFAULT_PCT_PRE_POS_FIXADO.intValue()));
     }
+
     @Test
     @Transactional
     public void getNonExistingInvestimento() throws Exception {
@@ -303,7 +306,7 @@ public class InvestimentoResourceIntTest {
 
         // Create the Investimento
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restInvestimentoMockMvc.perform(put("/api/investimentos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(investimento)))
@@ -322,7 +325,7 @@ public class InvestimentoResourceIntTest {
 
         int databaseSizeBeforeDelete = investimentoRepository.findAll().size();
 
-        // Get the investimento
+        // Delete the investimento
         restInvestimentoMockMvc.perform(delete("/api/investimentos/{id}", investimento.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());

@@ -12,4 +12,10 @@ import { GfpSharedLibsModule, GfpSharedCommonModule, JhiLoginModalComponent, Has
     exports: [GfpSharedCommonModule, JhiLoginModalComponent, HasAnyAuthorityDirective],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class GfpSharedModule {}
+export class GfpSharedModule {
+    static forRoot() {
+        return {
+            ngModule: GfpSharedModule
+        };
+    }
+}

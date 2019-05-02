@@ -1,7 +1,6 @@
-
 {
     "gfpApp": {
-        "historicoCotas" : {
+        "historicoCotas": {
             "home": {
                 "title": "Historico Cotas",
                 "createLabel": "Criar novo Historico Cotas",

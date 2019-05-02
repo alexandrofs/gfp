@@ -10,8 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.Optional;
+
 /**
  * Service Implementation for managing IndiceSerieDi.
  */
@@ -34,7 +34,8 @@ public class IndiceSerieDiService {
      * @return the persisted entity
      */
     public IndiceSerieDi save(IndiceSerieDi indiceSerieDi) {
-        log.debug("Request to save IndiceSerieDi : {}", indiceSerieDi);        return indiceSerieDiRepository.save(indiceSerieDi);
+        log.debug("Request to save IndiceSerieDi : {}", indiceSerieDi);
+        return indiceSerieDiRepository.save(indiceSerieDi);
     }
 
     /**
@@ -68,7 +69,6 @@ public class IndiceSerieDiService {
      * @param id the id of the entity
      */
     public void delete(Long id) {
-        log.debug("Request to delete IndiceSerieDi : {}", id);
-        indiceSerieDiRepository.deleteById(id);
+        log.debug("Request to delete IndiceSerieDi : {}", id);        indiceSerieDiRepository.deleteById(id);
     }
 }

@@ -20,6 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
 import java.math.BigDecimal;
@@ -52,7 +53,6 @@ public class HistoricoCotasResourceIntTest {
     @Autowired
     private HistoricoCotasRepository historicoCotasRepository;
 
-
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
@@ -64,6 +64,9 @@ public class HistoricoCotasResourceIntTest {
 
     @Autowired
     private EntityManager em;
+
+    @Autowired
+    private Validator validator;
 
     private MockMvc restHistoricoCotasMockMvc;
 
@@ -77,7 +80,8 @@ public class HistoricoCotasResourceIntTest {
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
             .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter).build();
+            .setMessageConverters(jacksonMessageConverter)
+            .setValidator(validator).build();
     }
 
     /**
@@ -192,7 +196,6 @@ public class HistoricoCotasResourceIntTest {
             .andExpect(jsonPath("$.[*].vlrCota").value(hasItem(DEFAULT_VLR_COTA.intValue())));
     }
     
-
     @Test
     @Transactional
     public void getHistoricoCotas() throws Exception {
@@ -207,6 +210,7 @@ public class HistoricoCotasResourceIntTest {
             .andExpect(jsonPath("$.dataCota").value(DEFAULT_DATA_COTA.toString()))
             .andExpect(jsonPath("$.vlrCota").value(DEFAULT_VLR_COTA.intValue()));
     }
+
     @Test
     @Transactional
     public void getNonExistingHistoricoCotas() throws Exception {
@@ -250,7 +254,7 @@ public class HistoricoCotasResourceIntTest {
 
         // Create the HistoricoCotas
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restHistoricoCotasMockMvc.perform(put("/api/historico-cotas")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(historicoCotas)))
@@ -269,7 +273,7 @@ public class HistoricoCotasResourceIntTest {
 
         int databaseSizeBeforeDelete = historicoCotasRepository.findAll().size();
 
-        // Get the historicoCotas
+        // Delete the historicoCotas
         restHistoricoCotasMockMvc.perform(delete("/api/historico-cotas/{id}", historicoCotas.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());

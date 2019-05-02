@@ -9,11 +9,9 @@
                 "info": "Informe endereço de email utilizado no cadastro.",
                 "success": "Verifique seu email para detalhes sobre a criação de uma nova senha.",
                 "notfound": "<strong>Endereço de email não cadastrado!</strong> Por favor verifique e tente novamente"
-
             }
-
         },
-        "finish" : {
+        "finish": {
             "title": "Criar nova senha",
             "form": {
                 "button": "Validar nova senha"
@@ -26,5 +24,4 @@
             }
         }
     }
-
 }

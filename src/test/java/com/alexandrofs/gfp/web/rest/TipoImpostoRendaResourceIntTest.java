@@ -19,6 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -48,7 +49,6 @@ public class TipoImpostoRendaResourceIntTest {
     @Autowired
     private TipoImpostoRendaRepository tipoImpostoRendaRepository;
 
-
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
@@ -60,6 +60,9 @@ public class TipoImpostoRendaResourceIntTest {
 
     @Autowired
     private EntityManager em;
+
+    @Autowired
+    private Validator validator;
 
     private MockMvc restTipoImpostoRendaMockMvc;
 
@@ -73,7 +76,8 @@ public class TipoImpostoRendaResourceIntTest {
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
             .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter).build();
+            .setMessageConverters(jacksonMessageConverter)
+            .setValidator(validator).build();
     }
 
     /**
@@ -183,7 +187,6 @@ public class TipoImpostoRendaResourceIntTest {
             .andExpect(jsonPath("$.[*].descricao").value(hasItem(DEFAULT_DESCRICAO.toString())));
     }
     
-
     @Test
     @Transactional
     public void getTipoImpostoRenda() throws Exception {
@@ -198,6 +201,7 @@ public class TipoImpostoRendaResourceIntTest {
             .andExpect(jsonPath("$.codigo").value(DEFAULT_CODIGO.toString()))
             .andExpect(jsonPath("$.descricao").value(DEFAULT_DESCRICAO.toString()));
     }
+
     @Test
     @Transactional
     public void getNonExistingTipoImpostoRenda() throws Exception {
@@ -241,7 +245,7 @@ public class TipoImpostoRendaResourceIntTest {
 
         // Create the TipoImpostoRenda
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restTipoImpostoRendaMockMvc.perform(put("/api/tipo-imposto-rendas")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(tipoImpostoRenda)))
@@ -260,7 +264,7 @@ public class TipoImpostoRendaResourceIntTest {
 
         int databaseSizeBeforeDelete = tipoImpostoRendaRepository.findAll().size();
 
-        // Get the tipoImpostoRenda
+        // Delete the tipoImpostoRenda
         restTipoImpostoRendaMockMvc.perform(delete("/api/tipo-imposto-rendas/{id}", tipoImpostoRenda.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());

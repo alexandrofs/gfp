@@ -1,5 +1,6 @@
 package com.alexandrofs.gfp.domain;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -16,7 +17,7 @@ import java.util.Objects;
 public class TipoInvestimento implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -48,7 +49,7 @@ public class TipoInvestimento implements Serializable {
 
     @ManyToOne(optional = false)
     @NotNull
-    @JsonIgnoreProperties("")
+    @JsonIgnoreProperties("tipoInvestimentos")
     private TipoImpostoRenda tipoImpostoRenda;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove

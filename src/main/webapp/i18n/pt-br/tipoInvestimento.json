@@ -1,7 +1,6 @@
-
 {
     "gfpApp": {
-        "tipoInvestimento" : {
+        "tipoInvestimento": {
             "home": {
                 "title": "Tipo Investimentos",
                 "createLabel": "Criar novo Tipo Investimento",

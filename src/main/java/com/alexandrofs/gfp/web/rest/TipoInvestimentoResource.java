@@ -1,6 +1,4 @@
 package com.alexandrofs.gfp.web.rest;
-
-import com.codahale.metrics.annotation.Timed;
 import com.alexandrofs.gfp.domain.TipoInvestimento;
 import com.alexandrofs.gfp.repository.TipoInvestimentoRepository;
 import com.alexandrofs.gfp.web.rest.errors.BadRequestAlertException;
@@ -43,7 +41,6 @@ public class TipoInvestimentoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/tipo-investimentos")
-    @Timed
     public ResponseEntity<TipoInvestimento> createTipoInvestimento(@Valid @RequestBody TipoInvestimento tipoInvestimento) throws URISyntaxException {
         log.debug("REST request to save TipoInvestimento : {}", tipoInvestimento);
         if (tipoInvestimento.getId() != null) {
@@ -65,7 +62,6 @@ public class TipoInvestimentoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/tipo-investimentos")
-    @Timed
     public ResponseEntity<TipoInvestimento> updateTipoInvestimento(@Valid @RequestBody TipoInvestimento tipoInvestimento) throws URISyntaxException {
         log.debug("REST request to update TipoInvestimento : {}", tipoInvestimento);
         if (tipoInvestimento.getId() == null) {
@@ -83,7 +79,6 @@ public class TipoInvestimentoResource {
      * @return the ResponseEntity with status 200 (OK) and the list of tipoInvestimentos in body
      */
     @GetMapping("/tipo-investimentos")
-    @Timed
     public List<TipoInvestimento> getAllTipoInvestimentos() {
         log.debug("REST request to get all TipoInvestimentos");
         return tipoInvestimentoRepository.findAll();
@@ -96,7 +91,6 @@ public class TipoInvestimentoResource {
      * @return the ResponseEntity with status 200 (OK) and with body the tipoInvestimento, or with status 404 (Not Found)
      */
     @GetMapping("/tipo-investimentos/{id}")
-    @Timed
     public ResponseEntity<TipoInvestimento> getTipoInvestimento(@PathVariable Long id) {
         log.debug("REST request to get TipoInvestimento : {}", id);
         Optional<TipoInvestimento> tipoInvestimento = tipoInvestimentoRepository.findById(id);
@@ -110,10 +104,8 @@ public class TipoInvestimentoResource {
      * @return the ResponseEntity with status 200 (OK)
      */
     @DeleteMapping("/tipo-investimentos/{id}")
-    @Timed
     public ResponseEntity<Void> deleteTipoInvestimento(@PathVariable Long id) {
         log.debug("REST request to delete TipoInvestimento : {}", id);
-
         tipoInvestimentoRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }

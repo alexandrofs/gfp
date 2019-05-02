@@ -20,6 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
 import java.math.BigDecimal;
@@ -50,7 +51,6 @@ public class TabelaImpostoRendaResourceIntTest {
     @Autowired
     private TabelaImpostoRendaRepository tabelaImpostoRendaRepository;
 
-
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
@@ -62,6 +62,9 @@ public class TabelaImpostoRendaResourceIntTest {
 
     @Autowired
     private EntityManager em;
+
+    @Autowired
+    private Validator validator;
 
     private MockMvc restTabelaImpostoRendaMockMvc;
 
@@ -75,7 +78,8 @@ public class TabelaImpostoRendaResourceIntTest {
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
             .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter).build();
+            .setMessageConverters(jacksonMessageConverter)
+            .setValidator(validator).build();
     }
 
     /**
@@ -190,7 +194,6 @@ public class TabelaImpostoRendaResourceIntTest {
             .andExpect(jsonPath("$.[*].pctAliquota").value(hasItem(DEFAULT_PCT_ALIQUOTA.intValue())));
     }
     
-
     @Test
     @Transactional
     public void getTabelaImpostoRenda() throws Exception {
@@ -205,6 +208,7 @@ public class TabelaImpostoRendaResourceIntTest {
             .andExpect(jsonPath("$.numDias").value(DEFAULT_NUM_DIAS.intValue()))
             .andExpect(jsonPath("$.pctAliquota").value(DEFAULT_PCT_ALIQUOTA.intValue()));
     }
+
     @Test
     @Transactional
     public void getNonExistingTabelaImpostoRenda() throws Exception {
@@ -248,7 +252,7 @@ public class TabelaImpostoRendaResourceIntTest {
 
         // Create the TabelaImpostoRenda
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restTabelaImpostoRendaMockMvc.perform(put("/api/tabela-imposto-rendas")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(tabelaImpostoRenda)))
@@ -267,7 +271,7 @@ public class TabelaImpostoRendaResourceIntTest {
 
         int databaseSizeBeforeDelete = tabelaImpostoRendaRepository.findAll().size();
 
-        // Get the tabelaImpostoRenda
+        // Delete the tabelaImpostoRenda
         restTabelaImpostoRendaMockMvc.perform(delete("/api/tabela-imposto-rendas/{id}", tabelaImpostoRenda.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());

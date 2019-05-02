@@ -1,5 +1,6 @@
 package com.alexandrofs.gfp.domain;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -18,7 +19,7 @@ import java.util.Objects;
 public class TipoImpostoRenda implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,7 +36,6 @@ public class TipoImpostoRenda implements Serializable {
 
     @OneToMany(mappedBy = "tipoImpostoRenda")
     private Set<TabelaImpostoRenda> tabelaImpostoRendas = new HashSet<>();
-
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;

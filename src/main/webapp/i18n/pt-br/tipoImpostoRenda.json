@@ -1,7 +1,6 @@
-
 {
     "gfpApp": {
-        "tipoImpostoRenda" : {
+        "tipoImpostoRenda": {
             "home": {
                 "title": "Tipo Imposto Rendas",
                 "createLabel": "Criar novo Tipo Imposto Renda",

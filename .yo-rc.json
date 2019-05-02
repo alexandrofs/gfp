@@ -1,6 +1,6 @@
 {
   "generator-jhipster": {
-    "jhipsterVersion": "4.0.0",
+    "jhipsterVersion": "5.8.0",
     "baseName": "gfp",
     "packageName": "com.alexandrofs.gfp",
     "packageFolder": "com/alexandrofs/gfp",
@@ -29,6 +29,11 @@
     "messageBroker": false,
     "serviceDiscoveryType": false,
     "clientPackageManager": "npm",
-    "clientFramework": "angular1"
+    "clientFramework": "angular1",
+    "cacheProvider": "no",
+    "enableHibernateCache": false,
+    "entitySuffix": "",
+    "dtoSuffix": "DTO",
+    "otherModules": []
   }
 }

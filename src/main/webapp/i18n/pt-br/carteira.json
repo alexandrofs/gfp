@@ -1,7 +1,6 @@
-
 {
     "gfpApp": {
-        "carteira" : {
+        "carteira": {
             "home": {
                 "title": "Carteiras",
                 "createLabel": "Criar novo Carteira",

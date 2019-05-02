@@ -20,6 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
 import java.math.BigDecimal;
@@ -58,8 +59,6 @@ public class IndiceSerieDiResourceIntTest {
     @Autowired
     private IndiceSerieDiRepository indiceSerieDiRepository;
 
-    
-
     @Autowired
     private IndiceSerieDiService indiceSerieDiService;
 
@@ -75,6 +74,9 @@ public class IndiceSerieDiResourceIntTest {
     @Autowired
     private EntityManager em;
 
+    @Autowired
+    private Validator validator;
+
     private MockMvc restIndiceSerieDiMockMvc;
 
     private IndiceSerieDi indiceSerieDi;
@@ -87,7 +89,8 @@ public class IndiceSerieDiResourceIntTest {
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
             .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter).build();
+            .setMessageConverters(jacksonMessageConverter)
+            .setValidator(validator).build();
     }
 
     /**
@@ -239,7 +242,6 @@ public class IndiceSerieDiResourceIntTest {
             .andExpect(jsonPath("$.[*].fatorDiario").value(hasItem(DEFAULT_FATOR_DIARIO.intValue())));
     }
     
-
     @Test
     @Transactional
     public void getIndiceSerieDi() throws Exception {
@@ -256,6 +258,7 @@ public class IndiceSerieDiResourceIntTest {
             .andExpect(jsonPath("$.taxaSelic").value(DEFAULT_TAXA_SELIC.intValue()))
             .andExpect(jsonPath("$.fatorDiario").value(DEFAULT_FATOR_DIARIO.intValue()));
     }
+
     @Test
     @Transactional
     public void getNonExistingIndiceSerieDi() throws Exception {
@@ -303,7 +306,7 @@ public class IndiceSerieDiResourceIntTest {
 
         // Create the IndiceSerieDi
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restIndiceSerieDiMockMvc.perform(put("/api/indice-serie-dis")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(indiceSerieDi)))
@@ -322,7 +325,7 @@ public class IndiceSerieDiResourceIntTest {
 
         int databaseSizeBeforeDelete = indiceSerieDiRepository.findAll().size();
 
-        // Get the indiceSerieDi
+        // Delete the indiceSerieDi
         restIndiceSerieDiMockMvc.perform(delete("/api/indice-serie-dis/{id}", indiceSerieDi.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());

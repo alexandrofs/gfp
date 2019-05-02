@@ -1,6 +1,4 @@
 package com.alexandrofs.gfp.web.rest;
-
-import com.codahale.metrics.annotation.Timed;
 import com.alexandrofs.gfp.domain.TabelaImpostoRenda;
 import com.alexandrofs.gfp.repository.TabelaImpostoRendaRepository;
 import com.alexandrofs.gfp.web.rest.errors.BadRequestAlertException;
@@ -43,7 +41,6 @@ public class TabelaImpostoRendaResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/tabela-imposto-rendas")
-    @Timed
     public ResponseEntity<TabelaImpostoRenda> createTabelaImpostoRenda(@Valid @RequestBody TabelaImpostoRenda tabelaImpostoRenda) throws URISyntaxException {
         log.debug("REST request to save TabelaImpostoRenda : {}", tabelaImpostoRenda);
         if (tabelaImpostoRenda.getId() != null) {
@@ -65,7 +62,6 @@ public class TabelaImpostoRendaResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/tabela-imposto-rendas")
-    @Timed
     public ResponseEntity<TabelaImpostoRenda> updateTabelaImpostoRenda(@Valid @RequestBody TabelaImpostoRenda tabelaImpostoRenda) throws URISyntaxException {
         log.debug("REST request to update TabelaImpostoRenda : {}", tabelaImpostoRenda);
         if (tabelaImpostoRenda.getId() == null) {
@@ -83,7 +79,6 @@ public class TabelaImpostoRendaResource {
      * @return the ResponseEntity with status 200 (OK) and the list of tabelaImpostoRendas in body
      */
     @GetMapping("/tabela-imposto-rendas")
-    @Timed
     public List<TabelaImpostoRenda> getAllTabelaImpostoRendas() {
         log.debug("REST request to get all TabelaImpostoRendas");
         return tabelaImpostoRendaRepository.findAll();
@@ -96,7 +91,6 @@ public class TabelaImpostoRendaResource {
      * @return the ResponseEntity with status 200 (OK) and with body the tabelaImpostoRenda, or with status 404 (Not Found)
      */
     @GetMapping("/tabela-imposto-rendas/{id}")
-    @Timed
     public ResponseEntity<TabelaImpostoRenda> getTabelaImpostoRenda(@PathVariable Long id) {
         log.debug("REST request to get TabelaImpostoRenda : {}", id);
         Optional<TabelaImpostoRenda> tabelaImpostoRenda = tabelaImpostoRendaRepository.findById(id);
@@ -110,10 +104,8 @@ public class TabelaImpostoRendaResource {
      * @return the ResponseEntity with status 200 (OK)
      */
     @DeleteMapping("/tabela-imposto-rendas/{id}")
-    @Timed
     public ResponseEntity<Void> deleteTabelaImpostoRenda(@PathVariable Long id) {
         log.debug("REST request to delete TabelaImpostoRenda : {}", id);
-
         tabelaImpostoRendaRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }

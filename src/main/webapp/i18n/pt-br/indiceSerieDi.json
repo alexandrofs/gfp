@@ -1,7 +1,6 @@
-
 {
     "gfpApp": {
-        "indiceSerieDi" : {
+        "indiceSerieDi": {
             "home": {
                 "title": "Indice Serie Dis",
                 "createLabel": "Criar novo Indice Serie Di",

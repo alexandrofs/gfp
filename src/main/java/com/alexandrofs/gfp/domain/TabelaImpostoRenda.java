@@ -1,5 +1,6 @@
 package com.alexandrofs.gfp.domain;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -17,7 +18,7 @@ import java.util.Objects;
 public class TabelaImpostoRenda implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

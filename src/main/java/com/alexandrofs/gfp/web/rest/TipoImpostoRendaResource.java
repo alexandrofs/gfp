@@ -1,6 +1,4 @@
 package com.alexandrofs.gfp.web.rest;
-
-import com.codahale.metrics.annotation.Timed;
 import com.alexandrofs.gfp.domain.TipoImpostoRenda;
 import com.alexandrofs.gfp.repository.TipoImpostoRendaRepository;
 import com.alexandrofs.gfp.web.rest.errors.BadRequestAlertException;
@@ -43,7 +41,6 @@ public class TipoImpostoRendaResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/tipo-imposto-rendas")
-    @Timed
     public ResponseEntity<TipoImpostoRenda> createTipoImpostoRenda(@Valid @RequestBody TipoImpostoRenda tipoImpostoRenda) throws URISyntaxException {
         log.debug("REST request to save TipoImpostoRenda : {}", tipoImpostoRenda);
         if (tipoImpostoRenda.getId() != null) {
@@ -65,7 +62,6 @@ public class TipoImpostoRendaResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/tipo-imposto-rendas")
-    @Timed
     public ResponseEntity<TipoImpostoRenda> updateTipoImpostoRenda(@Valid @RequestBody TipoImpostoRenda tipoImpostoRenda) throws URISyntaxException {
         log.debug("REST request to update TipoImpostoRenda : {}", tipoImpostoRenda);
         if (tipoImpostoRenda.getId() == null) {
@@ -83,7 +79,6 @@ public class TipoImpostoRendaResource {
      * @return the ResponseEntity with status 200 (OK) and the list of tipoImpostoRendas in body
      */
     @GetMapping("/tipo-imposto-rendas")
-    @Timed
     public List<TipoImpostoRenda> getAllTipoImpostoRendas() {
         log.debug("REST request to get all TipoImpostoRendas");
         return tipoImpostoRendaRepository.findAll();
@@ -96,7 +91,6 @@ public class TipoImpostoRendaResource {
      * @return the ResponseEntity with status 200 (OK) and with body the tipoImpostoRenda, or with status 404 (Not Found)
      */
     @GetMapping("/tipo-imposto-rendas/{id}")
-    @Timed
     public ResponseEntity<TipoImpostoRenda> getTipoImpostoRenda(@PathVariable Long id) {
         log.debug("REST request to get TipoImpostoRenda : {}", id);
         Optional<TipoImpostoRenda> tipoImpostoRenda = tipoImpostoRendaRepository.findById(id);
@@ -110,10 +104,8 @@ public class TipoImpostoRendaResource {
      * @return the ResponseEntity with status 200 (OK)
      */
     @DeleteMapping("/tipo-imposto-rendas/{id}")
-    @Timed
     public ResponseEntity<Void> deleteTipoImpostoRenda(@PathVariable Long id) {
         log.debug("REST request to delete TipoImpostoRenda : {}", id);
-
         tipoImpostoRendaRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }

@@ -19,6 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.Validator;
 
 import javax.persistence.EntityManager;
 import java.util.List;
@@ -45,7 +46,6 @@ public class InstituicaoResourceIntTest {
     @Autowired
     private InstituicaoRepository instituicaoRepository;
 
-
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
@@ -57,6 +57,9 @@ public class InstituicaoResourceIntTest {
 
     @Autowired
     private EntityManager em;
+
+    @Autowired
+    private Validator validator;
 
     private MockMvc restInstituicaoMockMvc;
 
@@ -70,7 +73,8 @@ public class InstituicaoResourceIntTest {
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setControllerAdvice(exceptionTranslator)
             .setConversionService(createFormattingConversionService())
-            .setMessageConverters(jacksonMessageConverter).build();
+            .setMessageConverters(jacksonMessageConverter)
+            .setValidator(validator).build();
     }
 
     /**
@@ -141,7 +145,6 @@ public class InstituicaoResourceIntTest {
             .andExpect(jsonPath("$.[*].nome").value(hasItem(DEFAULT_NOME.toString())));
     }
     
-
     @Test
     @Transactional
     public void getInstituicao() throws Exception {
@@ -155,6 +158,7 @@ public class InstituicaoResourceIntTest {
             .andExpect(jsonPath("$.id").value(instituicao.getId().intValue()))
             .andExpect(jsonPath("$.nome").value(DEFAULT_NOME.toString()));
     }
+
     @Test
     @Transactional
     public void getNonExistingInstituicao() throws Exception {
@@ -196,7 +200,7 @@ public class InstituicaoResourceIntTest {
 
         // Create the Instituicao
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restInstituicaoMockMvc.perform(put("/api/instituicaos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(instituicao)))
@@ -215,7 +219,7 @@ public class InstituicaoResourceIntTest {
 
         int databaseSizeBeforeDelete = instituicaoRepository.findAll().size();
 
-        // Get the instituicao
+        // Delete the instituicao
         restInstituicaoMockMvc.perform(delete("/api/instituicaos/{id}", instituicao.getId())
             .accept(TestUtil.APPLICATION_JSON_UTF8))
             .andExpect(status().isOk());

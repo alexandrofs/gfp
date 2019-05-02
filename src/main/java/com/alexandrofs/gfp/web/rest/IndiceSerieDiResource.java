@@ -1,6 +1,4 @@
 package com.alexandrofs.gfp.web.rest;
-
-import com.codahale.metrics.annotation.Timed;
 import com.alexandrofs.gfp.domain.IndiceSerieDi;
 import com.alexandrofs.gfp.service.IndiceSerieDiService;
 import com.alexandrofs.gfp.web.rest.errors.BadRequestAlertException;
@@ -48,7 +46,6 @@ public class IndiceSerieDiResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/indice-serie-dis")
-    @Timed
     public ResponseEntity<IndiceSerieDi> createIndiceSerieDi(@Valid @RequestBody IndiceSerieDi indiceSerieDi) throws URISyntaxException {
         log.debug("REST request to save IndiceSerieDi : {}", indiceSerieDi);
         if (indiceSerieDi.getId() != null) {
@@ -70,7 +67,6 @@ public class IndiceSerieDiResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/indice-serie-dis")
-    @Timed
     public ResponseEntity<IndiceSerieDi> updateIndiceSerieDi(@Valid @RequestBody IndiceSerieDi indiceSerieDi) throws URISyntaxException {
         log.debug("REST request to update IndiceSerieDi : {}", indiceSerieDi);
         if (indiceSerieDi.getId() == null) {
@@ -89,12 +85,11 @@ public class IndiceSerieDiResource {
      * @return the ResponseEntity with status 200 (OK) and the list of indiceSerieDis in body
      */
     @GetMapping("/indice-serie-dis")
-    @Timed
     public ResponseEntity<List<IndiceSerieDi>> getAllIndiceSerieDis(Pageable pageable) {
         log.debug("REST request to get a page of IndiceSerieDis");
         Page<IndiceSerieDi> page = indiceSerieDiService.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/indice-serie-dis");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
@@ -104,7 +99,6 @@ public class IndiceSerieDiResource {
      * @return the ResponseEntity with status 200 (OK) and with body the indiceSerieDi, or with status 404 (Not Found)
      */
     @GetMapping("/indice-serie-dis/{id}")
-    @Timed
     public ResponseEntity<IndiceSerieDi> getIndiceSerieDi(@PathVariable Long id) {
         log.debug("REST request to get IndiceSerieDi : {}", id);
         Optional<IndiceSerieDi> indiceSerieDi = indiceSerieDiService.findOne(id);
@@ -118,7 +112,6 @@ public class IndiceSerieDiResource {
      * @return the ResponseEntity with status 200 (OK)
      */
     @DeleteMapping("/indice-serie-dis/{id}")
-    @Timed
     public ResponseEntity<Void> deleteIndiceSerieDi(@PathVariable Long id) {
         log.debug("REST request to delete IndiceSerieDi : {}", id);
         indiceSerieDiService.delete(id);

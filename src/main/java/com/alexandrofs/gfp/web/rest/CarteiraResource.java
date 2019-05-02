@@ -1,6 +1,4 @@
 package com.alexandrofs.gfp.web.rest;
-
-import com.codahale.metrics.annotation.Timed;
 import com.alexandrofs.gfp.domain.Carteira;
 import com.alexandrofs.gfp.repository.CarteiraRepository;
 import com.alexandrofs.gfp.web.rest.errors.BadRequestAlertException;
@@ -43,7 +41,6 @@ public class CarteiraResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/carteiras")
-    @Timed
     public ResponseEntity<Carteira> createCarteira(@Valid @RequestBody Carteira carteira) throws URISyntaxException {
         log.debug("REST request to save Carteira : {}", carteira);
         if (carteira.getId() != null) {
@@ -65,7 +62,6 @@ public class CarteiraResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/carteiras")
-    @Timed
     public ResponseEntity<Carteira> updateCarteira(@Valid @RequestBody Carteira carteira) throws URISyntaxException {
         log.debug("REST request to update Carteira : {}", carteira);
         if (carteira.getId() == null) {
@@ -83,7 +79,6 @@ public class CarteiraResource {
      * @return the ResponseEntity with status 200 (OK) and the list of carteiras in body
      */
     @GetMapping("/carteiras")
-    @Timed
     public List<Carteira> getAllCarteiras() {
         log.debug("REST request to get all Carteiras");
         return carteiraRepository.findAll();
@@ -96,7 +91,6 @@ public class CarteiraResource {
      * @return the ResponseEntity with status 200 (OK) and with body the carteira, or with status 404 (Not Found)
      */
     @GetMapping("/carteiras/{id}")
-    @Timed
     public ResponseEntity<Carteira> getCarteira(@PathVariable Long id) {
         log.debug("REST request to get Carteira : {}", id);
         Optional<Carteira> carteira = carteiraRepository.findById(id);
@@ -110,10 +104,8 @@ public class CarteiraResource {
      * @return the ResponseEntity with status 200 (OK)
      */
     @DeleteMapping("/carteiras/{id}")
-    @Timed
     public ResponseEntity<Void> deleteCarteira(@PathVariable Long id) {
         log.debug("REST request to delete Carteira : {}", id);
-
         carteiraRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }

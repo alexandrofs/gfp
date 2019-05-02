@@ -1,7 +1,6 @@
-
 {
     "gfpApp": {
-        "instituicao" : {
+        "instituicao": {
             "home": {
                 "title": "Instituicaos",
                 "createLabel": "Criar novo Instituicao",

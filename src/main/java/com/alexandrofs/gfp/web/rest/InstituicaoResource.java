@@ -1,6 +1,4 @@
 package com.alexandrofs.gfp.web.rest;
-
-import com.codahale.metrics.annotation.Timed;
 import com.alexandrofs.gfp.domain.Instituicao;
 import com.alexandrofs.gfp.repository.InstituicaoRepository;
 import com.alexandrofs.gfp.web.rest.errors.BadRequestAlertException;
@@ -42,7 +40,6 @@ public class InstituicaoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/instituicaos")
-    @Timed
     public ResponseEntity<Instituicao> createInstituicao(@RequestBody Instituicao instituicao) throws URISyntaxException {
         log.debug("REST request to save Instituicao : {}", instituicao);
         if (instituicao.getId() != null) {
@@ -64,7 +61,6 @@ public class InstituicaoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/instituicaos")
-    @Timed
     public ResponseEntity<Instituicao> updateInstituicao(@RequestBody Instituicao instituicao) throws URISyntaxException {
         log.debug("REST request to update Instituicao : {}", instituicao);
         if (instituicao.getId() == null) {
@@ -82,7 +78,6 @@ public class InstituicaoResource {
      * @return the ResponseEntity with status 200 (OK) and the list of instituicaos in body
      */
     @GetMapping("/instituicaos")
-    @Timed
     public List<Instituicao> getAllInstituicaos() {
         log.debug("REST request to get all Instituicaos");
         return instituicaoRepository.findAll();
@@ -95,7 +90,6 @@ public class InstituicaoResource {
      * @return the ResponseEntity with status 200 (OK) and with body the instituicao, or with status 404 (Not Found)
      */
     @GetMapping("/instituicaos/{id}")
-    @Timed
     public ResponseEntity<Instituicao> getInstituicao(@PathVariable Long id) {
         log.debug("REST request to get Instituicao : {}", id);
         Optional<Instituicao> instituicao = instituicaoRepository.findById(id);
@@ -109,10 +103,8 @@ public class InstituicaoResource {
      * @return the ResponseEntity with status 200 (OK)
      */
     @DeleteMapping("/instituicaos/{id}")
-    @Timed
     public ResponseEntity<Void> deleteInstituicao(@PathVariable Long id) {
         log.debug("REST request to delete Instituicao : {}", id);
-
         instituicaoRepository.deleteById(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }

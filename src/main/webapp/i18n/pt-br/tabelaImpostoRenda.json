@@ -1,7 +1,6 @@
-
 {
     "gfpApp": {
-        "tabelaImpostoRenda" : {
+        "tabelaImpostoRenda": {
             "home": {
                 "title": "Tabela Imposto Rendas",
                 "createLabel": "Criar novo Tabela Imposto Renda",

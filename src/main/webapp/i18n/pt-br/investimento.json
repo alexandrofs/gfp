@@ -1,7 +1,6 @@
-
 {
     "gfpApp": {
-        "investimento" : {
+        "investimento": {
             "home": {
                 "title": "Investimentos",
                 "createLabel": "Criar novo Investimento",
