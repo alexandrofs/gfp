@@ -29,7 +29,7 @@ public class InvestimentoService {
     }
 
     @Autowired
-    private CalculoCotasService calculoCotasService;
+    private CalculoRendimentosService rendimentosService;
     
     /**
      * Save a investimento.
@@ -51,7 +51,7 @@ public class InvestimentoService {
     public List<Investimento> findAll() {
         log.debug("Request to get all Investimentos");
         List<Investimento> result = investimentoRepository.findAll();
-        return result.stream().map(calculoCotasService::calculaSaldoBruto).collect(Collectors.toList());
+        return result.stream().map(rendimentosService::calcula).collect(Collectors.toList());
     }
 
 
@@ -65,7 +65,7 @@ public class InvestimentoService {
     public Optional<Investimento> findOne(Long id) {
         log.debug("Request to get Investimento : {}", id);
         Optional<Investimento> investimento = investimentoRepository.findById(id);
-        return investimento.isPresent() ? Optional.ofNullable(calculoCotasService.calculaSaldoBruto(investimento.get())) : investimento;
+        return investimento.isPresent() ? Optional.ofNullable(rendimentosService.calcula(investimento.get())) : investimento;
     }
 
     /**

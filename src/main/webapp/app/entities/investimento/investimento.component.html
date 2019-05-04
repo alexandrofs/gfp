@@ -16,9 +16,12 @@
             <tr>
             <th><span jhiTranslate="gfpApp.investimento.dataAplicacao">Data Aplicacao</span></th>
             <th><span jhiTranslate="gfpApp.investimento.qtdeCota">Qtde Cota</span></th>
-            <th><span jhiTranslate="gfpApp.investimento.vlrCota">Vlr Cota</span></th>
+            <th class="text-right"><span jhiTranslate="gfpApp.investimento.vlrCota">Vlr Cota</span></th>
             <th><span jhiTranslate="gfpApp.investimento.pctPrePosFixado">Pct Pre Pos Fixado</span></th>
-            <th><span jhiTranslate="gfpApp.investimento.vlrSaldoBruto">Saldo Bruto</span></th>
+            <th class="text-right"><span jhiTranslate="gfpApp.investimento.vlrSaldoLiquido">Saldo Liquido</span></th>
+            <th class="text-right"><span jhiTranslate="gfpApp.investimento.vlrSaldoBruto">Saldo Bruto</span></th>
+            <th class="text-right"><span jhiTranslate="gfpApp.investimento.vlrRendLiquido">Vlr Rend Liquido</span></th>
+            <th class="text-right"><span jhiTranslate="gfpApp.investimento.pctRendLiquido">Pct Rend Liquido</span></th>
             <th><span jhiTranslate="gfpApp.investimento.carteira">Carteira</span></th>
             <th><span jhiTranslate="gfpApp.investimento.tipoInvestimento">Tipo Investimento</span></th>
             <th><span jhiTranslate="gfpApp.investimento.instituicao">Instituicao</span></th>
@@ -29,9 +32,12 @@
             <tr *ngFor="let investimento of investimentos ;trackBy: trackId">
                 <td>{{investimento.dataAplicacao | date:'dd/MM/yyyy'}}</td>
                 <td>{{investimento.qtdeCota}}</td>
-                <td>{{investimento.vlrCota | number : '1.2-2'}}</td>
+                <td align="right">{{investimento.vlrCota | number : '1.2-2'}}</td>
                 <td>{{investimento.pctPrePosFixado}}</td>
-                <td>{{investimento.vlrSaldoBruto | number : '1.2-2'}}</td>
+                <td align="right">{{investimento.vlrSaldoLiquido | number : '1.2-2'}}</td>
+                <td align="right">{{investimento.vlrSaldoBruto | number : '1.2-2'}}</td>
+                <td align="right">{{investimento.vlrRendLiquido | number : '1.2-2'}}</td>
+                <td align="right">{{investimento.pctRendTotalLiquido | number : '1.2-2'}} %</td>
                 <td>
                     <div *ngIf="investimento.carteira">
                         <a [routerLink]="['../carteira', investimento.carteira?.id, 'view' ]" >{{investimento.carteira?.nome}}</a>

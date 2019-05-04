@@ -73,13 +73,4 @@ public class CalculoCotasService {
 			
 	}
 	
-	public Investimento calculaSaldoBruto(final Investimento i) {
-		Optional<HistoricoCotas> cotaDesc = cotasRepository.findFirstByInvestimentoOrderByDataCotaDesc(i);
-		if (cotaDesc.isPresent()) {
-			i.setVlrSaldoBruto(cotaDesc.get().getVlrCota().multiply(i.getQtdeCota()));
-		} else {
-			i.setVlrSaldoBruto(i.getVlrCota().multiply(i.getQtdeCota()));
-		}
-		return i;
-	}
 }

@@ -3,8 +3,6 @@ package com.alexandrofs.gfp;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -16,9 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.alexandrofs.gfp.domain.TabelaImpostoRenda;
 import com.alexandrofs.gfp.domain.TipoImpostoRenda;
-import com.alexandrofs.gfp.repository.TipoImpostoRendaRepository;
 import com.alexandrofs.gfp.service.CalculoImpostoService;
 
 @RunWith(SpringRunner.class)
@@ -29,43 +25,11 @@ public class CalculoImpostoTest extends AbstractTest {
 	@Autowired
 	private CalculoImpostoService calculoService;
 	
-	@Autowired
-	private TipoImpostoRendaRepository tipoImpostoRepo;
-	
 	@Before
 	public void setup() {
-		TipoImpostoRenda tipoImpostoRenda = new TipoImpostoRenda();
-		tipoImpostoRenda.setCodigo("RF");
-		tipoImpostoRenda.setDescricao("RF");
-
-		Set<TabelaImpostoRenda> tabela = new HashSet<>();
-		
-		TabelaImpostoRenda tabelaImpostoRenda1 = new TabelaImpostoRenda();
-		tabelaImpostoRenda1.setNumDias(Long.valueOf(0));
-		tabelaImpostoRenda1.setPctAliquota(BigDecimal.valueOf(22.5));
-		tabelaImpostoRenda1.setTipoImpostoRenda(tipoImpostoRenda);
-		tabela.add(tabelaImpostoRenda1);
-		TabelaImpostoRenda tabelaImpostoRenda2 = new TabelaImpostoRenda();
-		tabelaImpostoRenda2.setNumDias(Long.valueOf(180));
-		tabelaImpostoRenda2.setPctAliquota(BigDecimal.valueOf(20));
-		tabelaImpostoRenda2.setTipoImpostoRenda(tipoImpostoRenda);
-		tabela.add(tabelaImpostoRenda2);
-		TabelaImpostoRenda tabelaImpostoRenda3 = new TabelaImpostoRenda();
-		tabelaImpostoRenda3.setNumDias(Long.valueOf(360));
-		tabelaImpostoRenda3.setPctAliquota(BigDecimal.valueOf(17.5));
-		tabelaImpostoRenda3.setTipoImpostoRenda(tipoImpostoRenda);
-		tabela.add(tabelaImpostoRenda3);		
-		TabelaImpostoRenda tabelaImpostoRenda4 = new TabelaImpostoRenda();
-		tabelaImpostoRenda4.setNumDias(Long.valueOf(720));
-		tabelaImpostoRenda4.setPctAliquota(BigDecimal.valueOf(15.0));
-		tabelaImpostoRenda4.setTipoImpostoRenda(tipoImpostoRenda);
-		tabela.add(tabelaImpostoRenda4);
-		
-		tipoImpostoRenda.setTabelaImpostoRendas(tabela);
-		
-		tipoImpostoRepo.saveAndFlush(tipoImpostoRenda);
+		insereTabelaIr();
 	}
-	
+
 	@Test
 	public void testaCalculoImpostoRendaFixa100dias(){
 		String codImposto = "RF";
