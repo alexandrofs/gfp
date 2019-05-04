@@ -1,0 +1,37 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="historicoCotas">
+            <h2><span jhiTranslate="gfpApp.historicoCotas.detail.title">Historico Cotas</span> {{historicoCotas.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="gfpApp.historicoCotas.dataCota">Data Cota</span></dt>
+                <dd>
+                    <span>{{historicoCotas.dataCota}}</span>
+                </dd>
+                <dt><span jhiTranslate="gfpApp.historicoCotas.vlrCota">Vlr Cota</span></dt>
+                <dd>
+                    <span>{{historicoCotas.vlrCota}}</span>
+                </dd>
+                <dt><span jhiTranslate="gfpApp.historicoCotas.investimento">Investimento</span></dt>
+                <dd>
+                    <div *ngIf="historicoCotas.investimento">
+                        <a [routerLink]="['/investimento', historicoCotas.investimento?.id, 'view']">{{historicoCotas.investimento?.id}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/historico-cotas', historicoCotas.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

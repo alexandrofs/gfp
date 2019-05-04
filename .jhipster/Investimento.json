@@ -7,7 +7,8 @@
             "relationshipValidateRules": [
                 "required"
             ],
-            "otherEntityField": "id"
+            "otherEntityField": "id",
+            "otherEntityRelationshipName": "investimento"
         },
         {
             "relationshipName": "tipoInvestimento",
@@ -16,7 +17,8 @@
             "relationshipValidateRules": [
                 "required"
             ],
-            "otherEntityField": "id"
+            "otherEntityField": "id",
+            "otherEntityRelationshipName": "investimento"
         },
         {
             "relationshipName": "historicoCotas",
@@ -31,7 +33,8 @@
             "relationshipValidateRules": [
                 "required"
             ],
-            "otherEntityField": "nome"
+            "otherEntityField": "nome",
+            "otherEntityRelationshipName": "investimento"
         }
     ],
     "fields": [

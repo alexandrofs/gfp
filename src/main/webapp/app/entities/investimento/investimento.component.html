@@ -1,0 +1,78 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="gfpApp.investimento.home.title">Investimentos</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-investimento" [routerLink]="['/investimento/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span  jhiTranslate="gfpApp.investimento.home.createLabel">
+            Create new Investimento
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <br/>
+    <div class="table-responsive" *ngIf="investimentos">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span jhiTranslate="gfpApp.investimento.dataAplicacao">Data Aplicacao</span></th>
+            <th><span jhiTranslate="gfpApp.investimento.qtdeCota">Qtde Cota</span></th>
+            <th><span jhiTranslate="gfpApp.investimento.vlrCota">Vlr Cota</span></th>
+            <th><span jhiTranslate="gfpApp.investimento.pctPrePosFixado">Pct Pre Pos Fixado</span></th>
+            <th><span jhiTranslate="gfpApp.investimento.vlrSaldoBruto">Saldo Bruto</span></th>
+            <th><span jhiTranslate="gfpApp.investimento.carteira">Carteira</span></th>
+            <th><span jhiTranslate="gfpApp.investimento.tipoInvestimento">Tipo Investimento</span></th>
+            <th><span jhiTranslate="gfpApp.investimento.instituicao">Instituicao</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let investimento of investimentos ;trackBy: trackId">
+                <td>{{investimento.dataAplicacao | date:'dd/MM/yyyy'}}</td>
+                <td>{{investimento.qtdeCota}}</td>
+                <td>{{investimento.vlrCota | number : '1.2-2'}}</td>
+                <td>{{investimento.pctPrePosFixado}}</td>
+                <td>{{investimento.vlrSaldoBruto | number : '1.2-2'}}</td>
+                <td>
+                    <div *ngIf="investimento.carteira">
+                        <a [routerLink]="['../carteira', investimento.carteira?.id, 'view' ]" >{{investimento.carteira?.nome}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="investimento.tipoInvestimento">
+                        <a [routerLink]="['../tipo-investimento', investimento.tipoInvestimento?.id, 'view' ]" >{{investimento.tipoInvestimento?.nome}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="investimento.instituicao">
+                        <a [routerLink]="['../instituicao', investimento.instituicao?.id, 'view' ]" >{{investimento.instituicao?.nome}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['/investimento', investimento.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/investimento', investimento.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', 'investimento', { outlets: { popup: investimento.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

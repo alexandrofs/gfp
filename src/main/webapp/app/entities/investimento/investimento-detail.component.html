@@ -1,0 +1,61 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="investimento">
+            <h2><span jhiTranslate="gfpApp.investimento.detail.title">Investimento</span> {{investimento.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="gfpApp.investimento.dataAplicacao">Data Aplicacao</span></dt>
+                <dd>
+                    <span>{{investimento.dataAplicacao | date : 'dd/MM/yyyy'}}</span>
+                </dd>
+                <dt><span jhiTranslate="gfpApp.investimento.qtdeCota">Qtde Cota</span></dt>
+                <dd>
+                    <span>{{investimento.qtdeCota}}</span>
+                </dd>
+                <dt><span jhiTranslate="gfpApp.investimento.vlrCota">Vlr Cota</span></dt>
+                <dd>
+                    <span>{{investimento.vlrCota | number : '1.2-2'}}</span>
+                </dd>
+                <dt><span jhiTranslate="gfpApp.investimento.vlrSaldoBruto">Saldo Bruto</span></dt>
+                <dd>
+                    <span>{{investimento.vlrSaldoBruto | number : '1.2-2'}}</span>
+                </dd>
+                <dt><span jhiTranslate="gfpApp.investimento.pctPrePosFixado">Pct Pre Pos Fixado</span></dt>
+                <dd>
+                    <span>{{investimento.pctPrePosFixado}}</span>
+                </dd>
+                <dt><span jhiTranslate="gfpApp.investimento.carteira">Carteira</span></dt>
+                <dd>
+                    <div *ngIf="investimento.carteira">
+                        <a [routerLink]="['/carteira', investimento.carteira?.id, 'view']">{{investimento.carteira?.nome}} - {{investimento.carteira?.descricao}}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="gfpApp.investimento.tipoInvestimento">Tipo Investimento</span></dt>
+                <dd>
+                    <div *ngIf="investimento.tipoInvestimento">
+                        <a [routerLink]="['/tipo-investimento', investimento.tipoInvestimento?.id, 'view']">{{investimento.tipoInvestimento?.nome}} - {{investimento.tipoInvestimento?.descricao}}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="gfpApp.investimento.instituicao">Instituicao</span></dt>
+                <dd>
+                    <div *ngIf="investimento.instituicao">
+                        <a [routerLink]="['/instituicao', investimento.instituicao?.id, 'view']">{{investimento.instituicao?.nome}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/investimento', investimento.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

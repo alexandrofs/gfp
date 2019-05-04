@@ -1,22 +1,11 @@
 package com.alexandrofs.gfp.web.rest;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.alexandrofs.gfp.GfpApp;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.List;
+import com.alexandrofs.gfp.domain.HistoricoCotas;
+import com.alexandrofs.gfp.domain.Investimento;
+import com.alexandrofs.gfp.repository.HistoricoCotasRepository;
 import com.alexandrofs.gfp.web.rest.errors.ExceptionTranslator;
-
-import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -33,13 +22,18 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Validator;
 
-import com.alexandrofs.gfp.GfpApp;
-import com.alexandrofs.gfp.domain.HistoricoCotas;
+import javax.persistence.EntityManager;
 import java.math.BigDecimal;
-import com.alexandrofs.gfp.domain.Investimento;
-import com.alexandrofs.gfp.repository.HistoricoCotasRepository;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.List;
+
 
 import static com.alexandrofs.gfp.web.rest.TestUtil.createFormattingConversionService;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Test class for the HistoricoCotasResource REST controller.
@@ -48,7 +42,6 @@ import static com.alexandrofs.gfp.web.rest.TestUtil.createFormattingConversionSe
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = GfpApp.class)
-@Transactional
 public class HistoricoCotasResourceIntTest {
 
     private static final LocalDate DEFAULT_DATA_COTA = LocalDate.ofEpochDay(0L);

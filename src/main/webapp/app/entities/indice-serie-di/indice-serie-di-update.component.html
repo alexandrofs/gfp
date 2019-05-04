@@ -1,0 +1,85 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-indice-serie-di-heading" jhiTranslate="gfpApp.indiceSerieDi.home.createOrEditLabel">Create or edit a Indice Serie Di</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!indiceSerieDi.id">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="indiceSerieDi.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gfpApp.indiceSerieDi.data" for="field_data">Data</label>
+                    <div class="input-group">
+                        <input id="field_data" type="text" class="form-control" name="data" ngbDatepicker  #dataDp="ngbDatepicker" [(ngModel)]="indiceSerieDi.data"
+                        required/>
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="dataDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                        </span>
+                    </div>
+                    <div [hidden]="!(editForm.controls.data?.dirty && editForm.controls.data?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.data?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gfpApp.indiceSerieDi.taxaMediaAnual" for="field_taxaMediaAnual">Taxa Media Anual</label>
+                    <input type="number" class="form-control" name="taxaMediaAnual" id="field_taxaMediaAnual"
+                        [(ngModel)]="indiceSerieDi.taxaMediaAnual" required/>
+                    <div [hidden]="!(editForm.controls.taxaMediaAnual?.dirty && editForm.controls.taxaMediaAnual?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.taxaMediaAnual?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.taxaMediaAnual?.errors?.number" jhiTranslate="entity.validation.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gfpApp.indiceSerieDi.taxaSelic" for="field_taxaSelic">Taxa Selic</label>
+                    <input type="number" class="form-control" name="taxaSelic" id="field_taxaSelic"
+                        [(ngModel)]="indiceSerieDi.taxaSelic" required/>
+                    <div [hidden]="!(editForm.controls.taxaSelic?.dirty && editForm.controls.taxaSelic?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.taxaSelic?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.taxaSelic?.errors?.number" jhiTranslate="entity.validation.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gfpApp.indiceSerieDi.fatorDiario" for="field_fatorDiario">Fator Diario</label>
+                    <input type="number" class="form-control" name="fatorDiario" id="field_fatorDiario"
+                        [(ngModel)]="indiceSerieDi.fatorDiario" required/>
+                    <div [hidden]="!(editForm.controls.fatorDiario?.dirty && editForm.controls.fatorDiario?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.fatorDiario?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.fatorDiario?.errors?.number" jhiTranslate="entity.validation.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

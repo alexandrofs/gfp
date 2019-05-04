@@ -27,8 +27,67 @@
                     </span>
                 </a>
                 <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="entity-menu">
+                    <li>
+                        <a class="dropdown-item" routerLink="carteira" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" fixedWidth="true"></fa-icon>
+                            <span jhiTranslate="global.menu.entities.carteira">Carteira</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item" routerLink="investimento" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" fixedWidth="true"></fa-icon>
+                            <span jhiTranslate="global.menu.entities.investimento">Investimento</span>
+                        </a>
+                    </li>
+<!--                    <li>
+                        <a class="dropdown-item" routerLink="historico-cotas" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                            <fa-icon icon="asterisk" fixedWidth="true"></fa-icon>
+                            <span jhiTranslate="global.menu.entities.historicoCotas">Historico Cotas</span>
+                        </a>
+                    </li>
+-->                    
                     <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
                 </ul>
+            </li>
+            <li *jhiHasAnyAuthority="'ROLE_ADMIN'" ngbDropdown class="nav-item dropdown pointer" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+              <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="configs-menu">
+                  <span>
+                      <fa-icon icon="th-list"></fa-icon>
+                      <span jhiTranslate="global.menu.configs.main">Configuration</span>
+                  </span>
+              </a>
+              <ul class="dropdown-menu" ngbDropdownMenu aria-labelledby="configs-menu">
+                  <li>
+                      <a class="dropdown-item" routerLink="instituicao" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                          <fa-icon icon="asterisk" fixedWidth="true"></fa-icon>
+                          <span jhiTranslate="global.menu.configs.instituicao">Instituicao</span>
+                      </a>
+                  </li>
+                  <li>
+                      <a class="dropdown-item" routerLink="indice-serie-di" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                          <fa-icon icon="asterisk" fixedWidth="true"></fa-icon>
+                          <span jhiTranslate="global.menu.configs.indiceSerieDi">Indice Serie Di</span>
+                      </a>
+                  </li>
+                  <li>
+                      <a class="dropdown-item" routerLink="tipo-investimento" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                          <fa-icon icon="asterisk" fixedWidth="true"></fa-icon>
+                          <span jhiTranslate="global.menu.configs.tipoInvestimento">Tipo Investimento</span>
+                      </a>
+                  </li>
+                  <li>
+                      <a class="dropdown-item" routerLink="tipo-imposto-renda" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                          <fa-icon icon="asterisk" fixedWidth="true"></fa-icon>
+                          <span jhiTranslate="global.menu.configs.tipoImpostoRenda">Tipo Imposto Renda</span>
+                      </a>
+                  </li>
+                  <li>
+                      <a class="dropdown-item" routerLink="tabela-imposto-renda" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" (click)="collapseNavbar()">
+                          <fa-icon icon="asterisk" fixedWidth="true"></fa-icon>
+                          <span jhiTranslate="global.menu.configs.tabelaImpostoRenda">Tabela Imposto Renda</span>
+                      </a>
+                  </li>
+              </ul>
             </li>
             <li *jhiHasAnyAuthority="'ROLE_ADMIN'" ngbDropdown class="nav-item dropdown pointer" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
                 <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="admin-menu">

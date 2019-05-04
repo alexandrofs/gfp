@@ -1,19 +1,10 @@
 package com.alexandrofs.gfp.web.rest;
 
-import static com.alexandrofs.gfp.web.rest.TestUtil.createFormattingConversionService;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.alexandrofs.gfp.GfpApp;
 
-import java.util.List;
-
-import javax.persistence.EntityManager;
+import com.alexandrofs.gfp.domain.Instituicao;
+import com.alexandrofs.gfp.repository.InstituicaoRepository;
+import com.alexandrofs.gfp.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,10 +21,15 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Validator;
 
-import com.alexandrofs.gfp.GfpApp;
-import com.alexandrofs.gfp.domain.Instituicao;
-import com.alexandrofs.gfp.repository.InstituicaoRepository;
-import com.alexandrofs.gfp.web.rest.errors.ExceptionTranslator;
+import javax.persistence.EntityManager;
+import java.util.List;
+
+
+import static com.alexandrofs.gfp.web.rest.TestUtil.createFormattingConversionService;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * Test class for the InstituicaoResource REST controller.
@@ -43,7 +39,6 @@ import com.alexandrofs.gfp.web.rest.errors.ExceptionTranslator;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = GfpApp.class)
 public class InstituicaoResourceIntTest {
-	
 
     private static final String DEFAULT_NOME = "AAAAAAAAAA";
     private static final String UPDATED_NOME = "BBBBBBBBBB";

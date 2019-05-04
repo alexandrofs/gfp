@@ -7,7 +7,8 @@
             "relationshipValidateRules": [
                 "required"
             ],
-            "otherEntityField": "id"
+            "otherEntityField": "id",
+            "otherEntityRelationshipName": "historicoCotas"
         }
     ],
     "fields": [

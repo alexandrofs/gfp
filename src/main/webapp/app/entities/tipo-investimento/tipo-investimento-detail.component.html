@@ -1,0 +1,49 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="tipoInvestimento">
+            <h2><span jhiTranslate="gfpApp.tipoInvestimento.detail.title">Tipo Investimento</span> {{tipoInvestimento.nome}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="gfpApp.tipoInvestimento.nome">Nome</span></dt>
+                <dd>
+                    <span>{{tipoInvestimento.nome}}</span>
+                </dd>
+                <dt><span jhiTranslate="gfpApp.tipoInvestimento.descricao">Descricao</span></dt>
+                <dd>
+                    <span>{{tipoInvestimento.descricao}}</span>
+                </dd>
+                <dt><span jhiTranslate="gfpApp.tipoInvestimento.modalidade">Modalidade</span></dt>
+                <dd>
+                    <span>{{tipoInvestimento.modalidade}}</span>
+                </dd>
+                <dt><span jhiTranslate="gfpApp.tipoInvestimento.tipoIndexador">Tipo Indexador</span></dt>
+                <dd>
+                    <span>{{tipoInvestimento.tipoIndexador}}</span>
+                </dd>
+                <dt><span jhiTranslate="gfpApp.tipoInvestimento.indice">Indice</span></dt>
+                <dd>
+                    <span>{{tipoInvestimento.indice}}</span>
+                </dd>
+                <dt><span jhiTranslate="gfpApp.tipoInvestimento.tipoImpostoRenda">Tipo Imposto Renda</span></dt>
+                <dd>
+                    <div *ngIf="tipoInvestimento.tipoImpostoRenda">
+                        <a [routerLink]="['/tipo-imposto-renda', tipoInvestimento.tipoImpostoRenda?.id, 'view']">{{tipoInvestimento.tipoImpostoRenda?.codigo}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/tipo-investimento', tipoInvestimento.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>
