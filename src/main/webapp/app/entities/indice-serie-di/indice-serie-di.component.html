@@ -1,0 +1,66 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="gfpApp.indiceSerieDi.home.title">Indice Serie Dis</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-indice-serie-di" [routerLink]="['/indice-serie-di/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span  jhiTranslate="gfpApp.indiceSerieDi.home.createLabel">
+            Create new Indice Serie Di
+            </span>
+        </button>
+        <button id="jh-import-entity" class="btn btn-primary float-right jh-create-entity create-indice-serie-di" [routerLink]="['/', 'indice-serie-di', { outlets: { popup: 'import' } }]">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span  jhiTranslate="gfpApp.indiceSerieDi.importar">
+            Import filse series
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <br/>
+    <div class="table-responsive" *ngIf="indiceSerieDis">
+        <table class="table table-striped">
+            <thead>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="reset.bind(this)">
+            <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="data"><span jhiTranslate="gfpApp.indiceSerieDi.data">Data</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="taxaMediaAnual"><span jhiTranslate="gfpApp.indiceSerieDi.taxaMediaAnual">Taxa Media Anual</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="taxaSelic"><span jhiTranslate="gfpApp.indiceSerieDi.taxaSelic">Taxa Selic</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="fatorDiario"><span jhiTranslate="gfpApp.indiceSerieDi.fatorDiario">Fator Diario</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
+            <tr *ngFor="let indiceSerieDi of indiceSerieDis ;trackBy: trackId">
+                <td><a [routerLink]="['/indice-serie-di', indiceSerieDi.id, 'view' ]">{{indiceSerieDi.id}}</a></td>
+                <td>{{indiceSerieDi.data | date:'mediumDate'}}</td>
+                <td>{{indiceSerieDi.taxaMediaAnual}}</td>
+                <td>{{indiceSerieDi.taxaSelic}}</td>
+                <td>{{indiceSerieDi.fatorDiario}}</td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['/indice-serie-di', indiceSerieDi.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/indice-serie-di', indiceSerieDi.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', 'indice-serie-di', { outlets: { popup: indiceSerieDi.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,30 +1,20 @@
 package com.alexandrofs.gfp.web.rest;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.List;
-import java.util.Optional;
-
-import javax.validation.Valid;
-
+import com.alexandrofs.gfp.domain.Investimento;
+import com.alexandrofs.gfp.service.InvestimentoService;
+import com.alexandrofs.gfp.web.rest.errors.BadRequestAlertException;
+import com.alexandrofs.gfp.web.rest.util.HeaderUtil;
+import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.alexandrofs.gfp.domain.Investimento;
-import com.alexandrofs.gfp.service.InvestimentoService;
-import com.alexandrofs.gfp.web.rest.util.HeaderUtil;
-import com.codahale.metrics.annotation.Timed;
+import javax.validation.Valid;
+import java.net.URI;
+import java.net.URISyntaxException;
 
-import io.github.jhipster.web.util.ResponseUtil;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * REST controller for managing Investimento.
@@ -36,7 +26,7 @@ public class InvestimentoResource {
     private final Logger log = LoggerFactory.getLogger(InvestimentoResource.class);
 
     private static final String ENTITY_NAME = "investimento";
-        
+
     private final InvestimentoService investimentoService;
 
     public InvestimentoResource(InvestimentoService investimentoService) {
@@ -51,11 +41,10 @@ public class InvestimentoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/investimentos")
-    @Timed
     public ResponseEntity<Investimento> createInvestimento(@Valid @RequestBody Investimento investimento) throws URISyntaxException {
         log.debug("REST request to save Investimento : {}", investimento);
         if (investimento.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert(ENTITY_NAME, "idexists", "A new investimento cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new investimento cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Investimento result = investimentoService.save(investimento);
         return ResponseEntity.created(new URI("/api/investimentos/" + result.getId()))
@@ -69,15 +58,14 @@ public class InvestimentoResource {
      * @param investimento the investimento to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated investimento,
      * or with status 400 (Bad Request) if the investimento is not valid,
-     * or with status 500 (Internal Server Error) if the investimento couldnt be updated
+     * or with status 500 (Internal Server Error) if the investimento couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/investimentos")
-    @Timed
     public ResponseEntity<Investimento> updateInvestimento(@Valid @RequestBody Investimento investimento) throws URISyntaxException {
         log.debug("REST request to update Investimento : {}", investimento);
         if (investimento.getId() == null) {
-            return createInvestimento(investimento);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Investimento result = investimentoService.save(investimento);
         return ResponseEntity.ok()
@@ -91,10 +79,9 @@ public class InvestimentoResource {
      * @return the ResponseEntity with status 200 (OK) and the list of investimentos in body
      */
     @GetMapping("/investimentos")
-    @Timed
     public List<Investimento> getAllInvestimentos() {
         log.debug("REST request to get all Investimentos");
-		return investimentoService.findAll();
+        return investimentoService.findAll();
     }
 
     /**
@@ -104,11 +91,10 @@ public class InvestimentoResource {
      * @return the ResponseEntity with status 200 (OK) and with body the investimento, or with status 404 (Not Found)
      */
     @GetMapping("/investimentos/{id}")
-    @Timed
     public ResponseEntity<Investimento> getInvestimento(@PathVariable Long id) {
         log.debug("REST request to get Investimento : {}", id);
-        Investimento investimento = investimentoService.findOne(id);
-        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(investimento));
+        Optional<Investimento> investimento = investimentoService.findOne(id);
+        return ResponseUtil.wrapOrNotFound(investimento);
     }
 
     /**
@@ -118,11 +104,9 @@ public class InvestimentoResource {
      * @return the ResponseEntity with status 200 (OK)
      */
     @DeleteMapping("/investimentos/{id}")
-    @Timed
     public ResponseEntity<Void> deleteInvestimento(@PathVariable Long id) {
         log.debug("REST request to delete Investimento : {}", id);
         investimentoService.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
-
 }

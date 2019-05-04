@@ -2,7 +2,7 @@
 <databaseChangeLog
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
     <!--
         Added the constraints for entity Investimento.
     -->
@@ -10,13 +10,13 @@
         
         <addForeignKeyConstraint baseColumnNames="carteira_id"
                                  baseTableName="tb_investimento"
-                                 constraintName="fk_investimento_carteira_id"
+                                 constraintName="fk_tb_investimento_carteira_id"
                                  referencedColumnNames="id"
                                  referencedTableName="tb_carteira"/>
 
         <addForeignKeyConstraint baseColumnNames="tipo_investimento_id"
                                  baseTableName="tb_investimento"
-                                 constraintName="fk_investimento_tipo_investimento_id"
+                                 constraintName="fk_tb_investimento_tipo_investimento_id"
                                  referencedColumnNames="id"
                                  referencedTableName="tb_tipo_investimento"/>
 
@@ -24,7 +24,7 @@
     <changeSet id="20160713032007-3" author="jhipster">    
         <addForeignKeyConstraint baseColumnNames="instituicao_id"
                                  baseTableName="tb_investimento"
-                                 constraintName="fk_investimento_instituicao_id"
+                                 constraintName="fk_tb_investimento_instituicao_id"
                                  referencedColumnNames="id"
                                  referencedTableName="tb_instituicao"/>
         

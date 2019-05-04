@@ -1,16 +1,16 @@
 package com.alexandrofs.gfp.repository;
 
 import com.alexandrofs.gfp.domain.TipoImpostoRenda;
-
 import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
 
 /**
- * Spring Data JPA repository for the TipoImpostoRenda entity.
+ * Spring Data  repository for the TipoImpostoRenda entity.
  */
 @SuppressWarnings("unused")
-public interface TipoImpostoRendaRepository extends JpaRepository<TipoImpostoRenda,Long> {
+@Repository
+public interface TipoImpostoRendaRepository extends JpaRepository<TipoImpostoRenda, Long> {
 
 	TipoImpostoRenda findByCodigo(String codImposto);
 

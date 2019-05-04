@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Comparator;
 
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +19,7 @@ import com.alexandrofs.gfp.domain.TipoImpostoRenda;
 @Transactional
 public class CalculoImpostoService {
 
-	private static Logger LOG = Logger.getLogger(CalculoImpostoService.class);
+	private static org.slf4j.Logger LOG = LoggerFactory.getLogger(CalculoCotasService.class);
 	
 	public BigDecimal calculaImposto(TipoImpostoRenda impostoRenda, BigDecimal valor, LocalDate dtAplicacao) {
 		BigDecimal resultado = null;

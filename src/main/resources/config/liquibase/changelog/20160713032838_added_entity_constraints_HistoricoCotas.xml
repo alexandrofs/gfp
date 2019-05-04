@@ -2,7 +2,7 @@
 <databaseChangeLog
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
     <!--
         Added the constraints for entity HistoricoCotas.
     -->
@@ -10,7 +10,7 @@
         
         <addForeignKeyConstraint baseColumnNames="investimento_id"
                                  baseTableName="tb_historico_cotas"
-                                 constraintName="fk_historico_cotas_investimento_id"
+                                 constraintName="fk_tb_historico_cotas_investimento_id"
                                  referencedColumnNames="id"
                                  referencedTableName="tb_investimento"/>
 

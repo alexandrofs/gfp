@@ -1,0 +1,75 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-tabela-imposto-renda-heading" jhiTranslate="gfpApp.tabelaImpostoRenda.home.createOrEditLabel">Create or edit a Tabela Imposto Renda</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!tabelaImpostoRenda.id">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="tabelaImpostoRenda.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gfpApp.tabelaImpostoRenda.numDias" for="field_numDias">Num Dias</label>
+                    <input type="number" class="form-control" name="numDias" id="field_numDias"
+                        [(ngModel)]="tabelaImpostoRenda.numDias" required min="0" jhiMin="0"/>
+                    <div [hidden]="!(editForm.controls.numDias?.dirty && editForm.controls.numDias?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.numDias?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.numDias?.errors?.min" jhiTranslate="entity.validation.min" [translateValues]="{ min: 0 }">
+                            This field should be at least 0.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.numDias?.errors?.number" jhiTranslate="entity.validation.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gfpApp.tabelaImpostoRenda.pctAliquota" for="field_pctAliquota">Pct Aliquota</label>
+                    <input type="number" class="form-control" name="pctAliquota" id="field_pctAliquota"
+                        [(ngModel)]="tabelaImpostoRenda.pctAliquota" required min="0" jhiMin="0"/>
+                    <div [hidden]="!(editForm.controls.pctAliquota?.dirty && editForm.controls.pctAliquota?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.pctAliquota?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.pctAliquota?.errors?.min" jhiTranslate="entity.validation.min" [translateValues]="{ min: 0 }">
+                            This field should be at least 0.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.pctAliquota?.errors?.number" jhiTranslate="entity.validation.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gfpApp.tabelaImpostoRenda.tipoImpostoRenda" for="field_tipoImpostoRenda">Tipo Imposto Renda</label>
+                    <select class="form-control" id="field_tipoImpostoRenda" name="tipoImpostoRenda" [(ngModel)]="tabelaImpostoRenda.tipoImpostoRenda"  required>
+                        <option *ngIf="!editForm.value.tipoImpostoRenda" [ngValue]="null" selected></option>
+                        <option [ngValue]="tipoImpostoRendaOption.id === tabelaImpostoRenda.tipoImpostoRenda?.id ? tabelaImpostoRenda.tipoImpostoRenda : tipoImpostoRendaOption" *ngFor="let tipoImpostoRendaOption of tipoimpostorendas; trackBy: trackTipoImpostoRendaById">{{tipoImpostoRendaOption.id}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.tipoImpostoRenda?.dirty && editForm.controls.tipoImpostoRenda?.invalid)">
+                    <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.tipoImpostoRenda?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                    </small>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

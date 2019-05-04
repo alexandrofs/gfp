@@ -9,6 +9,6 @@
     "changelogDate": "20170530014514",
     "dto": "no",
     "service": "no",
-    "entityTableName": "instituicao",
+    "entityTableName": "tb_instituicao",
     "pagination": "no"
 }

@@ -1,0 +1,68 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-historico-cotas-heading" jhiTranslate="gfpApp.historicoCotas.home.createOrEditLabel">Create or edit a Historico Cotas</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!historicoCotas.id">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="historicoCotas.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gfpApp.historicoCotas.dataCota" for="field_dataCota">Data Cota</label>
+                    <div class="input-group">
+                        <input id="field_dataCota" type="text" class="form-control" name="dataCota" ngbDatepicker  #dataCotaDp="ngbDatepicker" [(ngModel)]="historicoCotas.dataCota"
+                        required/>
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="dataCotaDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                        </span>
+                    </div>
+                    <div [hidden]="!(editForm.controls.dataCota?.dirty && editForm.controls.dataCota?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.dataCota?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gfpApp.historicoCotas.vlrCota" for="field_vlrCota">Vlr Cota</label>
+                    <input type="number" class="form-control" name="vlrCota" id="field_vlrCota"
+                        [(ngModel)]="historicoCotas.vlrCota" required/>
+                    <div [hidden]="!(editForm.controls.vlrCota?.dirty && editForm.controls.vlrCota?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.vlrCota?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.vlrCota?.errors?.number" jhiTranslate="entity.validation.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gfpApp.historicoCotas.investimento" for="field_investimento">Investimento</label>
+                    <select class="form-control" id="field_investimento" name="investimento" [(ngModel)]="historicoCotas.investimento"  required>
+                        <option *ngIf="!editForm.value.investimento" [ngValue]="null" selected></option>
+                        <option [ngValue]="investimentoOption.id === historicoCotas.investimento?.id ? historicoCotas.investimento : investimentoOption" *ngFor="let investimentoOption of investimentos; trackBy: trackInvestimentoById">{{investimentoOption.id}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.investimento?.dirty && editForm.controls.investimento?.invalid)">
+                    <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.investimento?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                    </small>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

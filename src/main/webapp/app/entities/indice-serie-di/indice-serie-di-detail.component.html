@@ -1,0 +1,39 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="indiceSerieDi">
+            <h2><span jhiTranslate="gfpApp.indiceSerieDi.detail.title">Indice Serie Di</span> {{indiceSerieDi.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="gfpApp.indiceSerieDi.data">Data</span></dt>
+                <dd>
+                    <span>{{indiceSerieDi.data}}</span>
+                </dd>
+                <dt><span jhiTranslate="gfpApp.indiceSerieDi.taxaMediaAnual">Taxa Media Anual</span></dt>
+                <dd>
+                    <span>{{indiceSerieDi.taxaMediaAnual}}</span>
+                </dd>
+                <dt><span jhiTranslate="gfpApp.indiceSerieDi.taxaSelic">Taxa Selic</span></dt>
+                <dd>
+                    <span>{{indiceSerieDi.taxaSelic}}</span>
+                </dd>
+                <dt><span jhiTranslate="gfpApp.indiceSerieDi.fatorDiario">Fator Diario</span></dt>
+                <dd>
+                    <span>{{indiceSerieDi.fatorDiario}}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/indice-serie-di', indiceSerieDi.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

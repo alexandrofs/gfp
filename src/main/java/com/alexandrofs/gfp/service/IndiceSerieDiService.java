@@ -1,16 +1,16 @@
 package com.alexandrofs.gfp.service;
 
-import javax.inject.Inject;
-
+import com.alexandrofs.gfp.domain.IndiceSerieDi;
+import com.alexandrofs.gfp.repository.IndiceSerieDiRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.alexandrofs.gfp.domain.IndiceSerieDi;
-import com.alexandrofs.gfp.repository.IndiceSerieDiRepository;
+import java.util.Optional;
 
 /**
  * Service Implementation for managing IndiceSerieDi.
@@ -20,7 +20,7 @@ import com.alexandrofs.gfp.repository.IndiceSerieDiRepository;
 public class IndiceSerieDiService {
 
     private final Logger log = LoggerFactory.getLogger(IndiceSerieDiService.class);
-    
+
     private final IndiceSerieDiRepository indiceSerieDiRepository;
 
     public IndiceSerieDiService(IndiceSerieDiRepository indiceSerieDiRepository) {
@@ -35,43 +35,40 @@ public class IndiceSerieDiService {
      */
     public IndiceSerieDi save(IndiceSerieDi indiceSerieDi) {
         log.debug("Request to save IndiceSerieDi : {}", indiceSerieDi);
-        IndiceSerieDi result = indiceSerieDiRepository.save(indiceSerieDi);
-        return result;
+        return indiceSerieDiRepository.save(indiceSerieDi);
     }
 
     /**
-     *  Get all the indiceSerieDis.
-     *  
-     *  @param pageable the pagination information
-     *  @return the list of entities
+     * Get all the indiceSerieDis.
+     *
+     * @param pageable the pagination information
+     * @return the list of entities
      */
     @Transactional(readOnly = true)
     public Page<IndiceSerieDi> findAll(Pageable pageable) {
         log.debug("Request to get all IndiceSerieDis");
-        Page<IndiceSerieDi> result = indiceSerieDiRepository.findAll(pageable);
-        return result;
+        return indiceSerieDiRepository.findAll(pageable);
     }
 
+
     /**
-     *  Get one indiceSerieDi by id.
+     * Get one indiceSerieDi by id.
      *
-     *  @param id the id of the entity
-     *  @return the entity
+     * @param id the id of the entity
+     * @return the entity
      */
     @Transactional(readOnly = true)
-    public IndiceSerieDi findOne(Long id) {
+    public Optional<IndiceSerieDi> findOne(Long id) {
         log.debug("Request to get IndiceSerieDi : {}", id);
-        IndiceSerieDi indiceSerieDi = indiceSerieDiRepository.findOne(id);
-        return indiceSerieDi;
+        return indiceSerieDiRepository.findById(id);
     }
 
     /**
-     *  Delete the  indiceSerieDi by id.
+     * Delete the indiceSerieDi by id.
      *
-     *  @param id the id of the entity
+     * @param id the id of the entity
      */
     public void delete(Long id) {
-        log.debug("Request to delete IndiceSerieDi : {}", id);
-        indiceSerieDiRepository.delete(id);
+        log.debug("Request to delete IndiceSerieDi : {}", id);        indiceSerieDiRepository.deleteById(id);
     }
 }

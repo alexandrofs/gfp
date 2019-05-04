@@ -1,0 +1,122 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-tipo-investimento-heading" jhiTranslate="gfpApp.tipoInvestimento.home.createOrEditLabel">Create or edit a Tipo Investimento</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!tipoInvestimento.id">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="tipoInvestimento.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gfpApp.tipoInvestimento.nome" for="field_nome">Nome</label>
+                    <input type="text" class="form-control" name="nome" id="field_nome"
+                        [(ngModel)]="tipoInvestimento.nome" required maxlength="20"/>
+                    <div [hidden]="!(editForm.controls.nome?.dirty && editForm.controls.nome?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.nome?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.nome?.errors?.maxlength" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: 20 }">
+                        This field cannot be longer than 20 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gfpApp.tipoInvestimento.descricao" for="field_descricao">Descricao</label>
+                    <input type="text" class="form-control" name="descricao" id="field_descricao"
+                        [(ngModel)]="tipoInvestimento.descricao" required maxlength="255"/>
+                    <div [hidden]="!(editForm.controls.descricao?.dirty && editForm.controls.descricao?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.descricao?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.descricao?.errors?.maxlength" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: 255 }">
+                        This field cannot be longer than 255 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gfpApp.tipoInvestimento.modalidade" for="field_modalidade">Modalidade</label>
+                    <select class="form-control" id="field_modalidade" name="modalidade" [(ngModel)]="tipoInvestimento.modalidade" required>
+                      <option *ngIf="!editForm.value.modalidade" [ngValue]="null" selected></option>
+                      <option [ngValue]="modaliadeOption.key === tipoInvestimento.modalidade ? tipoInvestimento.modalidade : modaliadeOption.key" *ngFor="let modaliadeOption of modalidades | keyvalue;">{{modaliadeOption.key}}</option>
+                    </select>
+                    <div [hidden]="!(editForm.controls.modalidade?.dirty && editForm.controls.modalidade?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.modalidade?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.modalidade?.errors?.maxlength" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: 25 }">
+                        This field cannot be longer than 25 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group" *ngIf="tipoInvestimento.modalidade == MODALIDADE_CDB || tipoInvestimento.modalidade == MODALIDADE_LCI">
+                    <label class="form-control-label" jhiTranslate="gfpApp.tipoInvestimento.tipoIndexador" for="field_tipoIndexador">Tipo Indexador</label>
+                    <select class="form-control" id="field_tipoIndexador" name="tipoIndexador" [(ngModel)]="tipoInvestimento.tipoIndexador"
+                        [required]="tipoInvestimento.modalidade == MODALIDADE_CDB || tipoInvestimento.modalidade == MODALIDADE_LCI">
+                      <option *ngIf="!editForm.value.tipoIndexador" [ngValue]="null" selected></option>
+                      <option [ngValue]="tipoIndexadorOption === tipoInvestimento.tipoIndexador ? tipoInvestimento.tipoIndexador : tipoIndexadorOption"
+                        *ngFor="let tipoIndexadorOption of tipoIndexadores;">{{tipoIndexadorOption}}</option>
+                    </select>
+                    <div [hidden]="!(editForm.controls.tipoIndexador?.dirty && editForm.controls.tipoIndexador?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.tipoIndexador?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.tipoIndexador?.errors?.maxlength" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: 10 }">
+                        This field cannot be longer than 10 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group" *ngIf="tipoInvestimento.tipoIndexador == INDEXADOR_POS">
+                    <label class="form-control-label" jhiTranslate="gfpApp.tipoInvestimento.indice" for="field_indice">Indice</label>
+                    <select class="form-control" id="field_indice" name="indice" [(ngModel)]="tipoInvestimento.indice"
+                        [required]="tipoInvestimento.tipoIndexador == INDEXADOR_POS">
+                      <option *ngIf="!editForm.value.indice" [ngValue]="null" selected></option>
+                      <option [ngValue]="indiceOption === tipoInvestimento.indice ? tipoInvestimento.indice : indiceOption"
+                        *ngFor="let indiceOption of indices;">{{indiceOption}}</option>
+                    </select>
+                    <div [hidden]="!(editForm.controls.indice?.dirty && editForm.controls.indice?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.indice?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.indice?.errors?.maxlength" jhiTranslate="entity.validation.maxlength" [translateValues]="{ max: 10 }">
+                        This field cannot be longer than 10 characters.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gfpApp.tipoInvestimento.tipoImpostoRenda" for="field_tipoImpostoRenda">Tipo Imposto Renda</label>
+                    <select class="form-control" id="field_tipoImpostoRenda" name="tipoImpostoRenda" [(ngModel)]="tipoInvestimento.tipoImpostoRenda"  required>
+                        <option *ngIf="!editForm.value.tipoImpostoRenda" [ngValue]="null" selected></option>
+                        <option [ngValue]="tipoImpostoRendaOption.id === tipoInvestimento.tipoImpostoRenda?.id ? tipoInvestimento.tipoImpostoRenda : tipoImpostoRendaOption" *ngFor="let tipoImpostoRendaOption of tipoimpostorendas; trackBy: trackTipoImpostoRendaById">{{tipoImpostoRendaOption.codigo}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.tipoImpostoRenda?.dirty && editForm.controls.tipoImpostoRenda?.invalid)">
+                    <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.tipoImpostoRenda?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                    </small>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

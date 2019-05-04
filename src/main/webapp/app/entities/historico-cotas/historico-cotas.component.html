@@ -1,0 +1,62 @@
+<div>
+    <h2 id="page-heading">
+        <span jhiTranslate="gfpApp.historicoCotas.home.title">Historico Cotas</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-historico-cotas" [routerLink]="['/historico-cotas/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span  jhiTranslate="gfpApp.historicoCotas.home.createLabel">
+            Create new Historico Cotas
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <br/>
+    <div class="table-responsive" *ngIf="historicoCotas">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span jhiTranslate="global.field.id">ID</span></th>
+            <th><span jhiTranslate="gfpApp.historicoCotas.dataCota">Data Cota</span></th>
+            <th><span jhiTranslate="gfpApp.historicoCotas.vlrCota">Vlr Cota</span></th>
+            <th><span jhiTranslate="gfpApp.historicoCotas.investimento">Investimento</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let historicoCotas of historicoCotas ;trackBy: trackId">
+                <td><a [routerLink]="['/historico-cotas', historicoCotas.id, 'view' ]">{{historicoCotas.id}}</a></td>
+                <td>{{historicoCotas.dataCota | date:'mediumDate'}}</td>
+                <td>{{historicoCotas.vlrCota}}</td>
+                <td>
+                    <div *ngIf="historicoCotas.investimento">
+                        <a [routerLink]="['../investimento', historicoCotas.investimento?.id, 'view' ]" >{{historicoCotas.investimento?.id}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['/historico-cotas', historicoCotas.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.view">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/historico-cotas', historicoCotas.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.edit">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', 'historico-cotas', { outlets: { popup: historicoCotas.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline" jhiTranslate="entity.action.delete">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

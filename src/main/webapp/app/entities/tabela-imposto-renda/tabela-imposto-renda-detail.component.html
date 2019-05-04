@@ -1,0 +1,37 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="tabelaImpostoRenda">
+            <h2><span jhiTranslate="gfpApp.tabelaImpostoRenda.detail.title">Tabela Imposto Renda</span> {{tabelaImpostoRenda.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="gfpApp.tabelaImpostoRenda.numDias">Num Dias</span></dt>
+                <dd>
+                    <span>{{tabelaImpostoRenda.numDias}}</span>
+                </dd>
+                <dt><span jhiTranslate="gfpApp.tabelaImpostoRenda.pctAliquota">Pct Aliquota</span></dt>
+                <dd>
+                    <span>{{tabelaImpostoRenda.pctAliquota}}</span>
+                </dd>
+                <dt><span jhiTranslate="gfpApp.tabelaImpostoRenda.tipoImpostoRenda">Tipo Imposto Renda</span></dt>
+                <dd>
+                    <div *ngIf="tabelaImpostoRenda.tipoImpostoRenda">
+                        <a [routerLink]="['/tipo-imposto-renda', tabelaImpostoRenda.tipoImpostoRenda?.id, 'view']">{{tabelaImpostoRenda.tipoImpostoRenda?.id}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/tabela-imposto-renda', tabelaImpostoRenda.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,35 +1,35 @@
 {
-  "generator-jhipster": {
-    "jhipsterVersion": "4.0.0",
-    "baseName": "gfp",
-    "packageName": "com.alexandrofs.gfp",
-    "packageFolder": "com/alexandrofs/gfp",
-    "serverPort": "8080",
-    "authenticationType": "session",
-    "hibernateCache": "no",
-    "clusteredHttpSession": false,
-    "websocket": false,
-    "databaseType": "sql",
-    "devDatabaseType": "mysql",
-    "prodDatabaseType": "mysql",
-    "searchEngine": false,
-    "buildTool": "maven",
-    "enableSocialSignIn": false,
-    "rememberMeKey": "fcc6f354cbe3938e3fb3a60fc9a6e1e882763523",
-    "useSass": false,
-    "applicationType": "monolith",
-    "testFrameworks": [
-      "protractor"
-    ],
-    "jhiPrefix": "jhi",
-    "enableTranslation": true,
-    "nativeLanguage": "pt-br",
-    "languages": [
-      "pt-br"
-    ],
-    "messageBroker": false,
-    "serviceDiscoveryType": false,
-    "clientPackageManager": "npm",
-    "clientFramework": "angular1"
-  }
+    "generator-jhipster": {
+        "jhipsterVersion": "5.8.0",
+        "baseName": "gfp",
+        "packageName": "com.alexandrofs.gfp",
+        "packageFolder": "com/alexandrofs/gfp",
+        "serverPort": "8080",
+        "authenticationType": "session",
+        "clusteredHttpSession": false,
+        "websocket": false,
+        "databaseType": "sql",
+        "devDatabaseType": "mysql",
+        "prodDatabaseType": "mysql",
+        "searchEngine": false,
+        "buildTool": "maven",
+        "enableSocialSignIn": false,
+        "rememberMeKey": "fcc6f354cbe3938e3fb3a60fc9a6e1e882763523",
+        "useSass": false,
+        "applicationType": "monolith",
+        "testFrameworks": ["protractor"],
+        "jhiPrefix": "jhi",
+        "enableTranslation": true,
+        "nativeLanguage": "pt-br",
+        "languages": ["pt-br"],
+        "messageBroker": false,
+        "serviceDiscoveryType": false,
+        "clientPackageManager": "npm",
+        "clientFramework": "angularX",
+        "cacheProvider": "no",
+        "enableHibernateCache": false,
+        "entitySuffix": "",
+        "dtoSuffix": "DTO",
+        "otherModules": []
+    }
 }

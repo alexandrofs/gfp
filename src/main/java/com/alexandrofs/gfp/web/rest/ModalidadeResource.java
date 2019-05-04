@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.alexandrofs.gfp.domain.fixed.ModalidadeEnum;
-import com.codahale.metrics.annotation.Timed;
+
+import io.micrometer.core.annotation.Timed;
 
 /**
  * REST controller for managing TipoInvestimento.

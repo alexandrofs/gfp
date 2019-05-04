@@ -11,12 +11,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
@@ -46,16 +46,16 @@ public class ImportaIndiceSerieDiResourceIntTest extends AbstractTest {
     private static final BigDecimal DEFAULT_TAXA_SELIC = new BigDecimal(1);
     private static final BigDecimal DEFAULT_FATOR_DIARIO = new BigDecimal(1);
 
-    @Inject
+    @Autowired
     private IndiceSerieDiRepository indiceSerieDiRepository;
 
-    @Inject
+    @Autowired
     private ImportaIndiceSerieDiService indiceSerieDiService;
 
-    @Inject
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Inject
+    @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
     private MockMvc restIndiceSerieDiMockMvc;
