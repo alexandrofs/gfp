@@ -1,8 +1,6 @@
 package com.alexandrofs.gfp.domain;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -23,7 +21,7 @@ import javax.persistence.Transient;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -73,10 +71,23 @@ public class Investimento implements Serializable {
     @JsonIgnoreProperties("investimentos")
     private Instituicao instituicao;
     
-    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     @Transient
     @JsonProperty("vlrSaldoBruto")
     private BigDecimal vlrSaldoBruto;
+    
+    @Transient
+    @JsonProperty("vlrSaldoLiquido")
+    private BigDecimal vlrSaldoLiquido;
+    
+    @Transient
+    @JsonProperty("vlrRendLiquido")
+    private BigDecimal vlrRendLiquido;
+    
+    @Transient
+    @JsonProperty("pctRendTotalLiquido")
+    private BigDecimal pctRendTotalLiquido;
+    
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
 
     public Long getId() {
         return id;
@@ -92,6 +103,30 @@ public class Investimento implements Serializable {
 
 	public void setVlrSaldoBruto(BigDecimal vlrSaldoBruto) {
 		this.vlrSaldoBruto = vlrSaldoBruto;
+	}
+	
+	public BigDecimal getVlrSaldoLiquido() {
+		return vlrSaldoLiquido;
+	}
+
+	public void setVlrSaldoLiquido(BigDecimal vlrSaldoLiquido) {
+		this.vlrSaldoLiquido = vlrSaldoLiquido;
+	}
+
+	public BigDecimal getVlrRendLiquido() {
+		return vlrRendLiquido;
+	}
+
+	public void setVlrRendLiquido(BigDecimal vlrRendLiquido) {
+		this.vlrRendLiquido = vlrRendLiquido;
+	}
+	
+	public BigDecimal getPctRendTotalLiquido() {
+		return pctRendTotalLiquido;
+	}
+
+	public void setPctRendTotalLiquido(BigDecimal pctRendTotal) {
+		this.pctRendTotalLiquido = pctRendTotal;
 	}
 
 	public LocalDate getDataAplicacao() {

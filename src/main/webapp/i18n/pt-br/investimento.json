@@ -24,7 +24,10 @@
             "tipoInvestimento": "Tipo Investimento",
             "historicoCotas": "Histórico Cotas",
             "instituicao": "Instituição",
-            "vlrSaldoBruto": "Saldo Bruto"
+            "vlrSaldoBruto": "Saldo Bruto",
+            "vlrSaldoLiquido": "Saldo Liquido",
+            "vlrRendLiquido": "Vlr Rend. Liquido",
+            "pctRendLiquido": "Pct Rend. Liquido"
         }
     }
 }

@@ -4,7 +4,6 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 
 import org.junit.After;
@@ -19,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.alexandrofs.gfp.domain.Carteira;
 import com.alexandrofs.gfp.domain.HistoricoCotas;
-import com.alexandrofs.gfp.domain.IndiceSerieDi;
 import com.alexandrofs.gfp.domain.Instituicao;
 import com.alexandrofs.gfp.domain.Investimento;
 import com.alexandrofs.gfp.repository.HistoricoCotasRepository;
@@ -145,15 +143,6 @@ public class CalculoCotasTest extends AbstractTest {
 		assertThat(cotaDesc.get(0).getDataCota(), equalTo(DEFAULT_DATA_APLICACAO.plusDays(2)));
 		assertThat(cotaDesc.get(0).getVlrCota(), equalTo(new BigDecimal("1.04")));
 		
-	}
-    
-	private void insereIndice(LocalDate localDate) {
-		IndiceSerieDi indiceSerieDi = new IndiceSerieDi();
-        indiceSerieDi.setData(localDate);
-        indiceSerieDi.setFatorDiario(new BigDecimal(1.02));
-        indiceSerieDi.setTaxaMediaAnual(BigDecimal.ONE);
-        indiceSerieDi.setTaxaSelic(BigDecimal.ONE);
-        indiceRepo.saveAndFlush(indiceSerieDi);
 	}
 	
 }
