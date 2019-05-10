@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/alexandrofs/gfp.svg?branch=develop)](https://travis-ci.org/alexandrofs/gfp)
+
 # gfp
 
 This application was generated using JHipster 5.8.0, you can find documentation and help at [https://www.jhipster.tech/documentation-archive/v5.8.0](https://www.jhipster.tech/documentation-archive/v5.8.0).
