@@ -1,0 +1,36 @@
+{
+    "name": "CategoriaDespesa",
+    "fields": [
+        {
+            "fieldName": "nome",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "usuario",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "despesa",
+            "otherEntityName": "despesa",
+            "otherEntityRelationshipName": "categoriaDespesa"
+        }
+    ],
+    "changelogDate": "20190601031437",
+    "entityTableName": "tb_categoria_despesa",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

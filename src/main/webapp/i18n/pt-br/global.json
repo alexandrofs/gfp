@@ -17,6 +17,11 @@
                 "main": "Cadastros",
                 "carteira": "Carteira",
                 "investimento": "Investimento",
+                "categoriaDespesa": "Categoria Despesa",
+                "contaPagamento": "Conta Pagamento",
+                "lancamento": "Lancamento",
+                "lancamentoCartao": "Lancamento Cartao",
+                "despesa": "Despesa",
                 "jhipster-needle-menu-add-entry": "JHipster will add additional entities here (do not translate!)"
             },
             "account": {
