@@ -1,0 +1,10 @@
+{
+    "gfpApp": {
+        "TipoConta": {
+            "null": "",
+            "CARTAO_CREDITO": "CARTAO_CREDITO",
+            "BANCO": "BANCO",
+            "VIRTUAL": "VIRTUAL"
+        }
+    }
+}

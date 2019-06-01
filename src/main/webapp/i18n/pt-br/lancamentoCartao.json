@@ -1,0 +1,26 @@
+{
+    "gfpApp": {
+        "lancamentoCartao": {
+            "home": {
+                "title": "Lancamento Cartaos",
+                "createLabel": "Criar novo Lancamento Cartao",
+                "createOrEditLabel": "Criar ou editar Lancamento Cartao"
+            },
+            "created": "Um novo Lancamento Cartao foi criado com o identificador {{ param }}",
+            "updated": "Um Lancamento Cartao foi atualizado com o identificador {{ param }}",
+            "deleted": "Um Lancamento Cartao foi excluído com o identificador {{ param }}",
+            "delete": {
+                "question": "Tem certeza de que deseja excluir Lancamento Cartao {{ id }}?"
+            },
+            "detail": {
+                "title": "Lancamento Cartao"
+            },
+            "dataCompra": "Data Compra",
+            "mesFatura": "Mes Fatura",
+            "descricao": "Descricao",
+            "valor": "Valor",
+            "usuario": "Usuario",
+            "contaPagamento": "Conta Pagamento"
+        }
+    }
+}

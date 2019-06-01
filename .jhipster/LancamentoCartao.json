@@ -1,0 +1,59 @@
+{
+    "name": "LancamentoCartao",
+    "fields": [
+        {
+            "fieldName": "dataCompra",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "mesFatura",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "descricao",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "valor",
+            "fieldType": "BigDecimal",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "usuario",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "contaPagamento",
+            "otherEntityRelationshipName": "lancamentoCartao",
+            "relationshipValidateRules": "required",
+            "relationshipName": "contaPagamento",
+            "otherEntityField": "nome"
+        }
+    ],
+    "changelogDate": "20190601025341",
+    "entityTableName": "tb_lancamento",
+    "dto": "no",
+    "pagination": "pager",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

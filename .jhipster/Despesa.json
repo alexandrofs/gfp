@@ -1,0 +1,67 @@
+{
+    "name": "Despesa",
+    "fields": [
+        {
+            "fieldName": "dataDespesa",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "mesReferencia",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "descricao",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "valor",
+            "fieldType": "BigDecimal",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "usuario",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "contaPagamento",
+            "otherEntityRelationshipName": "despesa",
+            "relationshipValidateRules": "required",
+            "relationshipName": "contaPagamento",
+            "otherEntityField": "nome"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "otherEntityName": "categoriaDespesa",
+            "otherEntityRelationshipName": "despesa",
+            "relationshipValidateRules": "required",
+            "relationshipName": "categoriaDespesa",
+            "otherEntityField": "nome"
+        }
+    ],
+    "changelogDate": "20190601025342",
+    "entityTableName": "tb_despesa",
+    "dto": "no",
+    "pagination": "pager",
+    "service": "serviceClass",
+    "jpaMetamodelFiltering": true,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}
