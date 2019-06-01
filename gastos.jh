@@ -1,0 +1,48 @@
+enum TipoConta {
+	CARTAO_CREDITO, BANCO, VIRTUAL
+}
+entity CategoriaDespesa(tb_categoria_despesa) {
+	nome String required
+    usuario String required
+}
+entity ContaPagamento(tb_conta_pagamento) {
+	nome String required
+    tipoConta TipoConta required
+    usuario String required
+}
+@paginate(pager)
+entity Lancamento(tb_lancamento) {
+	data LocalDate required
+    descricao String required
+    valor BigDecimal required
+    usuario String required	
+}
+@paginate(pager)
+entity LancamentoCartao(tb_lancamento_cartao) {
+	dataCompra LocalDate required
+    mesFatura LocalDate required
+    descricao String required
+    valor BigDecimal required
+    usuario String required	
+}
+@paginate(pager)
+entity Despesa(tb_despesa) {
+	dataDespesa LocalDate required
+    mesReferencia LocalDate required
+    descricao String required
+    valor BigDecimal required
+    usuario String required
+}
+relationship OneToMany {
+	ContaPagamento to Lancamento{contaPagamento (nome) required}
+}
+relationship OneToMany {
+	ContaPagamento to LancamentoCartao{contaPagamento (nome) required}
+}
+relationship OneToMany {
+	ContaPagamento to Despesa{contaPagamento (nome) required}
+}
+relationship OneToMany {
+	CategoriaDespesa to Despesa{categoriaDespesa (nome) required}
+}
+filter Despesa, LancamentoCartao, Lancamento

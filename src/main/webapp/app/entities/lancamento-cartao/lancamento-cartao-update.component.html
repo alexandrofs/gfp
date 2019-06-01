@@ -1,0 +1,106 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-lancamento-cartao-heading" jhiTranslate="gfpApp.lancamentoCartao.home.createOrEditLabel">Create or edit a Lancamento Cartao</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!lancamentoCartao.id">
+                    <label for="id" jhiTranslate="global.field.id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="lancamentoCartao.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gfpApp.lancamentoCartao.dataCompra" for="field_dataCompra">Data Compra</label>
+                    <div class="input-group">
+                        <input id="field_dataCompra" type="text" class="form-control" name="dataCompra" ngbDatepicker  #dataCompraDp="ngbDatepicker" [(ngModel)]="lancamentoCartao.dataCompra"
+                        required/>
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="dataCompraDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                        </span>
+                    </div>
+                    <div [hidden]="!(editForm.controls.dataCompra?.dirty && editForm.controls.dataCompra?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.dataCompra?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gfpApp.lancamentoCartao.mesFatura" for="field_mesFatura">Mes Fatura</label>
+                    <div class="input-group">
+                        <input id="field_mesFatura" type="text" class="form-control" name="mesFatura" ngbDatepicker  #mesFaturaDp="ngbDatepicker" [(ngModel)]="lancamentoCartao.mesFatura"
+                        required/>
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="mesFaturaDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                        </span>
+                    </div>
+                    <div [hidden]="!(editForm.controls.mesFatura?.dirty && editForm.controls.mesFatura?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.mesFatura?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gfpApp.lancamentoCartao.descricao" for="field_descricao">Descricao</label>
+                    <input type="text" class="form-control" name="descricao" id="field_descricao"
+                        [(ngModel)]="lancamentoCartao.descricao" required/>
+                    <div [hidden]="!(editForm.controls.descricao?.dirty && editForm.controls.descricao?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.descricao?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gfpApp.lancamentoCartao.valor" for="field_valor">Valor</label>
+                    <input type="number" class="form-control" name="valor" id="field_valor"
+                        [(ngModel)]="lancamentoCartao.valor" required/>
+                    <div [hidden]="!(editForm.controls.valor?.dirty && editForm.controls.valor?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.valor?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.valor?.errors?.number" jhiTranslate="entity.validation.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gfpApp.lancamentoCartao.usuario" for="field_usuario">Usuario</label>
+                    <input type="text" class="form-control" name="usuario" id="field_usuario"
+                        [(ngModel)]="lancamentoCartao.usuario" required/>
+                    <div [hidden]="!(editForm.controls.usuario?.dirty && editForm.controls.usuario?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.usuario?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gfpApp.lancamentoCartao.contaPagamento" for="field_contaPagamento">Conta Pagamento</label>
+                    <select class="form-control" id="field_contaPagamento" name="contaPagamento" [(ngModel)]="lancamentoCartao.contaPagamento"  required>
+                        <option *ngIf="!editForm.value.contaPagamento" [ngValue]="null" selected></option>
+                        <option [ngValue]="contaPagamentoOption.id === lancamentoCartao.contaPagamento?.id ? lancamentoCartao.contaPagamento : contaPagamentoOption" *ngFor="let contaPagamentoOption of contapagamentos; trackBy: trackContaPagamentoById">{{contaPagamentoOption.nome}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.contaPagamento?.dirty && editForm.controls.contaPagamento?.invalid)">
+                    <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.contaPagamento?.errors?.required" jhiTranslate="entity.validation.required">
+                        This field is required.
+                    </small>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.cancel">Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.save">Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

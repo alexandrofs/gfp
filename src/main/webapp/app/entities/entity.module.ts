@@ -35,6 +35,30 @@ import { RouterModule } from '@angular/router';
             {
                 path: 'historico-cotas',
                 loadChildren: './historico-cotas/historico-cotas.module#GfpHistoricoCotasModule'
+            },
+            {
+                path: 'categoria-despesa',
+                loadChildren: './categoria-despesa/categoria-despesa.module#GfpCategoriaDespesaModule'
+            },
+            {
+                path: 'conta-pagamento',
+                loadChildren: './conta-pagamento/conta-pagamento.module#GfpContaPagamentoModule'
+            },
+            {
+                path: 'lancamento',
+                loadChildren: './lancamento/lancamento.module#GfpLancamentoModule'
+            },
+            {
+                path: 'lancamento-cartao',
+                loadChildren: './lancamento-cartao/lancamento-cartao.module#GfpLancamentoCartaoModule'
+            },
+            {
+                path: 'despesa',
+                loadChildren: './despesa/despesa.module#GfpDespesaModule'
+            },
+            {
+                path: 'lancamento-cartao',
+                loadChildren: './lancamento-cartao/lancamento-cartao.module#GfpLancamentoCartaoModule'
             }
             /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
         ])
