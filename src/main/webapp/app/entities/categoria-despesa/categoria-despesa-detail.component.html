@@ -1,0 +1,31 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="categoriaDespesa">
+            <h2><span jhiTranslate="gfpApp.categoriaDespesa.detail.title">Categoria Despesa</span> {{categoriaDespesa.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="gfpApp.categoriaDespesa.nome">Nome</span></dt>
+                <dd>
+                    <span>{{categoriaDespesa.nome}}</span>
+                </dd>
+                <dt><span jhiTranslate="gfpApp.categoriaDespesa.usuario">Usuario</span></dt>
+                <dd>
+                    <span>{{categoriaDespesa.usuario}}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/categoria-despesa', categoriaDespesa.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

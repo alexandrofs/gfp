@@ -1,0 +1,23 @@
+{
+    "gfpApp": {
+        "categoriaDespesa": {
+            "home": {
+                "title": "Categoria Despesas",
+                "createLabel": "Criar novo Categoria Despesa",
+                "createOrEditLabel": "Criar ou editar Categoria Despesa"
+            },
+            "created": "Um novo Categoria Despesa foi criado com o identificador {{ param }}",
+            "updated": "Um Categoria Despesa foi atualizado com o identificador {{ param }}",
+            "deleted": "Um Categoria Despesa foi excluído com o identificador {{ param }}",
+            "delete": {
+                "question": "Tem certeza de que deseja excluir Categoria Despesa {{ id }}?"
+            },
+            "detail": {
+                "title": "Categoria Despesa"
+            },
+            "nome": "Nome",
+            "usuario": "Usuario",
+            "despesa": "Despesa"
+        }
+    }
+}

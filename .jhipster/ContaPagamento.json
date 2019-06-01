@@ -1,0 +1,56 @@
+{
+    "name": "ContaPagamento",
+    "fields": [
+        {
+            "fieldName": "nome",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "tipoConta",
+            "fieldType": "TipoConta",
+            "fieldValues": "CARTAO_CREDITO,BANCO,VIRTUAL",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "usuario",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "lancamento",
+            "otherEntityRelationshipName": "contaPagamento",
+            "relationshipName": "lancamento"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "lancamentoCartao",
+            "otherEntityRelationshipName": "contaPagamento",
+            "relationshipName": "lancamentoCartao"
+        },
+        {
+            "relationshipType": "one-to-many",
+            "otherEntityName": "despesa",
+            "otherEntityRelationshipName": "contaPagamento",
+            "relationshipName": "despesa"
+        }
+    ],
+    "changelogDate": "20190601030634",
+    "entityTableName": "tb_conta_pagamento",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

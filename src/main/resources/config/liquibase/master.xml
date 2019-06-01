@@ -13,6 +13,11 @@
     <include file="config/liquibase/changelog/20160713032838_added_entity_HistoricoCotas.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20170523014543_added_entity_IndiceSerieDi.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20170530014514_added_entity_Instituicao.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190601030633_added_entity_CategoriaDespesa.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190601030634_added_entity_ContaPagamento.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190601030635_added_entity_Lancamento.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190601030636_added_entity_LancamentoCartao.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190601030637_added_entity_Despesa.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="config/liquibase/changelog/20160713030900_added_entity_constraints_TabelaImpostoRenda.xml" relativeToChangelogFile="false"/>
     <include file="config/liquibase/changelog/20160713031309_added_entity_constraints_TipoInvestimento.xml" relativeToChangelogFile="false"/>
@@ -20,5 +25,8 @@
     <include file="config/liquibase/changelog/20160713032838_added_entity_constraints_HistoricoCotas.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170520-1_insert_initial_data_TipoImpostoRenda.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170520-2_insert_initial_data_TipoImpostoRenda.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190601030635_added_entity_constraints_Lancamento.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190601030636_added_entity_constraints_LancamentoCartao.xml" relativeToChangelogFile="false"/>
+    <include file="config/liquibase/changelog/20190601030637_added_entity_constraints_Despesa.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
 </databaseChangeLog>

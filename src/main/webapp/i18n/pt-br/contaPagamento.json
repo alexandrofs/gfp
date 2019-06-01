@@ -1,0 +1,26 @@
+{
+    "gfpApp": {
+        "contaPagamento": {
+            "home": {
+                "title": "Conta Pagamentos",
+                "createLabel": "Criar novo Conta Pagamento",
+                "createOrEditLabel": "Criar ou editar Conta Pagamento"
+            },
+            "created": "Um novo Conta Pagamento foi criado com o identificador {{ param }}",
+            "updated": "Um Conta Pagamento foi atualizado com o identificador {{ param }}",
+            "deleted": "Um Conta Pagamento foi excluído com o identificador {{ param }}",
+            "delete": {
+                "question": "Tem certeza de que deseja excluir Conta Pagamento {{ id }}?"
+            },
+            "detail": {
+                "title": "Conta Pagamento"
+            },
+            "nome": "Nome",
+            "tipoConta": "Tipo Conta",
+            "usuario": "Usuario",
+            "lancamento": "Lancamento",
+            "lancamentoCartao": "Lancamento Cartao",
+            "despesa": "Despesa"
+        }
+    }
+}

@@ -1,0 +1,55 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="despesa">
+            <h2><span jhiTranslate="gfpApp.despesa.detail.title">Despesa</span> {{despesa.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span jhiTranslate="gfpApp.despesa.dataDespesa">Data Despesa</span></dt>
+                <dd>
+                    <span>{{despesa.dataDespesa}}</span>
+                </dd>
+                <dt><span jhiTranslate="gfpApp.despesa.mesReferencia">Mes Referencia</span></dt>
+                <dd>
+                    <span>{{despesa.mesReferencia}}</span>
+                </dd>
+                <dt><span jhiTranslate="gfpApp.despesa.descricao">Descricao</span></dt>
+                <dd>
+                    <span>{{despesa.descricao}}</span>
+                </dd>
+                <dt><span jhiTranslate="gfpApp.despesa.valor">Valor</span></dt>
+                <dd>
+                    <span>{{despesa.valor}}</span>
+                </dd>
+                <dt><span jhiTranslate="gfpApp.despesa.usuario">Usuario</span></dt>
+                <dd>
+                    <span>{{despesa.usuario}}</span>
+                </dd>
+                <dt><span jhiTranslate="gfpApp.despesa.contaPagamento">Conta Pagamento</span></dt>
+                <dd>
+                    <div *ngIf="despesa.contaPagamento">
+                        <a [routerLink]="['/conta-pagamento', despesa.contaPagamento?.id, 'view']">{{despesa.contaPagamento?.nome}}</a>
+                    </div>
+                </dd>
+                <dt><span jhiTranslate="gfpApp.despesa.categoriaDespesa">Categoria Despesa</span></dt>
+                <dd>
+                    <div *ngIf="despesa.categoriaDespesa">
+                        <a [routerLink]="['/categoria-despesa', despesa.categoriaDespesa?.id, 'view']">{{despesa.categoriaDespesa?.nome}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/despesa', despesa.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>
