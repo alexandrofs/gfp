@@ -14,6 +14,9 @@ export interface IInvestimento {
     tipoInvestimento?: ITipoInvestimento;
     historicoCotas?: IHistoricoCotas[];
     instituicao?: IInstituicao;
+    vlrSaldoLiquido?: number;
+    vlrSaldoBruto?: number;
+    vlrRendLiquido?: number;
 }
 
 export class Investimento implements IInvestimento {
@@ -26,6 +29,9 @@ export class Investimento implements IInvestimento {
         public carteira?: ICarteira,
         public tipoInvestimento?: ITipoInvestimento,
         public historicoCotas?: IHistoricoCotas[],
-        public instituicao?: IInstituicao
+        public instituicao?: IInstituicao,
+        public vlrSaldoLiquido?: number,
+        public vlrSaldoBruto?: number,
+        public vlrRendLiquido?: number
     ) {}
 }
