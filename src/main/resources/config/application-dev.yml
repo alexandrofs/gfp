@@ -48,6 +48,7 @@ spring:
                 prepStmtCacheSqlLimit: 2048
                 useServerPrepStmts: true
     jpa:
+        database: postgresql
         show-sql: true
         properties:
             hibernate.id.new_generator_mappings: true
