@@ -1,11 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
 
 import { ILancamento } from 'app/shared/model/lancamento.model';
+import { IContaPagamento } from 'app/shared/model/conta-pagamento.model';
 import { AccountService } from 'app/core';
 
 import { ITEMS_PER_PAGE } from 'app/shared';
@@ -16,44 +17,42 @@ import { LancamentoService } from './lancamento.service';
     templateUrl: './lancamento.component.html'
 })
 export class LancamentoComponent implements OnInit, OnDestroy {
-    currentAccount: any;
+    contaPagamento: IContaPagamento;
     lancamentos: ILancamento[];
-    error: any;
-    success: any;
+    currentAccount: any;
     eventSubscriber: Subscription;
-    routeData: any;
+    itemsPerPage: number;
     links: any;
-    totalItems: any;
-    itemsPerPage: any;
     page: any;
     predicate: any;
-    previousPage: any;
     reverse: any;
+    totalItems: number;
 
     constructor(
         protected lancamentoService: LancamentoService,
-        protected parseLinks: JhiParseLinks,
         protected jhiAlertService: JhiAlertService,
+        protected eventManager: JhiEventManager,
+        protected parseLinks: JhiParseLinks,
         protected accountService: AccountService,
-        protected activatedRoute: ActivatedRoute,
-        protected router: Router,
-        protected eventManager: JhiEventManager
+        protected activatedRoute: ActivatedRoute
     ) {
+        this.lancamentos = [];
         this.itemsPerPage = ITEMS_PER_PAGE;
-        this.routeData = this.activatedRoute.data.subscribe(data => {
-            this.page = data.pagingParams.page;
-            this.previousPage = data.pagingParams.page;
-            this.reverse = data.pagingParams.ascending;
-            this.predicate = data.pagingParams.predicate;
-        });
+        this.page = 0;
+        this.links = {
+            last: 0
+        };
+        this.predicate = 'id';
+        this.reverse = true;
     }
 
     loadAll() {
         this.lancamentoService
             .query({
-                page: this.page - 1,
+                page: this.page,
                 size: this.itemsPerPage,
-                sort: this.sort()
+                sort: this.sort(),
+                'contaPagamentoId.equals': this.contaPagamento.id
             })
             .subscribe(
                 (res: HttpResponse<ILancamento[]>) => this.paginateLancamentos(res.body, res.headers),
@@ -61,37 +60,21 @@ export class LancamentoComponent implements OnInit, OnDestroy {
             );
     }
 
-    loadPage(page: number) {
-        if (page !== this.previousPage) {
-            this.previousPage = page;
-            this.transition();
-        }
-    }
-
-    transition() {
-        this.router.navigate(['/lancamento'], {
-            queryParams: {
-                page: this.page,
-                size: this.itemsPerPage,
-                sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
-            }
-        });
+    reset() {
+        this.page = 0;
+        this.lancamentos = [];
         this.loadAll();
     }
 
-    clear() {
-        this.page = 0;
-        this.router.navigate([
-            '/lancamento',
-            {
-                page: this.page,
-                sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
-            }
-        ]);
+    loadPage(page) {
+        this.page = page;
         this.loadAll();
     }
 
     ngOnInit() {
+        this.activatedRoute.data.subscribe(({ contaPagamento }) => {
+            this.contaPagamento = contaPagamento;
+        });
         this.loadAll();
         this.accountService.identity().then(account => {
             this.currentAccount = account;
@@ -108,7 +91,7 @@ export class LancamentoComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInLancamentos() {
-        this.eventSubscriber = this.eventManager.subscribe('lancamentoListModification', response => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('lancamentoListModification', response => this.reset());
     }
 
     sort() {
@@ -122,7 +105,9 @@ export class LancamentoComponent implements OnInit, OnDestroy {
     protected paginateLancamentos(data: ILancamento[], headers: HttpHeaders) {
         this.links = this.parseLinks.parse(headers.get('link'));
         this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
-        this.lancamentos = data;
+        for (let i = 0; i < data.length; i++) {
+            this.lancamentos.push(data[i]);
+        }
     }
 
     protected onError(errorMessage: string) {

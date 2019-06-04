@@ -18,6 +18,7 @@
             "nome": "Nome",
             "tipoConta": "Tipo Conta",
             "usuario": "Usuario",
+            "lancamentos": "Lançamentos",
             "lancamento": "Lancamento",
             "lancamentoCartao": "Lancamento Cartao",
             "despesa": "Despesa"

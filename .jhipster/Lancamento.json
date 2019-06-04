@@ -42,7 +42,7 @@
     "changelogDate": "20190601031439",
     "entityTableName": "tb_lancamento",
     "dto": "no",
-    "pagination": "pager",
+    "pagination": "infinite-scroll",
     "service": "serviceClass",
     "jpaMetamodelFiltering": true,
     "fluentMethods": true,

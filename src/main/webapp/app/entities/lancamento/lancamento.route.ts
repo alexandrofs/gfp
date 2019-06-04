@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpResponse } from '@angular/common/http';
 import { Resolve, ActivatedRouteSnapshot, RouterStateSnapshot, Routes } from '@angular/router';
-import { JhiPaginationUtil, JhiResolvePagingParams } from 'ng-jhipster';
 import { UserRouteAccessService } from 'app/core';
 import { Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
@@ -12,6 +11,9 @@ import { LancamentoDetailComponent } from './lancamento-detail.component';
 import { LancamentoUpdateComponent } from './lancamento-update.component';
 import { LancamentoDeletePopupComponent } from './lancamento-delete-dialog.component';
 import { ILancamento } from 'app/shared/model/lancamento.model';
+import { ContaPagamentoService } from '../conta-pagamento/conta-pagamento.service';
+import { IContaPagamento } from 'app/shared/model/conta-pagamento.model';
+import { ContaPagamento } from 'app/shared/model/conta-pagamento.model';
 
 @Injectable({ providedIn: 'root' })
 export class LancamentoResolve implements Resolve<ILancamento> {
@@ -29,16 +31,40 @@ export class LancamentoResolve implements Resolve<ILancamento> {
     }
 }
 
+@Injectable({ providedIn: 'root' })
+export class ContaPagamentoResolve implements Resolve<IContaPagamento> {
+    constructor(private service: ContaPagamentoService) {}
+
+    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<IContaPagamento> {
+        const id = route.params['contaPagamentoId'] ? route.params['contaPagamentoId'] : null;
+        if (id) {
+            return this.service.find(id).pipe(
+                filter((response: HttpResponse<ContaPagamento>) => response.ok),
+                map((contaPagamento: HttpResponse<ContaPagamento>) => contaPagamento.body)
+            );
+        }
+        return of(new ContaPagamento());
+    }
+}
+
 export const lancamentoRoute: Routes = [
     {
         path: '',
         component: LancamentoComponent,
+        data: {
+            authorities: ['ROLE_USER'],
+            pageTitle: 'gfpApp.lancamento.home.title'
+        },
+        canActivate: [UserRouteAccessService]
+    },
+    {
+        path: ':contaPagamentoId/lancamentos',
+        component: LancamentoComponent,
         resolve: {
-            pagingParams: JhiResolvePagingParams
+            contaPagamento: ContaPagamentoResolve
         },
         data: {
             authorities: ['ROLE_USER'],
-            defaultSort: 'id,asc',
             pageTitle: 'gfpApp.lancamento.home.title'
         },
         canActivate: [UserRouteAccessService]
@@ -56,10 +82,11 @@ export const lancamentoRoute: Routes = [
         canActivate: [UserRouteAccessService]
     },
     {
-        path: 'new',
+        path: ':contaPagamentoId/new',
         component: LancamentoUpdateComponent,
         resolve: {
-            lancamento: LancamentoResolve
+            lancamento: LancamentoResolve,
+            contaPagamento: ContaPagamentoResolve
         },
         data: {
             authorities: ['ROLE_USER'],

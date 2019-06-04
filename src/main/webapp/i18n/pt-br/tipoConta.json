@@ -2,9 +2,9 @@
     "gfpApp": {
         "TipoConta": {
             "null": "",
-            "CARTAO_CREDITO": "CARTAO_CREDITO",
-            "BANCO": "BANCO",
-            "VIRTUAL": "VIRTUAL"
+            "CARTAO_CREDITO": "Cartão de Crédito",
+            "BANCO": "Instituição Financeira",
+            "VIRTUAL": "Virtual"
         }
     }
 }
