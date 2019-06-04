@@ -1,7 +1,7 @@
 <div class="row justify-content-center">
     <div class="col-8">
         <div *ngIf="contaPagamento">
-            <h2><span jhiTranslate="gfpApp.contaPagamento.detail.title">Conta Pagamento</span> {{contaPagamento.id}}</h2>
+            <h2><span jhiTranslate="gfpApp.contaPagamento.detail.title">Conta Pagamento</span></h2>
             <hr>
             <jhi-alert-error></jhi-alert-error>
             <dl class="row-md jh-entity-details">
@@ -19,8 +19,7 @@
                 </dd>
             </dl>
 
-            <button type="submit"
-                    (click)="previousState()"
+            <button type="button" [routerLink]="['/conta-pagamento']"
                     class="btn btn-info">
                 <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.back"> Back</span>
             </button>
@@ -29,6 +28,18 @@
                     [routerLink]="['/conta-pagamento', contaPagamento.id, 'edit']"
                     class="btn btn-primary">
                 <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span jhiTranslate="entity.action.edit"> Edit</span>
+            </button>
+            <button *ngIf="contaPagamento.tipoConta=='CARTAO_CREDITO'" type="button"
+                    [routerLink]="['/lancamento-cartao', contaPagamento.id, 'lancamentos' ]"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'eye'"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="gfpApp.contaPagamento.lancamentos">Lançamentos</span>
+            </button>
+            <button *ngIf="contaPagamento.tipoConta!=='CARTAO_CREDITO'" type="button"
+                    [routerLink]="['/lancamento', contaPagamento.id, 'lancamentos' ]"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'eye'"></fa-icon>
+                <span class="d-none d-md-inline" jhiTranslate="gfpApp.contaPagamento.lancamentos">Lançamentos</span>
             </button>
         </div>
     </div>

@@ -14,12 +14,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,11 +52,12 @@ public class LancamentoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/lancamentos")
-    public ResponseEntity<Lancamento> createLancamento(@Valid @RequestBody Lancamento lancamento) throws URISyntaxException {
+    public ResponseEntity<Lancamento> createLancamento(@Valid @RequestBody Lancamento lancamento, @AuthenticationPrincipal Principal principal) throws URISyntaxException {
         log.debug("REST request to save Lancamento : {}", lancamento);
         if (lancamento.getId() != null) {
             throw new BadRequestAlertException("A new lancamento cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        lancamento.setUsuario(principal.getName());
         Lancamento result = lancamentoService.save(lancamento);
         return ResponseEntity.created(new URI("/api/lancamentos/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))

@@ -14,12 +14,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,11 +52,12 @@ public class LancamentoCartaoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/lancamento-cartaos")
-    public ResponseEntity<LancamentoCartao> createLancamentoCartao(@Valid @RequestBody LancamentoCartao lancamentoCartao) throws URISyntaxException {
+    public ResponseEntity<LancamentoCartao> createLancamentoCartao(@Valid @RequestBody LancamentoCartao lancamentoCartao, @AuthenticationPrincipal Principal principal) throws URISyntaxException {
         log.debug("REST request to save LancamentoCartao : {}", lancamentoCartao);
         if (lancamentoCartao.getId() != null) {
             throw new BadRequestAlertException("A new lancamentoCartao cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        lancamentoCartao.setUsuario(principal.getName());
         LancamentoCartao result = lancamentoCartaoService.save(lancamentoCartao);
         return ResponseEntity.created(new URI("/api/lancamento-cartaos/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))

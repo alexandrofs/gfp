@@ -1,6 +1,7 @@
 package com.alexandrofs.gfp.domain;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -36,7 +37,6 @@ public class Lancamento implements Serializable {
     @Column(name = "valor", precision = 10, scale = 2, nullable = false)
     private BigDecimal valor;
 
-    @NotNull
     @Column(name = "usuario", nullable = false)
     private String usuario;
 

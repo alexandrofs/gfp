@@ -35,7 +35,6 @@ public class ContaPagamento implements Serializable {
     @Column(name = "tipo_conta", nullable = false)
     private TipoConta tipoConta;
 
-    @NotNull
     @Column(name = "usuario", nullable = false)
     private String usuario;
 

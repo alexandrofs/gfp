@@ -49,7 +49,7 @@
     "changelogDate": "20190601031440",
     "entityTableName": "tb_lancamento_cartao",
     "dto": "no",
-    "pagination": "pager",
+    "pagination": "infinite-scroll",
     "service": "serviceClass",
     "jpaMetamodelFiltering": true,
     "fluentMethods": true,

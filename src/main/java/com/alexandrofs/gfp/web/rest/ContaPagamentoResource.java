@@ -1,20 +1,31 @@
 package com.alexandrofs.gfp.web.rest;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.security.Principal;
+import java.util.List;
+import java.util.Optional;
+
+import javax.validation.Valid;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.alexandrofs.gfp.domain.ContaPagamento;
 import com.alexandrofs.gfp.repository.ContaPagamentoRepository;
 import com.alexandrofs.gfp.web.rest.errors.BadRequestAlertException;
 import com.alexandrofs.gfp.web.rest.util.HeaderUtil;
+
 import io.github.jhipster.web.util.ResponseUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import java.util.List;
-import java.util.Optional;
 
 /**
  * REST controller for managing ContaPagamento.
@@ -41,11 +52,12 @@ public class ContaPagamentoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/conta-pagamentos")
-    public ResponseEntity<ContaPagamento> createContaPagamento(@Valid @RequestBody ContaPagamento contaPagamento) throws URISyntaxException {
+    public ResponseEntity<ContaPagamento> createContaPagamento(@Valid @RequestBody ContaPagamento contaPagamento, @AuthenticationPrincipal Principal principal) throws URISyntaxException {
         log.debug("REST request to save ContaPagamento : {}", contaPagamento);
         if (contaPagamento.getId() != null) {
             throw new BadRequestAlertException("A new contaPagamento cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        contaPagamento.setUsuario(principal.getName());
         ContaPagamento result = contaPagamentoRepository.save(contaPagamento);
         return ResponseEntity.created(new URI("/api/conta-pagamentos/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
