@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alexandrofs.gfp.domain.ContaPagamento;
 import com.alexandrofs.gfp.repository.ContaPagamentoRepository;
+import com.alexandrofs.gfp.security.SecurityUtils;
 import com.alexandrofs.gfp.web.rest.errors.BadRequestAlertException;
 import com.alexandrofs.gfp.web.rest.util.HeaderUtil;
 
@@ -52,12 +53,12 @@ public class ContaPagamentoResource {
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PostMapping("/conta-pagamentos")
-    public ResponseEntity<ContaPagamento> createContaPagamento(@Valid @RequestBody ContaPagamento contaPagamento, @AuthenticationPrincipal Principal principal) throws URISyntaxException {
+    public ResponseEntity<ContaPagamento> createContaPagamento(@Valid @RequestBody ContaPagamento contaPagamento) throws URISyntaxException {
         log.debug("REST request to save ContaPagamento : {}", contaPagamento);
         if (contaPagamento.getId() != null) {
             throw new BadRequestAlertException("A new contaPagamento cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        contaPagamento.setUsuario(principal.getName());
+        contaPagamento.setUsuario(SecurityUtils.getCurrentUserLoginWithException());
         ContaPagamento result = contaPagamentoRepository.save(contaPagamento);
         return ResponseEntity.created(new URI("/api/conta-pagamentos/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
