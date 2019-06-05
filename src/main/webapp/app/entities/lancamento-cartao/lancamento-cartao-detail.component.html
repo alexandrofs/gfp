@@ -7,11 +7,11 @@
             <dl class="row-md jh-entity-details">
                 <dt><span jhiTranslate="gfpApp.lancamentoCartao.dataCompra">Data Compra</span></dt>
                 <dd>
-                    <span>{{lancamentoCartao.dataCompra}}</span>
+                    <span>{{lancamentoCartao.dataCompra | date:'dd/MM/yyyy'}}</span>
                 </dd>
                 <dt><span jhiTranslate="gfpApp.lancamentoCartao.mesFatura">Mes Fatura</span></dt>
                 <dd>
-                    <span>{{lancamentoCartao.mesFatura}}</span>
+                    <span>{{lancamentoCartao.mesFatura | date:'MM/yyyy'}}</span>
                 </dd>
                 <dt><span jhiTranslate="gfpApp.lancamentoCartao.descricao">Descricao</span></dt>
                 <dd>
@@ -19,11 +19,7 @@
                 </dd>
                 <dt><span jhiTranslate="gfpApp.lancamentoCartao.valor">Valor</span></dt>
                 <dd>
-                    <span>{{lancamentoCartao.valor}}</span>
-                </dd>
-                <dt><span jhiTranslate="gfpApp.lancamentoCartao.usuario">Usuario</span></dt>
-                <dd>
-                    <span>{{lancamentoCartao.usuario}}</span>
+                    <span>{{lancamentoCartao.valor | number:'1.2-2'}}</span>
                 </dd>
                 <dt><span jhiTranslate="gfpApp.lancamentoCartao.contaPagamento">Conta Pagamento</span></dt>
                 <dd>

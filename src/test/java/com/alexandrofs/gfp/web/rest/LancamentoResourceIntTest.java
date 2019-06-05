@@ -19,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -124,6 +125,7 @@ public class LancamentoResourceIntTest {
         lancamento = createEntity(em);
     }
 
+    @WithMockUser(DEFAULT_USUARIO)
     @Test
     @Transactional
     public void createLancamento() throws Exception {
@@ -206,24 +208,6 @@ public class LancamentoResourceIntTest {
         int databaseSizeBeforeTest = lancamentoRepository.findAll().size();
         // set the field null
         lancamento.setValor(null);
-
-        // Create the Lancamento, which fails.
-
-        restLancamentoMockMvc.perform(post("/api/lancamentos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(lancamento)))
-            .andExpect(status().isBadRequest());
-
-        List<Lancamento> lancamentoList = lancamentoRepository.findAll();
-        assertThat(lancamentoList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void checkUsuarioIsRequired() throws Exception {
-        int databaseSizeBeforeTest = lancamentoRepository.findAll().size();
-        // set the field null
-        lancamento.setUsuario(null);
 
         // Create the Lancamento, which fails.
 

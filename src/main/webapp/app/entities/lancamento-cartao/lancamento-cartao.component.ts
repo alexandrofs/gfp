@@ -1,11 +1,12 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
 
 import { ILancamentoCartao } from 'app/shared/model/lancamento-cartao.model';
+import { IContaPagamento } from 'app/shared/model/conta-pagamento.model';
 import { AccountService } from 'app/core';
 
 import { ITEMS_PER_PAGE } from 'app/shared';
@@ -16,44 +17,42 @@ import { LancamentoCartaoService } from './lancamento-cartao.service';
     templateUrl: './lancamento-cartao.component.html'
 })
 export class LancamentoCartaoComponent implements OnInit, OnDestroy {
-    currentAccount: any;
+    contaPagamento: IContaPagamento;
     lancamentoCartaos: ILancamentoCartao[];
-    error: any;
-    success: any;
+    currentAccount: any;
     eventSubscriber: Subscription;
-    routeData: any;
+    itemsPerPage: number;
     links: any;
-    totalItems: any;
-    itemsPerPage: any;
     page: any;
     predicate: any;
-    previousPage: any;
     reverse: any;
+    totalItems: number;
 
     constructor(
         protected lancamentoCartaoService: LancamentoCartaoService,
-        protected parseLinks: JhiParseLinks,
         protected jhiAlertService: JhiAlertService,
+        protected eventManager: JhiEventManager,
+        protected parseLinks: JhiParseLinks,
         protected accountService: AccountService,
-        protected activatedRoute: ActivatedRoute,
-        protected router: Router,
-        protected eventManager: JhiEventManager
+        protected activatedRoute: ActivatedRoute
     ) {
+        this.lancamentoCartaos = [];
         this.itemsPerPage = ITEMS_PER_PAGE;
-        this.routeData = this.activatedRoute.data.subscribe(data => {
-            this.page = data.pagingParams.page;
-            this.previousPage = data.pagingParams.page;
-            this.reverse = data.pagingParams.ascending;
-            this.predicate = data.pagingParams.predicate;
-        });
+        this.page = 0;
+        this.links = {
+            last: 0
+        };
+        this.predicate = 'id';
+        this.reverse = true;
     }
 
     loadAll() {
         this.lancamentoCartaoService
             .query({
-                page: this.page - 1,
+                page: this.page,
                 size: this.itemsPerPage,
-                sort: this.sort()
+                sort: this.sort(),
+                'contaPagamentoId.equals': this.contaPagamento.id
             })
             .subscribe(
                 (res: HttpResponse<ILancamentoCartao[]>) => this.paginateLancamentoCartaos(res.body, res.headers),
@@ -61,37 +60,21 @@ export class LancamentoCartaoComponent implements OnInit, OnDestroy {
             );
     }
 
-    loadPage(page: number) {
-        if (page !== this.previousPage) {
-            this.previousPage = page;
-            this.transition();
-        }
-    }
-
-    transition() {
-        this.router.navigate(['/lancamento-cartao'], {
-            queryParams: {
-                page: this.page,
-                size: this.itemsPerPage,
-                sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
-            }
-        });
+    reset() {
+        this.page = 0;
+        this.lancamentoCartaos = [];
         this.loadAll();
     }
 
-    clear() {
-        this.page = 0;
-        this.router.navigate([
-            '/lancamento-cartao',
-            {
-                page: this.page,
-                sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
-            }
-        ]);
+    loadPage(page) {
+        this.page = page;
         this.loadAll();
     }
 
     ngOnInit() {
+        this.activatedRoute.data.subscribe(({ contaPagamento }) => {
+            this.contaPagamento = contaPagamento;
+        });
         this.loadAll();
         this.accountService.identity().then(account => {
             this.currentAccount = account;
@@ -108,7 +91,7 @@ export class LancamentoCartaoComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInLancamentoCartaos() {
-        this.eventSubscriber = this.eventManager.subscribe('lancamentoCartaoListModification', response => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('lancamentoCartaoListModification', response => this.reset());
     }
 
     sort() {
@@ -122,10 +105,16 @@ export class LancamentoCartaoComponent implements OnInit, OnDestroy {
     protected paginateLancamentoCartaos(data: ILancamentoCartao[], headers: HttpHeaders) {
         this.links = this.parseLinks.parse(headers.get('link'));
         this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
-        this.lancamentoCartaos = data;
+        for (let i = 0; i < data.length; i++) {
+            this.lancamentoCartaos.push(data[i]);
+        }
     }
 
     protected onError(errorMessage: string) {
         this.jhiAlertService.error(errorMessage, null, null);
+    }
+
+    previousState() {
+        window.history.back();
     }
 }

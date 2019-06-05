@@ -59,6 +59,14 @@ import { RouterModule } from '@angular/router';
             {
                 path: 'lancamento-cartao',
                 loadChildren: './lancamento-cartao/lancamento-cartao.module#GfpLancamentoCartaoModule'
+            },
+            {
+                path: 'lancamento-cartao',
+                loadChildren: './lancamento-cartao/lancamento-cartao.module#GfpLancamentoCartaoModule'
+            },
+            {
+                path: 'lancamento',
+                loadChildren: './lancamento/lancamento.module#GfpLancamentoModule'
             }
             /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
         ])

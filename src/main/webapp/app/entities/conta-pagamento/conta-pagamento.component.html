@@ -17,7 +17,6 @@
             <th><span jhiTranslate="global.field.id">ID</span></th>
             <th><span jhiTranslate="gfpApp.contaPagamento.nome">Nome</span></th>
             <th><span jhiTranslate="gfpApp.contaPagamento.tipoConta">Tipo Conta</span></th>
-            <th><span jhiTranslate="gfpApp.contaPagamento.usuario">Usuario</span></th>
             <th></th>
             </tr>
             </thead>
@@ -26,7 +25,6 @@
                 <td><a [routerLink]="['/conta-pagamento', contaPagamento.id, 'view' ]">{{contaPagamento.id}}</a></td>
                 <td>{{contaPagamento.nome}}</td>
                 <td jhiTranslate="{{'gfpApp.TipoConta.' + contaPagamento.tipoConta}}">{{contaPagamento.tipoConta}}</td>
-                <td>{{contaPagamento.usuario}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"

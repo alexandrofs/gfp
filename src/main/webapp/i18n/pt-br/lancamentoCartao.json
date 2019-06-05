@@ -2,22 +2,22 @@
     "gfpApp": {
         "lancamentoCartao": {
             "home": {
-                "title": "Lancamento Cartaos",
-                "createLabel": "Criar novo Lancamento Cartao",
-                "createOrEditLabel": "Criar ou editar Lancamento Cartao"
+                "title": "Lançamentos Cartão",
+                "createLabel": "Criar novo Lançamento",
+                "createOrEditLabel": "Criar ou editar Lançamento"
             },
-            "created": "Um novo Lancamento Cartao foi criado com o identificador {{ param }}",
-            "updated": "Um Lancamento Cartao foi atualizado com o identificador {{ param }}",
-            "deleted": "Um Lancamento Cartao foi deletado com o identificador {{ param }}",
+            "created": "Um novo Lançamento foi criado com o identificador {{ param }}",
+            "updated": "Um Lançamento foi atualizado com o identificador {{ param }}",
+            "deleted": "Um Lançamento foi deletado com o identificador {{ param }}",
             "delete": {
-                "question": "Tem certeza de que deseja excluir Lancamento Cartao {{ id }}?"
+                "question": "Tem certeza de que deseja excluir Lançamento {{ id }}?"
             },
             "detail": {
-                "title": "Lancamento Cartao"
+                "title": "Lançamento"
             },
             "dataCompra": "Data Compra",
-            "mesFatura": "Mes Fatura",
-            "descricao": "Descricao",
+            "mesFatura": "Mês Fatura",
+            "descricao": "Descriçao",
             "valor": "Valor",
             "usuario": "Usuario",
             "contaPagamento": "Conta Pagamento"

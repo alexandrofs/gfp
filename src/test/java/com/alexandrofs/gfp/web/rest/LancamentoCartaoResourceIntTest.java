@@ -19,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -128,6 +129,7 @@ public class LancamentoCartaoResourceIntTest {
         lancamentoCartao = createEntity(em);
     }
 
+    @WithMockUser(DEFAULT_USUARIO)
     @Test
     @Transactional
     public void createLancamentoCartao() throws Exception {
@@ -229,24 +231,6 @@ public class LancamentoCartaoResourceIntTest {
         int databaseSizeBeforeTest = lancamentoCartaoRepository.findAll().size();
         // set the field null
         lancamentoCartao.setValor(null);
-
-        // Create the LancamentoCartao, which fails.
-
-        restLancamentoCartaoMockMvc.perform(post("/api/lancamento-cartaos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(lancamentoCartao)))
-            .andExpect(status().isBadRequest());
-
-        List<LancamentoCartao> lancamentoCartaoList = lancamentoCartaoRepository.findAll();
-        assertThat(lancamentoCartaoList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void checkUsuarioIsRequired() throws Exception {
-        int databaseSizeBeforeTest = lancamentoCartaoRepository.findAll().size();
-        // set the field null
-        lancamentoCartao.setUsuario(null);
 
         // Create the LancamentoCartao, which fails.
 

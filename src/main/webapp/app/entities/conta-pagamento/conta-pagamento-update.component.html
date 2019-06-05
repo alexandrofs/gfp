@@ -37,7 +37,7 @@
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="gfpApp.contaPagamento.usuario" for="field_usuario">Usuario</label>
                     <input type="text" class="form-control" name="usuario" id="field_usuario"
-                        [(ngModel)]="contaPagamento.usuario" required/>
+                        [(ngModel)]="contaPagamento.usuario"/>
                     <div [hidden]="!(editForm.controls.usuario?.dirty && editForm.controls.usuario?.invalid)">
                         <small class="form-text text-danger"
                         [hidden]="!editForm.controls.usuario?.errors?.required" jhiTranslate="entity.validation.required">

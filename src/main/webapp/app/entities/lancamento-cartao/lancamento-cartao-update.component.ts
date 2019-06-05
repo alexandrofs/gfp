@@ -31,8 +31,11 @@ export class LancamentoCartaoUpdateComponent implements OnInit {
 
     ngOnInit() {
         this.isSaving = false;
-        this.activatedRoute.data.subscribe(({ lancamentoCartao }) => {
+        this.activatedRoute.data.subscribe(({ lancamentoCartao, contaPagamento }) => {
             this.lancamentoCartao = lancamentoCartao;
+            this.lancamentoCartao.contaPagamento = this.lancamentoCartao.contaPagamento
+                ? this.lancamentoCartao.contaPagamento
+                : contaPagamento;
         });
         this.contaPagamentoService
             .query()

@@ -1,10 +1,19 @@
 package com.alexandrofs.gfp.web.rest;
 
-import com.alexandrofs.gfp.GfpApp;
+import static com.alexandrofs.gfp.web.rest.TestUtil.createFormattingConversionService;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.alexandrofs.gfp.domain.ContaPagamento;
-import com.alexandrofs.gfp.repository.ContaPagamentoRepository;
-import com.alexandrofs.gfp.web.rest.errors.ExceptionTranslator;
+import java.util.List;
+
+import javax.persistence.EntityManager;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -15,23 +24,18 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.Validator;
 
-import javax.persistence.EntityManager;
-import java.util.List;
-
-
-import static com.alexandrofs.gfp.web.rest.TestUtil.createFormattingConversionService;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
+import com.alexandrofs.gfp.GfpApp;
+import com.alexandrofs.gfp.domain.ContaPagamento;
 import com.alexandrofs.gfp.domain.enumeration.TipoConta;
+import com.alexandrofs.gfp.repository.ContaPagamentoRepository;
+import com.alexandrofs.gfp.web.rest.errors.ExceptionTranslator;
 /**
  * Test class for the ContaPagamentoResource REST controller.
  *
@@ -103,6 +107,7 @@ public class ContaPagamentoResourceIntTest {
         contaPagamento = createEntity(em);
     }
 
+    @WithMockUser(DEFAULT_USUARIO)
     @Test
     @Transactional
     public void createContaPagamento() throws Exception {
@@ -166,24 +171,6 @@ public class ContaPagamentoResourceIntTest {
         int databaseSizeBeforeTest = contaPagamentoRepository.findAll().size();
         // set the field null
         contaPagamento.setTipoConta(null);
-
-        // Create the ContaPagamento, which fails.
-
-        restContaPagamentoMockMvc.perform(post("/api/conta-pagamentos")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(contaPagamento)))
-            .andExpect(status().isBadRequest());
-
-        List<ContaPagamento> contaPagamentoList = contaPagamentoRepository.findAll();
-        assertThat(contaPagamentoList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void checkUsuarioIsRequired() throws Exception {
-        int databaseSizeBeforeTest = contaPagamentoRepository.findAll().size();
-        // set the field null
-        contaPagamento.setUsuario(null);
 
         // Create the ContaPagamento, which fails.
 

@@ -1,10 +1,16 @@
 <div>
     <h2 id="page-heading">
-        <span jhiTranslate="gfpApp.lancamento.home.title">Lancamentos</span>
-        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-lancamento" [routerLink]="['/lancamento/new']">
+        <span jhiTranslate="gfpApp.lancamento.home.title">Lancamentos</span> - {{contaPagamento.nome}}
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-lancamento" [routerLink]="['/lancamento', contaPagamento?.id, 'new' ]">
             <fa-icon [icon]="'plus'"></fa-icon>
             <span  jhiTranslate="gfpApp.lancamento.home.createLabel">
             Create new Lancamento
+            </span>
+        </button>
+        <button id="jh-return" class="btn btn-primary float-right" [routerLink]="['/conta-pagamento', contaPagamento?.id, 'view' ]">
+            <fa-icon [icon]="'arrow-left'"></fa-icon>
+            <span  jhiTranslate="entity.action.back">
+            Back
             </span>
         </button>
     </h2>
@@ -13,28 +19,20 @@
     <div class="table-responsive" *ngIf="lancamentos">
         <table class="table table-striped">
             <thead>
-            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="reset.bind(this)">
             <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="data"><span jhiTranslate="gfpApp.lancamento.data">Data</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="descricao"><span jhiTranslate="gfpApp.lancamento.descricao">Descricao</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="valor"><span jhiTranslate="gfpApp.lancamento.valor">Valor</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="usuario"><span jhiTranslate="gfpApp.lancamento.usuario">Usuario</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="contaPagamento.nome"><span jhiTranslate="gfpApp.lancamento.contaPagamento">Conta Pagamento</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="valor" class="text-right"><span jhiTranslate="gfpApp.lancamento.valor">Valor</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
-            <tbody>
+            <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
             <tr *ngFor="let lancamento of lancamentos ;trackBy: trackId">
                 <td><a [routerLink]="['/lancamento', lancamento.id, 'view' ]">{{lancamento.id}}</a></td>
-                <td>{{lancamento.data | date:'mediumDate'}}</td>
+                <td>{{lancamento.data | date:'dd/MM/yyyy'}}</td>
                 <td>{{lancamento.descricao}}</td>
-                <td>{{lancamento.valor}}</td>
-                <td>{{lancamento.usuario}}</td>
-                <td>
-                    <div *ngIf="lancamento.contaPagamento">
-                        <a [routerLink]="['../conta-pagamento', lancamento.contaPagamento?.id, 'view' ]" >{{lancamento.contaPagamento?.nome}}</a>
-                    </div>
-                </td>
+                <td class="text-right">{{lancamento.valor | number:'1.2-2'}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"
@@ -62,14 +60,5 @@
             </tr>
             </tbody>
         </table>
-    </div>
-    <!-- Pager is not implemented yet, so this is normal pagination instead -->
-    <div *ngIf="lancamentos && lancamentos.length">
-        <div class="row justify-content-center">
-            <jhi-item-count [page]="page" [total]="totalItems" [itemsPerPage]="itemsPerPage"></jhi-item-count>
-        </div>
-        <div class="row justify-content-center">
-            <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
-        </div>
     </div>
 </div>

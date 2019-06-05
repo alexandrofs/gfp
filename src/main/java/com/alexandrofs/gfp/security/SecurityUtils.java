@@ -1,10 +1,12 @@
 package com.alexandrofs.gfp.security;
 
+import java.util.Optional;
+
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Optional;
+import com.alexandrofs.gfp.web.rest.errors.BadRequestAlertException;
 
 /**
  * Utility class for Spring Security.
@@ -31,6 +33,16 @@ public final class SecurityUtils {
                 }
                 return null;
             });
+    }
+    
+    /**
+     * Get the login of the current user with exception if does not exists.
+     *
+     * @return the login of the current user
+     */
+    public static String getCurrentUserLoginWithException() {
+    	
+        return getCurrentUserLogin().orElseThrow(()->new BadRequestAlertException("Não existe usuário logado", null, null));
     }
 
     /**

@@ -30,8 +30,9 @@ export class LancamentoUpdateComponent implements OnInit {
 
     ngOnInit() {
         this.isSaving = false;
-        this.activatedRoute.data.subscribe(({ lancamento }) => {
+        this.activatedRoute.data.subscribe(({ lancamento, contaPagamento }) => {
             this.lancamento = lancamento;
+            this.lancamento.contaPagamento = this.lancamento.contaPagamento ? this.lancamento.contaPagamento : contaPagamento;
         });
         this.contaPagamentoService
             .query()
