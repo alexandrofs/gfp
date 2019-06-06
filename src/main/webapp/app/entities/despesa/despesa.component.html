@@ -13,26 +13,28 @@
     <div class="table-responsive" *ngIf="despesas">
         <table class="table table-striped">
             <thead>
-            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="reset.bind(this)">
             <th jhiSortBy="id"><span jhiTranslate="global.field.id">ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="dataDespesa"><span jhiTranslate="gfpApp.despesa.dataDespesa">Data Despesa</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="mesReferencia"><span jhiTranslate="gfpApp.despesa.mesReferencia">Mes Referencia</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="descricao"><span jhiTranslate="gfpApp.despesa.descricao">Descricao</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="valor"><span jhiTranslate="gfpApp.despesa.valor">Valor</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="usuario"><span jhiTranslate="gfpApp.despesa.usuario">Usuario</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="parcela" class="text-right"><span jhiTranslate="gfpApp.despesa.parcela">Parcela</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="quantidadeParcelas" class="text-right"><span jhiTranslate="gfpApp.despesa.quantidadeParcelas">Quantidade Parcelas</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="valor" class="text-right"><span jhiTranslate="gfpApp.despesa.valor">Valor</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="contaPagamento.nome"><span jhiTranslate="gfpApp.despesa.contaPagamento">Conta Pagamento</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="categoriaDespesa.nome"><span jhiTranslate="gfpApp.despesa.categoriaDespesa">Categoria Despesa</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th></th>
             </tr>
             </thead>
-            <tbody>
+            <tbody infinite-scroll (scrolled)="loadPage(page + 1)" [infiniteScrollDisabled]="page >= links['last']" [infiniteScrollDistance]="0">
             <tr *ngFor="let despesa of despesas ;trackBy: trackId">
                 <td><a [routerLink]="['/despesa', despesa.id, 'view' ]">{{despesa.id}}</a></td>
-                <td>{{despesa.dataDespesa | date:'mediumDate'}}</td>
-                <td>{{despesa.mesReferencia | date:'mediumDate'}}</td>
+                <td>{{despesa.dataDespesa | date:'dd/MM/yyyy'}}</td>
+                <td>{{despesa.mesReferencia | date:'MM/yyyy'}}</td>
                 <td>{{despesa.descricao}}</td>
-                <td>{{despesa.valor}}</td>
-                <td>{{despesa.usuario}}</td>
+                <td class="text-right">{{despesa.parcela}}</td>
+                <td class="text-right">{{despesa.quantidadeParcelas}}</td>
+                <td class="text-right">{{despesa.valor | number:'1.2-2'}}</td>
                 <td>
                     <div *ngIf="despesa.contaPagamento">
                         <a [routerLink]="['../conta-pagamento', despesa.contaPagamento?.id, 'view' ]" >{{despesa.contaPagamento?.nome}}</a>
@@ -70,14 +72,5 @@
             </tr>
             </tbody>
         </table>
-    </div>
-    <!-- Pager is not implemented yet, so this is normal pagination instead -->
-    <div *ngIf="despesas && despesas.length">
-        <div class="row justify-content-center">
-            <jhi-item-count [page]="page" [total]="totalItems" [itemsPerPage]="itemsPerPage"></jhi-item-count>
-        </div>
-        <div class="row justify-content-center">
-            <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
-        </div>
     </div>
 </div>

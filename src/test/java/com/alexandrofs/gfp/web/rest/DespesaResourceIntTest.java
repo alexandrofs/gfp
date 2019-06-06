@@ -20,6 +20,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -56,6 +57,12 @@ public class DespesaResourceIntTest {
 
     private static final String DEFAULT_DESCRICAO = "AAAAAAAAAA";
     private static final String UPDATED_DESCRICAO = "BBBBBBBBBB";
+
+    private static final Integer DEFAULT_PARCELA = 1;
+    private static final Integer UPDATED_PARCELA = 2;
+
+    private static final Integer DEFAULT_QUANTIDADE_PARCELAS = 1;
+    private static final Integer UPDATED_QUANTIDADE_PARCELAS = 2;
 
     private static final BigDecimal DEFAULT_VALOR = new BigDecimal(1);
     private static final BigDecimal UPDATED_VALOR = new BigDecimal(2);
@@ -114,6 +121,8 @@ public class DespesaResourceIntTest {
             .dataDespesa(DEFAULT_DATA_DESPESA)
             .mesReferencia(DEFAULT_MES_REFERENCIA)
             .descricao(DEFAULT_DESCRICAO)
+            .parcela(DEFAULT_PARCELA)
+            .quantidadeParcelas(DEFAULT_QUANTIDADE_PARCELAS)
             .valor(DEFAULT_VALOR)
             .usuario(DEFAULT_USUARIO);
         // Add required entity
@@ -134,6 +143,7 @@ public class DespesaResourceIntTest {
         despesa = createEntity(em);
     }
 
+    @WithMockUser(DEFAULT_USUARIO)
     @Test
     @Transactional
     public void createDespesa() throws Exception {
@@ -152,6 +162,8 @@ public class DespesaResourceIntTest {
         assertThat(testDespesa.getDataDespesa()).isEqualTo(DEFAULT_DATA_DESPESA);
         assertThat(testDespesa.getMesReferencia()).isEqualTo(DEFAULT_MES_REFERENCIA);
         assertThat(testDespesa.getDescricao()).isEqualTo(DEFAULT_DESCRICAO);
+        assertThat(testDespesa.getParcela()).isEqualTo(DEFAULT_PARCELA);
+        assertThat(testDespesa.getQuantidadeParcelas()).isEqualTo(DEFAULT_QUANTIDADE_PARCELAS);
         assertThat(testDespesa.getValor()).isEqualTo(DEFAULT_VALOR);
         assertThat(testDespesa.getUsuario()).isEqualTo(DEFAULT_USUARIO);
     }
@@ -249,24 +261,6 @@ public class DespesaResourceIntTest {
 
     @Test
     @Transactional
-    public void checkUsuarioIsRequired() throws Exception {
-        int databaseSizeBeforeTest = despesaRepository.findAll().size();
-        // set the field null
-        despesa.setUsuario(null);
-
-        // Create the Despesa, which fails.
-
-        restDespesaMockMvc.perform(post("/api/despesas")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(despesa)))
-            .andExpect(status().isBadRequest());
-
-        List<Despesa> despesaList = despesaRepository.findAll();
-        assertThat(despesaList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void getAllDespesas() throws Exception {
         // Initialize the database
         despesaRepository.saveAndFlush(despesa);
@@ -279,6 +273,8 @@ public class DespesaResourceIntTest {
             .andExpect(jsonPath("$.[*].dataDespesa").value(hasItem(DEFAULT_DATA_DESPESA.toString())))
             .andExpect(jsonPath("$.[*].mesReferencia").value(hasItem(DEFAULT_MES_REFERENCIA.toString())))
             .andExpect(jsonPath("$.[*].descricao").value(hasItem(DEFAULT_DESCRICAO.toString())))
+            .andExpect(jsonPath("$.[*].parcela").value(hasItem(DEFAULT_PARCELA)))
+            .andExpect(jsonPath("$.[*].quantidadeParcelas").value(hasItem(DEFAULT_QUANTIDADE_PARCELAS)))
             .andExpect(jsonPath("$.[*].valor").value(hasItem(DEFAULT_VALOR.intValue())))
             .andExpect(jsonPath("$.[*].usuario").value(hasItem(DEFAULT_USUARIO.toString())));
     }
@@ -297,6 +293,8 @@ public class DespesaResourceIntTest {
             .andExpect(jsonPath("$.dataDespesa").value(DEFAULT_DATA_DESPESA.toString()))
             .andExpect(jsonPath("$.mesReferencia").value(DEFAULT_MES_REFERENCIA.toString()))
             .andExpect(jsonPath("$.descricao").value(DEFAULT_DESCRICAO.toString()))
+            .andExpect(jsonPath("$.parcela").value(DEFAULT_PARCELA))
+            .andExpect(jsonPath("$.quantidadeParcelas").value(DEFAULT_QUANTIDADE_PARCELAS))
             .andExpect(jsonPath("$.valor").value(DEFAULT_VALOR.intValue()))
             .andExpect(jsonPath("$.usuario").value(DEFAULT_USUARIO.toString()));
     }
@@ -474,6 +472,138 @@ public class DespesaResourceIntTest {
 
     @Test
     @Transactional
+    public void getAllDespesasByParcelaIsEqualToSomething() throws Exception {
+        // Initialize the database
+        despesaRepository.saveAndFlush(despesa);
+
+        // Get all the despesaList where parcela equals to DEFAULT_PARCELA
+        defaultDespesaShouldBeFound("parcela.equals=" + DEFAULT_PARCELA);
+
+        // Get all the despesaList where parcela equals to UPDATED_PARCELA
+        defaultDespesaShouldNotBeFound("parcela.equals=" + UPDATED_PARCELA);
+    }
+
+    @Test
+    @Transactional
+    public void getAllDespesasByParcelaIsInShouldWork() throws Exception {
+        // Initialize the database
+        despesaRepository.saveAndFlush(despesa);
+
+        // Get all the despesaList where parcela in DEFAULT_PARCELA or UPDATED_PARCELA
+        defaultDespesaShouldBeFound("parcela.in=" + DEFAULT_PARCELA + "," + UPDATED_PARCELA);
+
+        // Get all the despesaList where parcela equals to UPDATED_PARCELA
+        defaultDespesaShouldNotBeFound("parcela.in=" + UPDATED_PARCELA);
+    }
+
+    @Test
+    @Transactional
+    public void getAllDespesasByParcelaIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        despesaRepository.saveAndFlush(despesa);
+
+        // Get all the despesaList where parcela is not null
+        defaultDespesaShouldBeFound("parcela.specified=true");
+
+        // Get all the despesaList where parcela is null
+        defaultDespesaShouldNotBeFound("parcela.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllDespesasByParcelaIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        despesaRepository.saveAndFlush(despesa);
+
+        // Get all the despesaList where parcela greater than or equals to DEFAULT_PARCELA
+        defaultDespesaShouldBeFound("parcela.greaterOrEqualThan=" + DEFAULT_PARCELA);
+
+        // Get all the despesaList where parcela greater than or equals to UPDATED_PARCELA
+        defaultDespesaShouldNotBeFound("parcela.greaterOrEqualThan=" + UPDATED_PARCELA);
+    }
+
+    @Test
+    @Transactional
+    public void getAllDespesasByParcelaIsLessThanSomething() throws Exception {
+        // Initialize the database
+        despesaRepository.saveAndFlush(despesa);
+
+        // Get all the despesaList where parcela less than or equals to DEFAULT_PARCELA
+        defaultDespesaShouldNotBeFound("parcela.lessThan=" + DEFAULT_PARCELA);
+
+        // Get all the despesaList where parcela less than or equals to UPDATED_PARCELA
+        defaultDespesaShouldBeFound("parcela.lessThan=" + UPDATED_PARCELA);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllDespesasByQuantidadeParcelasIsEqualToSomething() throws Exception {
+        // Initialize the database
+        despesaRepository.saveAndFlush(despesa);
+
+        // Get all the despesaList where quantidadeParcelas equals to DEFAULT_QUANTIDADE_PARCELAS
+        defaultDespesaShouldBeFound("quantidadeParcelas.equals=" + DEFAULT_QUANTIDADE_PARCELAS);
+
+        // Get all the despesaList where quantidadeParcelas equals to UPDATED_QUANTIDADE_PARCELAS
+        defaultDespesaShouldNotBeFound("quantidadeParcelas.equals=" + UPDATED_QUANTIDADE_PARCELAS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllDespesasByQuantidadeParcelasIsInShouldWork() throws Exception {
+        // Initialize the database
+        despesaRepository.saveAndFlush(despesa);
+
+        // Get all the despesaList where quantidadeParcelas in DEFAULT_QUANTIDADE_PARCELAS or UPDATED_QUANTIDADE_PARCELAS
+        defaultDespesaShouldBeFound("quantidadeParcelas.in=" + DEFAULT_QUANTIDADE_PARCELAS + "," + UPDATED_QUANTIDADE_PARCELAS);
+
+        // Get all the despesaList where quantidadeParcelas equals to UPDATED_QUANTIDADE_PARCELAS
+        defaultDespesaShouldNotBeFound("quantidadeParcelas.in=" + UPDATED_QUANTIDADE_PARCELAS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllDespesasByQuantidadeParcelasIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        despesaRepository.saveAndFlush(despesa);
+
+        // Get all the despesaList where quantidadeParcelas is not null
+        defaultDespesaShouldBeFound("quantidadeParcelas.specified=true");
+
+        // Get all the despesaList where quantidadeParcelas is null
+        defaultDespesaShouldNotBeFound("quantidadeParcelas.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllDespesasByQuantidadeParcelasIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        despesaRepository.saveAndFlush(despesa);
+
+        // Get all the despesaList where quantidadeParcelas greater than or equals to DEFAULT_QUANTIDADE_PARCELAS
+        defaultDespesaShouldBeFound("quantidadeParcelas.greaterOrEqualThan=" + DEFAULT_QUANTIDADE_PARCELAS);
+
+        // Get all the despesaList where quantidadeParcelas greater than or equals to UPDATED_QUANTIDADE_PARCELAS
+        defaultDespesaShouldNotBeFound("quantidadeParcelas.greaterOrEqualThan=" + UPDATED_QUANTIDADE_PARCELAS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllDespesasByQuantidadeParcelasIsLessThanSomething() throws Exception {
+        // Initialize the database
+        despesaRepository.saveAndFlush(despesa);
+
+        // Get all the despesaList where quantidadeParcelas less than or equals to DEFAULT_QUANTIDADE_PARCELAS
+        defaultDespesaShouldNotBeFound("quantidadeParcelas.lessThan=" + DEFAULT_QUANTIDADE_PARCELAS);
+
+        // Get all the despesaList where quantidadeParcelas less than or equals to UPDATED_QUANTIDADE_PARCELAS
+        defaultDespesaShouldBeFound("quantidadeParcelas.lessThan=" + UPDATED_QUANTIDADE_PARCELAS);
+    }
+
+
+    @Test
+    @Transactional
     public void getAllDespesasByValorIsEqualToSomething() throws Exception {
         // Initialize the database
         despesaRepository.saveAndFlush(despesa);
@@ -598,6 +728,8 @@ public class DespesaResourceIntTest {
             .andExpect(jsonPath("$.[*].dataDespesa").value(hasItem(DEFAULT_DATA_DESPESA.toString())))
             .andExpect(jsonPath("$.[*].mesReferencia").value(hasItem(DEFAULT_MES_REFERENCIA.toString())))
             .andExpect(jsonPath("$.[*].descricao").value(hasItem(DEFAULT_DESCRICAO.toString())))
+            .andExpect(jsonPath("$.[*].parcela").value(hasItem(DEFAULT_PARCELA)))
+            .andExpect(jsonPath("$.[*].quantidadeParcelas").value(hasItem(DEFAULT_QUANTIDADE_PARCELAS)))
             .andExpect(jsonPath("$.[*].valor").value(hasItem(DEFAULT_VALOR.intValue())))
             .andExpect(jsonPath("$.[*].usuario").value(hasItem(DEFAULT_USUARIO.toString())));
 
@@ -650,6 +782,8 @@ public class DespesaResourceIntTest {
             .dataDespesa(UPDATED_DATA_DESPESA)
             .mesReferencia(UPDATED_MES_REFERENCIA)
             .descricao(UPDATED_DESCRICAO)
+            .parcela(UPDATED_PARCELA)
+            .quantidadeParcelas(UPDATED_QUANTIDADE_PARCELAS)
             .valor(UPDATED_VALOR)
             .usuario(UPDATED_USUARIO);
 
@@ -665,6 +799,8 @@ public class DespesaResourceIntTest {
         assertThat(testDespesa.getDataDespesa()).isEqualTo(UPDATED_DATA_DESPESA);
         assertThat(testDespesa.getMesReferencia()).isEqualTo(UPDATED_MES_REFERENCIA);
         assertThat(testDespesa.getDescricao()).isEqualTo(UPDATED_DESCRICAO);
+        assertThat(testDespesa.getParcela()).isEqualTo(UPDATED_PARCELA);
+        assertThat(testDespesa.getQuantidadeParcelas()).isEqualTo(UPDATED_QUANTIDADE_PARCELAS);
         assertThat(testDespesa.getValor()).isEqualTo(UPDATED_VALOR);
         assertThat(testDespesa.getUsuario()).isEqualTo(UPDATED_USUARIO);
     }

@@ -92,6 +92,12 @@ public class DespesaQueryService extends QueryService<Despesa> {
             if (criteria.getDescricao() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getDescricao(), Despesa_.descricao));
             }
+            if (criteria.getParcela() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getParcela(), Despesa_.parcela));
+            }
+            if (criteria.getQuantidadeParcelas() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getQuantidadeParcelas(), Despesa_.quantidadeParcelas));
+            }
             if (criteria.getValor() != null) {
                 specification = specification.and(buildRangeSpecification(criteria.getValor(), Despesa_.valor));
             }

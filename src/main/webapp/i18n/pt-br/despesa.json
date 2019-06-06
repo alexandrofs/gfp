@@ -18,6 +18,8 @@
             "dataDespesa": "Data Despesa",
             "mesReferencia": "Mes Referencia",
             "descricao": "Descricao",
+            "parcela": "Parcela",
+            "quantidadeParcelas": "Quantidade Parcelas",
             "valor": "Valor",
             "usuario": "Usuario",
             "contaPagamento": "Conta Pagamento",

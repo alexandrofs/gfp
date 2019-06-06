@@ -53,6 +53,36 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gfpApp.despesa.parcela" for="field_parcela">Parcela</label>
+                    <input type="number" class="form-control" name="parcela" id="field_parcela"
+                        [(ngModel)]="despesa.parcela" min="1" jhiMin="1"/>
+                    <div [hidden]="!(editForm.controls.parcela?.dirty && editForm.controls.parcela?.invalid)">
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.parcela?.errors?.min" jhiTranslate="entity.validation.min" [translateValues]="{ min: 1 }">
+                            This field should be at least 1.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.parcela?.errors?.number" jhiTranslate="entity.validation.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gfpApp.despesa.quantidadeParcelas" for="field_quantidadeParcelas">Quantidade Parcelas</label>
+                    <input type="number" class="form-control" name="quantidadeParcelas" id="field_quantidadeParcelas"
+                        [(ngModel)]="despesa.quantidadeParcelas" min="1" jhiMin="1"/>
+                    <div [hidden]="!(editForm.controls.quantidadeParcelas?.dirty && editForm.controls.quantidadeParcelas?.invalid)">
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.quantidadeParcelas?.errors?.min" jhiTranslate="entity.validation.min" [translateValues]="{ min: 1 }">
+                            This field should be at least 1.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.quantidadeParcelas?.errors?.number" jhiTranslate="entity.validation.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="form-control-label" jhiTranslate="gfpApp.despesa.valor" for="field_valor">Valor</label>
                     <input type="number" class="form-control" name="valor" id="field_valor"
                         [(ngModel)]="despesa.valor" required/>
@@ -67,18 +97,6 @@
                         </small>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="form-control-label" jhiTranslate="gfpApp.despesa.usuario" for="field_usuario">Usuario</label>
-                    <input type="text" class="form-control" name="usuario" id="field_usuario"
-                        [(ngModel)]="despesa.usuario" required/>
-                    <div [hidden]="!(editForm.controls.usuario?.dirty && editForm.controls.usuario?.invalid)">
-                        <small class="form-text text-danger"
-                        [hidden]="!editForm.controls.usuario?.errors?.required" jhiTranslate="entity.validation.required">
-                        This field is required.
-                        </small>
-                    </div>
-                </div>
-
                 <div class="form-group">
                     <label class="form-control-label" jhiTranslate="gfpApp.despesa.contaPagamento" for="field_contaPagamento">Conta Pagamento</label>
                     <select class="form-control" id="field_contaPagamento" name="contaPagamento" [(ngModel)]="despesa.contaPagamento"  required>

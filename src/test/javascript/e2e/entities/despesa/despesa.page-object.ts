@@ -29,6 +29,8 @@ export class DespesaUpdatePage {
     dataDespesaInput = element(by.id('field_dataDespesa'));
     mesReferenciaInput = element(by.id('field_mesReferencia'));
     descricaoInput = element(by.id('field_descricao'));
+    parcelaInput = element(by.id('field_parcela'));
+    quantidadeParcelasInput = element(by.id('field_quantidadeParcelas'));
     valorInput = element(by.id('field_valor'));
     usuarioInput = element(by.id('field_usuario'));
     contaPagamentoSelect = element(by.id('field_contaPagamento'));
@@ -60,6 +62,22 @@ export class DespesaUpdatePage {
 
     async getDescricaoInput() {
         return this.descricaoInput.getAttribute('value');
+    }
+
+    async setParcelaInput(parcela) {
+        await this.parcelaInput.sendKeys(parcela);
+    }
+
+    async getParcelaInput() {
+        return this.parcelaInput.getAttribute('value');
+    }
+
+    async setQuantidadeParcelasInput(quantidadeParcelas) {
+        await this.quantidadeParcelasInput.sendKeys(quantidadeParcelas);
+    }
+
+    async getQuantidadeParcelasInput() {
+        return this.quantidadeParcelasInput.getAttribute('value');
     }
 
     async setValorInput(valor) {

@@ -36,11 +36,18 @@ public class Despesa implements Serializable {
     @Column(name = "descricao", nullable = false)
     private String descricao;
 
+    @Min(value = 1)
+    @Column(name = "parcela")
+    private Integer parcela;
+
+    @Min(value = 1)
+    @Column(name = "quantidade_parcelas")
+    private Integer quantidadeParcelas;
+
     @NotNull
     @Column(name = "valor", precision = 10, scale = 2, nullable = false)
     private BigDecimal valor;
 
-    @NotNull
     @Column(name = "usuario", nullable = false)
     private String usuario;
 
@@ -100,6 +107,32 @@ public class Despesa implements Serializable {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
+    }
+
+    public Integer getParcela() {
+        return parcela;
+    }
+
+    public Despesa parcela(Integer parcela) {
+        this.parcela = parcela;
+        return this;
+    }
+
+    public void setParcela(Integer parcela) {
+        this.parcela = parcela;
+    }
+
+    public Integer getQuantidadeParcelas() {
+        return quantidadeParcelas;
+    }
+
+    public Despesa quantidadeParcelas(Integer quantidadeParcelas) {
+        this.quantidadeParcelas = quantidadeParcelas;
+        return this;
+    }
+
+    public void setQuantidadeParcelas(Integer quantidadeParcelas) {
+        this.quantidadeParcelas = quantidadeParcelas;
     }
 
     public BigDecimal getValor() {
@@ -182,6 +215,8 @@ public class Despesa implements Serializable {
             ", dataDespesa='" + getDataDespesa() + "'" +
             ", mesReferencia='" + getMesReferencia() + "'" +
             ", descricao='" + getDescricao() + "'" +
+            ", parcela=" + getParcela() +
+            ", quantidadeParcelas=" + getQuantidadeParcelas() +
             ", valor=" + getValor() +
             ", usuario='" + getUsuario() + "'" +
             "}";

@@ -1,5 +1,26 @@
 {
-    "name": "Despesa",
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": "required",
+            "relationshipName": "contaPagamento",
+            "otherEntityName": "contaPagamento",
+            "otherEntityField": "nome",
+            "otherEntityRelationshipNameUndefined": true,
+            "otherEntityRelationshipName": "despesa"
+        },
+        {
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": "required",
+            "relationshipName": "categoriaDespesa",
+            "otherEntityName": "categoriaDespesa",
+            "otherEntityField": "nome",
+            "otherEntityRelationshipNameUndefined": true,
+            "otherEntityRelationshipName": "despesa"
+        }
+    ],
     "fields": [
         {
             "fieldName": "dataDespesa",
@@ -23,6 +44,22 @@
             ]
         },
         {
+            "fieldName": "parcela",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "min"
+            ],
+            "fieldValidateRulesMin": "1"
+        },
+        {
+            "fieldName": "quantidadeParcelas",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "min"
+            ],
+            "fieldValidateRulesMin": "1"
+        },
+        {
             "fieldName": "valor",
             "fieldType": "BigDecimal",
             "fieldValidateRules": [
@@ -37,29 +74,12 @@
             ]
         }
     ],
-    "relationships": [
-        {
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": "required",
-            "relationshipName": "contaPagamento",
-            "otherEntityName": "contaPagamento",
-            "otherEntityField": "nome"
-        },
-        {
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": "required",
-            "relationshipName": "categoriaDespesa",
-            "otherEntityName": "categoriaDespesa",
-            "otherEntityField": "nome"
-        }
-    ],
     "changelogDate": "20190601031441",
-    "entityTableName": "tb_despesa",
     "dto": "no",
-    "pagination": "pager",
+    "searchEngine": false,
     "service": "serviceClass",
+    "entityTableName": "tb_despesa",
+    "databaseType": "sql",
     "jpaMetamodelFiltering": true,
-    "fluentMethods": true,
-    "clientRootFolder": "",
-    "applications": "*"
+    "pagination": "infinite-scroll"
 }

@@ -32,6 +32,10 @@ public class DespesaCriteria implements Serializable {
 
     private StringFilter descricao;
 
+    private IntegerFilter parcela;
+
+    private IntegerFilter quantidadeParcelas;
+
     private BigDecimalFilter valor;
 
     private StringFilter usuario;
@@ -70,6 +74,22 @@ public class DespesaCriteria implements Serializable {
 
     public void setDescricao(StringFilter descricao) {
         this.descricao = descricao;
+    }
+
+    public IntegerFilter getParcela() {
+        return parcela;
+    }
+
+    public void setParcela(IntegerFilter parcela) {
+        this.parcela = parcela;
+    }
+
+    public IntegerFilter getQuantidadeParcelas() {
+        return quantidadeParcelas;
+    }
+
+    public void setQuantidadeParcelas(IntegerFilter quantidadeParcelas) {
+        this.quantidadeParcelas = quantidadeParcelas;
     }
 
     public BigDecimalFilter getValor() {
@@ -119,6 +139,8 @@ public class DespesaCriteria implements Serializable {
             Objects.equals(dataDespesa, that.dataDespesa) &&
             Objects.equals(mesReferencia, that.mesReferencia) &&
             Objects.equals(descricao, that.descricao) &&
+            Objects.equals(parcela, that.parcela) &&
+            Objects.equals(quantidadeParcelas, that.quantidadeParcelas) &&
             Objects.equals(valor, that.valor) &&
             Objects.equals(usuario, that.usuario) &&
             Objects.equals(contaPagamentoId, that.contaPagamentoId) &&
@@ -132,6 +154,8 @@ public class DespesaCriteria implements Serializable {
         dataDespesa,
         mesReferencia,
         descricao,
+        parcela,
+        quantidadeParcelas,
         valor,
         usuario,
         contaPagamentoId,
@@ -146,6 +170,8 @@ public class DespesaCriteria implements Serializable {
                 (dataDespesa != null ? "dataDespesa=" + dataDespesa + ", " : "") +
                 (mesReferencia != null ? "mesReferencia=" + mesReferencia + ", " : "") +
                 (descricao != null ? "descricao=" + descricao + ", " : "") +
+                (parcela != null ? "parcela=" + parcela + ", " : "") +
+                (quantidadeParcelas != null ? "quantidadeParcelas=" + quantidadeParcelas + ", " : "") +
                 (valor != null ? "valor=" + valor + ", " : "") +
                 (usuario != null ? "usuario=" + usuario + ", " : "") +
                 (contaPagamentoId != null ? "contaPagamentoId=" + contaPagamentoId + ", " : "") +

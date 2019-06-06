@@ -1,5 +1,6 @@
 package com.alexandrofs.gfp.web.rest;
 import com.alexandrofs.gfp.domain.Despesa;
+import com.alexandrofs.gfp.security.SecurityUtils;
 import com.alexandrofs.gfp.service.DespesaService;
 import com.alexandrofs.gfp.web.rest.errors.BadRequestAlertException;
 import com.alexandrofs.gfp.web.rest.util.HeaderUtil;
@@ -56,6 +57,7 @@ public class DespesaResource {
         if (despesa.getId() != null) {
             throw new BadRequestAlertException("A new despesa cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        despesa.setUsuario(SecurityUtils.getCurrentUserLoginWithException());
         Despesa result = despesaService.save(despesa);
         return ResponseEntity.created(new URI("/api/despesas/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))

@@ -25,7 +25,7 @@ describe('Service Tests', () => {
             httpMock = injector.get(HttpTestingController);
             currentDate = moment();
 
-            elemDefault = new Despesa(0, currentDate, currentDate, 'AAAAAAA', 0, 'AAAAAAA');
+            elemDefault = new Despesa(0, currentDate, currentDate, 'AAAAAAA', 0, 0, 0, 'AAAAAAA');
         });
 
         describe('Service methods', async () => {
@@ -76,6 +76,8 @@ describe('Service Tests', () => {
                         dataDespesa: currentDate.format(DATE_FORMAT),
                         mesReferencia: currentDate.format(DATE_FORMAT),
                         descricao: 'BBBBBB',
+                        parcela: 1,
+                        quantidadeParcelas: 1,
                         valor: 1,
                         usuario: 'BBBBBB'
                     },
@@ -103,6 +105,8 @@ describe('Service Tests', () => {
                         dataDespesa: currentDate.format(DATE_FORMAT),
                         mesReferencia: currentDate.format(DATE_FORMAT),
                         descricao: 'BBBBBB',
+                        parcela: 1,
+                        quantidadeParcelas: 1,
                         valor: 1,
                         usuario: 'BBBBBB'
                     },

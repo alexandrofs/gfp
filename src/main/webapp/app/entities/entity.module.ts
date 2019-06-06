@@ -67,6 +67,22 @@ import { RouterModule } from '@angular/router';
             {
                 path: 'lancamento',
                 loadChildren: './lancamento/lancamento.module#GfpLancamentoModule'
+            },
+            {
+                path: 'lancamento-cartao',
+                loadChildren: './lancamento-cartao/lancamento-cartao.module#GfpLancamentoCartaoModule'
+            },
+            {
+                path: 'despesa',
+                loadChildren: './despesa/despesa.module#GfpDespesaModule'
+            },
+            {
+                path: 'despesa',
+                loadChildren: './despesa/despesa.module#GfpDespesaModule'
+            },
+            {
+                path: 'despesa',
+                loadChildren: './despesa/despesa.module#GfpDespesaModule'
             }
             /* jhipster-needle-add-entity-route - JHipster will add entity modules routes here */
         ])

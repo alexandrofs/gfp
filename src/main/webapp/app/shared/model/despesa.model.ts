@@ -7,6 +7,8 @@ export interface IDespesa {
     dataDespesa?: Moment;
     mesReferencia?: Moment;
     descricao?: string;
+    parcela?: number;
+    quantidadeParcelas?: number;
     valor?: number;
     usuario?: string;
     contaPagamento?: IContaPagamento;
@@ -19,6 +21,8 @@ export class Despesa implements IDespesa {
         public dataDespesa?: Moment,
         public mesReferencia?: Moment,
         public descricao?: string,
+        public parcela?: number,
+        public quantidadeParcelas?: number,
         public valor?: number,
         public usuario?: string,
         public contaPagamento?: IContaPagamento,

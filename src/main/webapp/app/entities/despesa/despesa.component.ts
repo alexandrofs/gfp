@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { HttpErrorResponse, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import { JhiEventManager, JhiParseLinks, JhiAlertService } from 'ng-jhipster';
@@ -16,42 +15,37 @@ import { DespesaService } from './despesa.service';
     templateUrl: './despesa.component.html'
 })
 export class DespesaComponent implements OnInit, OnDestroy {
-    currentAccount: any;
     despesas: IDespesa[];
-    error: any;
-    success: any;
+    currentAccount: any;
     eventSubscriber: Subscription;
-    routeData: any;
+    itemsPerPage: number;
     links: any;
-    totalItems: any;
-    itemsPerPage: any;
     page: any;
     predicate: any;
-    previousPage: any;
     reverse: any;
+    totalItems: number;
 
     constructor(
         protected despesaService: DespesaService,
-        protected parseLinks: JhiParseLinks,
         protected jhiAlertService: JhiAlertService,
-        protected accountService: AccountService,
-        protected activatedRoute: ActivatedRoute,
-        protected router: Router,
-        protected eventManager: JhiEventManager
+        protected eventManager: JhiEventManager,
+        protected parseLinks: JhiParseLinks,
+        protected accountService: AccountService
     ) {
+        this.despesas = [];
         this.itemsPerPage = ITEMS_PER_PAGE;
-        this.routeData = this.activatedRoute.data.subscribe(data => {
-            this.page = data.pagingParams.page;
-            this.previousPage = data.pagingParams.page;
-            this.reverse = data.pagingParams.ascending;
-            this.predicate = data.pagingParams.predicate;
-        });
+        this.page = 0;
+        this.links = {
+            last: 0
+        };
+        this.predicate = 'id';
+        this.reverse = true;
     }
 
     loadAll() {
         this.despesaService
             .query({
-                page: this.page - 1,
+                page: this.page,
                 size: this.itemsPerPage,
                 sort: this.sort()
             })
@@ -61,33 +55,14 @@ export class DespesaComponent implements OnInit, OnDestroy {
             );
     }
 
-    loadPage(page: number) {
-        if (page !== this.previousPage) {
-            this.previousPage = page;
-            this.transition();
-        }
-    }
-
-    transition() {
-        this.router.navigate(['/despesa'], {
-            queryParams: {
-                page: this.page,
-                size: this.itemsPerPage,
-                sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
-            }
-        });
+    reset() {
+        this.page = 0;
+        this.despesas = [];
         this.loadAll();
     }
 
-    clear() {
-        this.page = 0;
-        this.router.navigate([
-            '/despesa',
-            {
-                page: this.page,
-                sort: this.predicate + ',' + (this.reverse ? 'asc' : 'desc')
-            }
-        ]);
+    loadPage(page) {
+        this.page = page;
         this.loadAll();
     }
 
@@ -108,7 +83,7 @@ export class DespesaComponent implements OnInit, OnDestroy {
     }
 
     registerChangeInDespesas() {
-        this.eventSubscriber = this.eventManager.subscribe('despesaListModification', response => this.loadAll());
+        this.eventSubscriber = this.eventManager.subscribe('despesaListModification', response => this.reset());
     }
 
     sort() {
@@ -122,7 +97,9 @@ export class DespesaComponent implements OnInit, OnDestroy {
     protected paginateDespesas(data: IDespesa[], headers: HttpHeaders) {
         this.links = this.parseLinks.parse(headers.get('link'));
         this.totalItems = parseInt(headers.get('X-Total-Count'), 10);
-        this.despesas = data;
+        for (let i = 0; i < data.length; i++) {
+            this.despesas.push(data[i]);
+        }
     }
 
     protected onError(errorMessage: string) {

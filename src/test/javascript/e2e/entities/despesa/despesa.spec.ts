@@ -43,6 +43,8 @@ describe('Despesa e2e test', () => {
             despesaUpdatePage.setDataDespesaInput('2000-12-31'),
             despesaUpdatePage.setMesReferenciaInput('2000-12-31'),
             despesaUpdatePage.setDescricaoInput('descricao'),
+            despesaUpdatePage.setParcelaInput('5'),
+            despesaUpdatePage.setQuantidadeParcelasInput('5'),
             despesaUpdatePage.setValorInput('5'),
             despesaUpdatePage.setUsuarioInput('usuario'),
             despesaUpdatePage.contaPagamentoSelectLastOption(),
@@ -51,6 +53,8 @@ describe('Despesa e2e test', () => {
         expect(await despesaUpdatePage.getDataDespesaInput()).to.eq('2000-12-31');
         expect(await despesaUpdatePage.getMesReferenciaInput()).to.eq('2000-12-31');
         expect(await despesaUpdatePage.getDescricaoInput()).to.eq('descricao');
+        expect(await despesaUpdatePage.getParcelaInput()).to.eq('5');
+        expect(await despesaUpdatePage.getQuantidadeParcelasInput()).to.eq('5');
         expect(await despesaUpdatePage.getValorInput()).to.eq('5');
         expect(await despesaUpdatePage.getUsuarioInput()).to.eq('usuario');
         await despesaUpdatePage.save();

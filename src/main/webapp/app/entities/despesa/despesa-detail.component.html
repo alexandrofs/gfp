@@ -7,23 +7,27 @@
             <dl class="row-md jh-entity-details">
                 <dt><span jhiTranslate="gfpApp.despesa.dataDespesa">Data Despesa</span></dt>
                 <dd>
-                    <span>{{despesa.dataDespesa}}</span>
+                    <span>{{despesa.dataDespesa | date:'dd/MM/yyyy'}}</span>
                 </dd>
                 <dt><span jhiTranslate="gfpApp.despesa.mesReferencia">Mes Referencia</span></dt>
                 <dd>
-                    <span>{{despesa.mesReferencia}}</span>
+                    <span>{{despesa.mesReferencia | date:'MM/yyyy'}}</span>
                 </dd>
                 <dt><span jhiTranslate="gfpApp.despesa.descricao">Descricao</span></dt>
                 <dd>
                     <span>{{despesa.descricao}}</span>
                 </dd>
+                <dt><span jhiTranslate="gfpApp.despesa.parcela">Parcela</span></dt>
+                <dd>
+                    <span>{{despesa.parcela}}</span>
+                </dd>
+                <dt><span jhiTranslate="gfpApp.despesa.quantidadeParcelas">Quantidade Parcelas</span></dt>
+                <dd>
+                    <span>{{despesa.quantidadeParcelas}}</span>
+                </dd>
                 <dt><span jhiTranslate="gfpApp.despesa.valor">Valor</span></dt>
                 <dd>
-                    <span>{{despesa.valor}}</span>
-                </dd>
-                <dt><span jhiTranslate="gfpApp.despesa.usuario">Usuario</span></dt>
-                <dd>
-                    <span>{{despesa.usuario}}</span>
+                    <span>{{despesa.valor | number:'1.2-2'}}</span>
                 </dd>
                 <dt><span jhiTranslate="gfpApp.despesa.contaPagamento">Conta Pagamento</span></dt>
                 <dd>
