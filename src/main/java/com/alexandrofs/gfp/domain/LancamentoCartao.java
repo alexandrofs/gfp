@@ -1,7 +1,6 @@
 package com.alexandrofs.gfp.domain;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -43,6 +42,14 @@ public class LancamentoCartao implements Serializable {
 
     @Column(name = "usuario", nullable = false)
     private String usuario;
+
+    @Min(value = 1)
+    @Column(name = "quantidade_parcelas")
+    private Integer quantidadeParcelas;
+
+    @Min(value = 1)
+    @Column(name = "parcela")
+    private Integer parcela;
 
     @ManyToOne(optional = false)
     @NotNull
@@ -123,6 +130,32 @@ public class LancamentoCartao implements Serializable {
         this.usuario = usuario;
     }
 
+    public Integer getQuantidadeParcelas() {
+        return quantidadeParcelas;
+    }
+
+    public LancamentoCartao quantidadeParcelas(Integer quantidadeParcelas) {
+        this.quantidadeParcelas = quantidadeParcelas;
+        return this;
+    }
+
+    public void setQuantidadeParcelas(Integer quantidadeParcelas) {
+        this.quantidadeParcelas = quantidadeParcelas;
+    }
+
+    public Integer getParcela() {
+        return parcela;
+    }
+
+    public LancamentoCartao parcela(Integer parcela) {
+        this.parcela = parcela;
+        return this;
+    }
+
+    public void setParcela(Integer parcela) {
+        this.parcela = parcela;
+    }
+
     public ContaPagamento getContaPagamento() {
         return contaPagamento;
     }
@@ -166,6 +199,8 @@ public class LancamentoCartao implements Serializable {
             ", descricao='" + getDescricao() + "'" +
             ", valor=" + getValor() +
             ", usuario='" + getUsuario() + "'" +
+            ", quantidadeParcelas=" + getQuantidadeParcelas() +
+            ", parcela=" + getParcela() +
             "}";
     }
 }

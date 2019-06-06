@@ -31,6 +31,8 @@ export class LancamentoCartaoUpdatePage {
     descricaoInput = element(by.id('field_descricao'));
     valorInput = element(by.id('field_valor'));
     usuarioInput = element(by.id('field_usuario'));
+    quantidadeParcelasInput = element(by.id('field_quantidadeParcelas'));
+    parcelaInput = element(by.id('field_parcela'));
     contaPagamentoSelect = element(by.id('field_contaPagamento'));
 
     async getPageTitle() {
@@ -75,6 +77,22 @@ export class LancamentoCartaoUpdatePage {
 
     async getUsuarioInput() {
         return this.usuarioInput.getAttribute('value');
+    }
+
+    async setQuantidadeParcelasInput(quantidadeParcelas) {
+        await this.quantidadeParcelasInput.sendKeys(quantidadeParcelas);
+    }
+
+    async getQuantidadeParcelasInput() {
+        return this.quantidadeParcelasInput.getAttribute('value');
+    }
+
+    async setParcelaInput(parcela) {
+        await this.parcelaInput.sendKeys(parcela);
+    }
+
+    async getParcelaInput() {
+        return this.parcelaInput.getAttribute('value');
     }
 
     async contaPagamentoSelectLastOption() {

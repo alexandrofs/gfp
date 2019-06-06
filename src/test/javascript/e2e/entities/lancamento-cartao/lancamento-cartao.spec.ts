@@ -45,6 +45,8 @@ describe('LancamentoCartao e2e test', () => {
             lancamentoCartaoUpdatePage.setDescricaoInput('descricao'),
             lancamentoCartaoUpdatePage.setValorInput('5'),
             lancamentoCartaoUpdatePage.setUsuarioInput('usuario'),
+            lancamentoCartaoUpdatePage.setQuantidadeParcelasInput('5'),
+            lancamentoCartaoUpdatePage.setParcelaInput('5'),
             lancamentoCartaoUpdatePage.contaPagamentoSelectLastOption(),
         ]);
         expect(await lancamentoCartaoUpdatePage.getDataCompraInput()).to.eq('2000-12-31');
@@ -52,6 +54,8 @@ describe('LancamentoCartao e2e test', () => {
         expect(await lancamentoCartaoUpdatePage.getDescricaoInput()).to.eq('descricao');
         expect(await lancamentoCartaoUpdatePage.getValorInput()).to.eq('5');
         expect(await lancamentoCartaoUpdatePage.getUsuarioInput()).to.eq('usuario');
+        expect(await lancamentoCartaoUpdatePage.getQuantidadeParcelasInput()).to.eq('5');
+        expect(await lancamentoCartaoUpdatePage.getParcelaInput()).to.eq('5');
         await lancamentoCartaoUpdatePage.save();
         expect(await lancamentoCartaoUpdatePage.getSaveButton().isPresent()).to.be.false;
 

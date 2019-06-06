@@ -63,6 +63,12 @@ public class LancamentoCartaoResourceIntTest {
     private static final String DEFAULT_USUARIO = "AAAAAAAAAA";
     private static final String UPDATED_USUARIO = "BBBBBBBBBB";
 
+    private static final Integer DEFAULT_QUANTIDADE_PARCELAS = 1;
+    private static final Integer UPDATED_QUANTIDADE_PARCELAS = 2;
+
+    private static final Integer DEFAULT_PARCELA = 1;
+    private static final Integer UPDATED_PARCELA = 2;
+
     @Autowired
     private LancamentoCartaoRepository lancamentoCartaoRepository;
 
@@ -115,7 +121,9 @@ public class LancamentoCartaoResourceIntTest {
             .mesFatura(DEFAULT_MES_FATURA)
             .descricao(DEFAULT_DESCRICAO)
             .valor(DEFAULT_VALOR)
-            .usuario(DEFAULT_USUARIO);
+            .usuario(DEFAULT_USUARIO)
+            .quantidadeParcelas(DEFAULT_QUANTIDADE_PARCELAS)
+            .parcela(DEFAULT_PARCELA);
         // Add required entity
         ContaPagamento contaPagamento = ContaPagamentoResourceIntTest.createEntity(em);
         em.persist(contaPagamento);
@@ -150,6 +158,8 @@ public class LancamentoCartaoResourceIntTest {
         assertThat(testLancamentoCartao.getDescricao()).isEqualTo(DEFAULT_DESCRICAO);
         assertThat(testLancamentoCartao.getValor()).isEqualTo(DEFAULT_VALOR);
         assertThat(testLancamentoCartao.getUsuario()).isEqualTo(DEFAULT_USUARIO);
+        assertThat(testLancamentoCartao.getQuantidadeParcelas()).isEqualTo(DEFAULT_QUANTIDADE_PARCELAS);
+        assertThat(testLancamentoCartao.getParcela()).isEqualTo(DEFAULT_PARCELA);
     }
 
     @Test
@@ -258,7 +268,9 @@ public class LancamentoCartaoResourceIntTest {
             .andExpect(jsonPath("$.[*].mesFatura").value(hasItem(DEFAULT_MES_FATURA.toString())))
             .andExpect(jsonPath("$.[*].descricao").value(hasItem(DEFAULT_DESCRICAO.toString())))
             .andExpect(jsonPath("$.[*].valor").value(hasItem(DEFAULT_VALOR.intValue())))
-            .andExpect(jsonPath("$.[*].usuario").value(hasItem(DEFAULT_USUARIO.toString())));
+            .andExpect(jsonPath("$.[*].usuario").value(hasItem(DEFAULT_USUARIO.toString())))
+            .andExpect(jsonPath("$.[*].quantidadeParcelas").value(hasItem(DEFAULT_QUANTIDADE_PARCELAS)))
+            .andExpect(jsonPath("$.[*].parcela").value(hasItem(DEFAULT_PARCELA)));
     }
     
     @Test
@@ -276,7 +288,9 @@ public class LancamentoCartaoResourceIntTest {
             .andExpect(jsonPath("$.mesFatura").value(DEFAULT_MES_FATURA.toString()))
             .andExpect(jsonPath("$.descricao").value(DEFAULT_DESCRICAO.toString()))
             .andExpect(jsonPath("$.valor").value(DEFAULT_VALOR.intValue()))
-            .andExpect(jsonPath("$.usuario").value(DEFAULT_USUARIO.toString()));
+            .andExpect(jsonPath("$.usuario").value(DEFAULT_USUARIO.toString()))
+            .andExpect(jsonPath("$.quantidadeParcelas").value(DEFAULT_QUANTIDADE_PARCELAS))
+            .andExpect(jsonPath("$.parcela").value(DEFAULT_PARCELA));
     }
 
     @Test
@@ -530,6 +544,138 @@ public class LancamentoCartaoResourceIntTest {
 
     @Test
     @Transactional
+    public void getAllLancamentoCartaosByQuantidadeParcelasIsEqualToSomething() throws Exception {
+        // Initialize the database
+        lancamentoCartaoRepository.saveAndFlush(lancamentoCartao);
+
+        // Get all the lancamentoCartaoList where quantidadeParcelas equals to DEFAULT_QUANTIDADE_PARCELAS
+        defaultLancamentoCartaoShouldBeFound("quantidadeParcelas.equals=" + DEFAULT_QUANTIDADE_PARCELAS);
+
+        // Get all the lancamentoCartaoList where quantidadeParcelas equals to UPDATED_QUANTIDADE_PARCELAS
+        defaultLancamentoCartaoShouldNotBeFound("quantidadeParcelas.equals=" + UPDATED_QUANTIDADE_PARCELAS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllLancamentoCartaosByQuantidadeParcelasIsInShouldWork() throws Exception {
+        // Initialize the database
+        lancamentoCartaoRepository.saveAndFlush(lancamentoCartao);
+
+        // Get all the lancamentoCartaoList where quantidadeParcelas in DEFAULT_QUANTIDADE_PARCELAS or UPDATED_QUANTIDADE_PARCELAS
+        defaultLancamentoCartaoShouldBeFound("quantidadeParcelas.in=" + DEFAULT_QUANTIDADE_PARCELAS + "," + UPDATED_QUANTIDADE_PARCELAS);
+
+        // Get all the lancamentoCartaoList where quantidadeParcelas equals to UPDATED_QUANTIDADE_PARCELAS
+        defaultLancamentoCartaoShouldNotBeFound("quantidadeParcelas.in=" + UPDATED_QUANTIDADE_PARCELAS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllLancamentoCartaosByQuantidadeParcelasIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        lancamentoCartaoRepository.saveAndFlush(lancamentoCartao);
+
+        // Get all the lancamentoCartaoList where quantidadeParcelas is not null
+        defaultLancamentoCartaoShouldBeFound("quantidadeParcelas.specified=true");
+
+        // Get all the lancamentoCartaoList where quantidadeParcelas is null
+        defaultLancamentoCartaoShouldNotBeFound("quantidadeParcelas.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllLancamentoCartaosByQuantidadeParcelasIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        lancamentoCartaoRepository.saveAndFlush(lancamentoCartao);
+
+        // Get all the lancamentoCartaoList where quantidadeParcelas greater than or equals to DEFAULT_QUANTIDADE_PARCELAS
+        defaultLancamentoCartaoShouldBeFound("quantidadeParcelas.greaterOrEqualThan=" + DEFAULT_QUANTIDADE_PARCELAS);
+
+        // Get all the lancamentoCartaoList where quantidadeParcelas greater than or equals to UPDATED_QUANTIDADE_PARCELAS
+        defaultLancamentoCartaoShouldNotBeFound("quantidadeParcelas.greaterOrEqualThan=" + UPDATED_QUANTIDADE_PARCELAS);
+    }
+
+    @Test
+    @Transactional
+    public void getAllLancamentoCartaosByQuantidadeParcelasIsLessThanSomething() throws Exception {
+        // Initialize the database
+        lancamentoCartaoRepository.saveAndFlush(lancamentoCartao);
+
+        // Get all the lancamentoCartaoList where quantidadeParcelas less than or equals to DEFAULT_QUANTIDADE_PARCELAS
+        defaultLancamentoCartaoShouldNotBeFound("quantidadeParcelas.lessThan=" + DEFAULT_QUANTIDADE_PARCELAS);
+
+        // Get all the lancamentoCartaoList where quantidadeParcelas less than or equals to UPDATED_QUANTIDADE_PARCELAS
+        defaultLancamentoCartaoShouldBeFound("quantidadeParcelas.lessThan=" + UPDATED_QUANTIDADE_PARCELAS);
+    }
+
+
+    @Test
+    @Transactional
+    public void getAllLancamentoCartaosByParcelaIsEqualToSomething() throws Exception {
+        // Initialize the database
+        lancamentoCartaoRepository.saveAndFlush(lancamentoCartao);
+
+        // Get all the lancamentoCartaoList where parcela equals to DEFAULT_PARCELA
+        defaultLancamentoCartaoShouldBeFound("parcela.equals=" + DEFAULT_PARCELA);
+
+        // Get all the lancamentoCartaoList where parcela equals to UPDATED_PARCELA
+        defaultLancamentoCartaoShouldNotBeFound("parcela.equals=" + UPDATED_PARCELA);
+    }
+
+    @Test
+    @Transactional
+    public void getAllLancamentoCartaosByParcelaIsInShouldWork() throws Exception {
+        // Initialize the database
+        lancamentoCartaoRepository.saveAndFlush(lancamentoCartao);
+
+        // Get all the lancamentoCartaoList where parcela in DEFAULT_PARCELA or UPDATED_PARCELA
+        defaultLancamentoCartaoShouldBeFound("parcela.in=" + DEFAULT_PARCELA + "," + UPDATED_PARCELA);
+
+        // Get all the lancamentoCartaoList where parcela equals to UPDATED_PARCELA
+        defaultLancamentoCartaoShouldNotBeFound("parcela.in=" + UPDATED_PARCELA);
+    }
+
+    @Test
+    @Transactional
+    public void getAllLancamentoCartaosByParcelaIsNullOrNotNull() throws Exception {
+        // Initialize the database
+        lancamentoCartaoRepository.saveAndFlush(lancamentoCartao);
+
+        // Get all the lancamentoCartaoList where parcela is not null
+        defaultLancamentoCartaoShouldBeFound("parcela.specified=true");
+
+        // Get all the lancamentoCartaoList where parcela is null
+        defaultLancamentoCartaoShouldNotBeFound("parcela.specified=false");
+    }
+
+    @Test
+    @Transactional
+    public void getAllLancamentoCartaosByParcelaIsGreaterThanOrEqualToSomething() throws Exception {
+        // Initialize the database
+        lancamentoCartaoRepository.saveAndFlush(lancamentoCartao);
+
+        // Get all the lancamentoCartaoList where parcela greater than or equals to DEFAULT_PARCELA
+        defaultLancamentoCartaoShouldBeFound("parcela.greaterOrEqualThan=" + DEFAULT_PARCELA);
+
+        // Get all the lancamentoCartaoList where parcela greater than or equals to UPDATED_PARCELA
+        defaultLancamentoCartaoShouldNotBeFound("parcela.greaterOrEqualThan=" + UPDATED_PARCELA);
+    }
+
+    @Test
+    @Transactional
+    public void getAllLancamentoCartaosByParcelaIsLessThanSomething() throws Exception {
+        // Initialize the database
+        lancamentoCartaoRepository.saveAndFlush(lancamentoCartao);
+
+        // Get all the lancamentoCartaoList where parcela less than or equals to DEFAULT_PARCELA
+        defaultLancamentoCartaoShouldNotBeFound("parcela.lessThan=" + DEFAULT_PARCELA);
+
+        // Get all the lancamentoCartaoList where parcela less than or equals to UPDATED_PARCELA
+        defaultLancamentoCartaoShouldBeFound("parcela.lessThan=" + UPDATED_PARCELA);
+    }
+
+
+    @Test
+    @Transactional
     public void getAllLancamentoCartaosByContaPagamentoIsEqualToSomething() throws Exception {
         // Initialize the database
         ContaPagamento contaPagamento = ContaPagamentoResourceIntTest.createEntity(em);
@@ -558,7 +704,9 @@ public class LancamentoCartaoResourceIntTest {
             .andExpect(jsonPath("$.[*].mesFatura").value(hasItem(DEFAULT_MES_FATURA.toString())))
             .andExpect(jsonPath("$.[*].descricao").value(hasItem(DEFAULT_DESCRICAO.toString())))
             .andExpect(jsonPath("$.[*].valor").value(hasItem(DEFAULT_VALOR.intValue())))
-            .andExpect(jsonPath("$.[*].usuario").value(hasItem(DEFAULT_USUARIO.toString())));
+            .andExpect(jsonPath("$.[*].usuario").value(hasItem(DEFAULT_USUARIO.toString())))
+            .andExpect(jsonPath("$.[*].quantidadeParcelas").value(hasItem(DEFAULT_QUANTIDADE_PARCELAS)))
+            .andExpect(jsonPath("$.[*].parcela").value(hasItem(DEFAULT_PARCELA)));
 
         // Check, that the count call also returns 1
         restLancamentoCartaoMockMvc.perform(get("/api/lancamento-cartaos/count?sort=id,desc&" + filter))
@@ -610,7 +758,9 @@ public class LancamentoCartaoResourceIntTest {
             .mesFatura(UPDATED_MES_FATURA)
             .descricao(UPDATED_DESCRICAO)
             .valor(UPDATED_VALOR)
-            .usuario(UPDATED_USUARIO);
+            .usuario(UPDATED_USUARIO)
+            .quantidadeParcelas(UPDATED_QUANTIDADE_PARCELAS)
+            .parcela(UPDATED_PARCELA);
 
         restLancamentoCartaoMockMvc.perform(put("/api/lancamento-cartaos")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -626,6 +776,8 @@ public class LancamentoCartaoResourceIntTest {
         assertThat(testLancamentoCartao.getDescricao()).isEqualTo(UPDATED_DESCRICAO);
         assertThat(testLancamentoCartao.getValor()).isEqualTo(UPDATED_VALOR);
         assertThat(testLancamentoCartao.getUsuario()).isEqualTo(UPDATED_USUARIO);
+        assertThat(testLancamentoCartao.getQuantidadeParcelas()).isEqualTo(UPDATED_QUANTIDADE_PARCELAS);
+        assertThat(testLancamentoCartao.getParcela()).isEqualTo(UPDATED_PARCELA);
     }
 
     @Test

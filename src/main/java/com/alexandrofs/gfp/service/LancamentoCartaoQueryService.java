@@ -98,6 +98,12 @@ public class LancamentoCartaoQueryService extends QueryService<LancamentoCartao>
             if (criteria.getUsuario() != null) {
                 specification = specification.and(buildStringSpecification(criteria.getUsuario(), LancamentoCartao_.usuario));
             }
+            if (criteria.getQuantidadeParcelas() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getQuantidadeParcelas(), LancamentoCartao_.quantidadeParcelas));
+            }
+            if (criteria.getParcela() != null) {
+                specification = specification.and(buildRangeSpecification(criteria.getParcela(), LancamentoCartao_.parcela));
+            }
             if (criteria.getContaPagamentoId() != null) {
                 specification = specification.and(buildSpecification(criteria.getContaPagamentoId(),
                     root -> root.join(LancamentoCartao_.contaPagamento, JoinType.LEFT).get(ContaPagamento_.id)));

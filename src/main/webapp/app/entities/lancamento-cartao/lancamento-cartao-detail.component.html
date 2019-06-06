@@ -17,10 +17,18 @@
                 <dd>
                     <span>{{lancamentoCartao.descricao}}</span>
                 </dd>
+                <dt><span jhiTranslate="gfpApp.lancamentoCartao.parcela">Parcela</span></dt>
+                <dd>
+                    <span>{{lancamentoCartao.parcela}}</span>
+                </dd>
+                <dt><span jhiTranslate="gfpApp.lancamentoCartao.quantidadeParcelas">Quantidade Parcelas</span></dt>
+                <dd>
+                    <span>{{lancamentoCartao.quantidadeParcelas}}</span>
+                </dd>
                 <dt><span jhiTranslate="gfpApp.lancamentoCartao.valor">Valor</span></dt>
                 <dd>
                     <span>{{lancamentoCartao.valor | number:'1.2-2'}}</span>
-                </dd>
+                </dd>                
                 <dt><span jhiTranslate="gfpApp.lancamentoCartao.contaPagamento">Conta Pagamento</span></dt>
                 <dd>
                     <div *ngIf="lancamentoCartao.contaPagamento">

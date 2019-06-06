@@ -8,6 +8,8 @@ export interface ILancamentoCartao {
     descricao?: string;
     valor?: number;
     usuario?: string;
+    quantidadeParcelas?: number;
+    parcela?: number;
     contaPagamento?: IContaPagamento;
 }
 
@@ -19,6 +21,8 @@ export class LancamentoCartao implements ILancamentoCartao {
         public descricao?: string,
         public valor?: number,
         public usuario?: string,
+        public quantidadeParcelas?: number,
+        public parcela?: number,
         public contaPagamento?: IContaPagamento
     ) {}
 }

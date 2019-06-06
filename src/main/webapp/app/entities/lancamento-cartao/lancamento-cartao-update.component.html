@@ -53,6 +53,36 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gfpApp.lancamentoCartao.parcela" for="field_parcela">Parcela</label>
+                    <input type="number" class="form-control" name="parcela" id="field_parcela"
+                        [(ngModel)]="lancamentoCartao.parcela" min="1" jhiMin="1"/>
+                    <div [hidden]="!(editForm.controls.parcela?.dirty && editForm.controls.parcela?.invalid)">
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.parcela?.errors?.min" jhiTranslate="entity.validation.min" [translateValues]="{ min: 1 }">
+                            This field should be at least 1.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.parcela?.errors?.number" jhiTranslate="entity.validation.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" jhiTranslate="gfpApp.lancamentoCartao.quantidadeParcelas" for="field_quantidadeParcelas">Quantidade Parcelas</label>
+                    <input type="number" class="form-control" name="quantidadeParcelas" id="field_quantidadeParcelas"
+                        [(ngModel)]="lancamentoCartao.quantidadeParcelas" min="1" jhiMin="1"/>
+                    <div [hidden]="!(editForm.controls.quantidadeParcelas?.dirty && editForm.controls.quantidadeParcelas?.invalid)">
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.quantidadeParcelas?.errors?.min" jhiTranslate="entity.validation.min" [translateValues]="{ min: 1 }">
+                            This field should be at least 1.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.quantidadeParcelas?.errors?.number" jhiTranslate="entity.validation.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
                     <label class="form-control-label" jhiTranslate="gfpApp.lancamentoCartao.valor" for="field_valor">Valor</label>
                     <input type="number" class="form-control" name="valor" id="field_valor"
                         [(ngModel)]="lancamentoCartao.valor" required/>
@@ -67,6 +97,7 @@
                         </small>
                     </div>
                 </div>
+                
             </div>
             <div>
                 <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">

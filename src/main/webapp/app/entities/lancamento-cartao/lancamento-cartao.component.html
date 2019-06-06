@@ -24,7 +24,9 @@
             <th jhiSortBy="dataCompra"><span jhiTranslate="gfpApp.lancamentoCartao.dataCompra">Data Compra</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="mesFatura"><span jhiTranslate="gfpApp.lancamentoCartao.mesFatura">Mes Fatura</span> <fa-icon [icon]="'sort'"></fa-icon></th>
             <th jhiSortBy="descricao"><span jhiTranslate="gfpApp.lancamentoCartao.descricao">Descricao</span> <fa-icon [icon]="'sort'"></fa-icon></th>
-            <th jhiSortBy="valor" class="text-right"><span jhiTranslate="gfpApp.lancamentoCartao.valor">Valor</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="parcela" class="text-right"><span jhiTranslate="gfpApp.lancamentoCartao.parcela">Parcela</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="quantidadeParcelas" class="text-right"><span jhiTranslate="gfpApp.lancamentoCartao.quantidadeParcelas">Quantidade Parcelas</span> <fa-icon [icon]="'sort'"></fa-icon></th>            
+            <th jhiSortBy="valor" class="text-right"><span jhiTranslate="gfpApp.lancamentoCartao.valor">Valor</span> <fa-icon [icon]="'sort'"></fa-icon></th>            
             <th></th>
             </tr>
             </thead>
@@ -34,7 +36,9 @@
                 <td>{{lancamentoCartao.dataCompra | date:'dd/MM/yyyy'}}</td>
                 <td>{{lancamentoCartao.mesFatura | date:'MM/yyyy'}}</td>
                 <td>{{lancamentoCartao.descricao}}</td>
-                <td class="text-right">{{lancamentoCartao.valor | number:'1.2-2'}}</td>
+                <td class="text-right">{{lancamentoCartao.parcela}}</td>
+                <td class="text-right">{{lancamentoCartao.quantidadeParcelas}}</td>                
+                <td class="text-right">{{lancamentoCartao.valor | number:'1.2-2'}}</td>                
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"

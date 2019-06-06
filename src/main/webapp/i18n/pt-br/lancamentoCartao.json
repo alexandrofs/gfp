@@ -13,13 +13,15 @@
                 "question": "Tem certeza de que deseja excluir Lançamento {{ id }}?"
             },
             "detail": {
-                "title": "Lançamento"
+                "title": "Lancamento Cartao"
             },
             "dataCompra": "Data Compra",
             "mesFatura": "Mês Fatura",
             "descricao": "Descriçao",
             "valor": "Valor",
             "usuario": "Usuario",
+            "quantidadeParcelas": "Quantidade Parcelas",
+            "parcela": "Parcela",
             "contaPagamento": "Conta Pagamento"
         }
     }

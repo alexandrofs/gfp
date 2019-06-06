@@ -1,5 +1,17 @@
 {
-    "name": "LancamentoCartao",
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "relationships": [
+        {
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": "required",
+            "relationshipName": "contaPagamento",
+            "otherEntityName": "contaPagamento",
+            "otherEntityField": "nome",
+            "otherEntityRelationshipNameUndefined": true,
+            "otherEntityRelationshipName": "lancamentoCartao"
+        }
+    ],
     "fields": [
         {
             "fieldName": "dataCompra",
@@ -23,36 +35,42 @@
             ]
         },
         {
-            "fieldName": "valor",
-            "fieldType": "BigDecimal",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
             "fieldName": "usuario",
             "fieldType": "String",
             "fieldValidateRules": [
                 "required"
             ]
-        }
-    ],
-    "relationships": [
+        },
+	{
+            "fieldName": "parcela",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "min"
+            ],
+            "fieldValidateRulesMin": "1"
+        },
         {
-            "relationshipType": "many-to-one",
-            "relationshipValidateRules": "required",
-            "relationshipName": "contaPagamento",
-            "otherEntityName": "contaPagamento",
-            "otherEntityField": "nome"
+            "fieldName": "quantidadeParcelas",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "min"
+            ],
+            "fieldValidateRulesMin": "1"
+        },
+	{
+            "fieldName": "valor",
+            "fieldType": "BigDecimal",
+            "fieldValidateRules": [
+                "required"
+            ]
         }
     ],
     "changelogDate": "20190601031440",
-    "entityTableName": "tb_lancamento_cartao",
     "dto": "no",
-    "pagination": "infinite-scroll",
+    "searchEngine": false,
     "service": "serviceClass",
+    "entityTableName": "tb_lancamento_cartao",
+    "databaseType": "sql",
     "jpaMetamodelFiltering": true,
-    "fluentMethods": true,
-    "clientRootFolder": "",
-    "applications": "*"
+    "pagination": "infinite-scroll"
 }

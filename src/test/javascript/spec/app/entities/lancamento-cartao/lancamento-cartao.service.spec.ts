@@ -25,7 +25,7 @@ describe('Service Tests', () => {
             httpMock = injector.get(HttpTestingController);
             currentDate = moment();
 
-            elemDefault = new LancamentoCartao(0, currentDate, currentDate, 'AAAAAAA', 0, 'AAAAAAA');
+            elemDefault = new LancamentoCartao(0, currentDate, currentDate, 'AAAAAAA', 0, 'AAAAAAA', 0, 0);
         });
 
         describe('Service methods', async () => {
@@ -77,7 +77,9 @@ describe('Service Tests', () => {
                         mesFatura: currentDate.format(DATE_FORMAT),
                         descricao: 'BBBBBB',
                         valor: 1,
-                        usuario: 'BBBBBB'
+                        usuario: 'BBBBBB',
+                        quantidadeParcelas: 1,
+                        parcela: 1
                     },
                     elemDefault
                 );
@@ -104,7 +106,9 @@ describe('Service Tests', () => {
                         mesFatura: currentDate.format(DATE_FORMAT),
                         descricao: 'BBBBBB',
                         valor: 1,
-                        usuario: 'BBBBBB'
+                        usuario: 'BBBBBB',
+                        quantidadeParcelas: 1,
+                        parcela: 1
                     },
                     elemDefault
                 );

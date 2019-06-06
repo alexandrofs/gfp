@@ -36,6 +36,10 @@ public class LancamentoCartaoCriteria implements Serializable {
 
     private StringFilter usuario;
 
+    private IntegerFilter quantidadeParcelas;
+
+    private IntegerFilter parcela;
+
     private LongFilter contaPagamentoId;
 
     public LongFilter getId() {
@@ -86,6 +90,22 @@ public class LancamentoCartaoCriteria implements Serializable {
         this.usuario = usuario;
     }
 
+    public IntegerFilter getQuantidadeParcelas() {
+        return quantidadeParcelas;
+    }
+
+    public void setQuantidadeParcelas(IntegerFilter quantidadeParcelas) {
+        this.quantidadeParcelas = quantidadeParcelas;
+    }
+
+    public IntegerFilter getParcela() {
+        return parcela;
+    }
+
+    public void setParcela(IntegerFilter parcela) {
+        this.parcela = parcela;
+    }
+
     public LongFilter getContaPagamentoId() {
         return contaPagamentoId;
     }
@@ -111,6 +131,8 @@ public class LancamentoCartaoCriteria implements Serializable {
             Objects.equals(descricao, that.descricao) &&
             Objects.equals(valor, that.valor) &&
             Objects.equals(usuario, that.usuario) &&
+            Objects.equals(quantidadeParcelas, that.quantidadeParcelas) &&
+            Objects.equals(parcela, that.parcela) &&
             Objects.equals(contaPagamentoId, that.contaPagamentoId);
     }
 
@@ -123,6 +145,8 @@ public class LancamentoCartaoCriteria implements Serializable {
         descricao,
         valor,
         usuario,
+        quantidadeParcelas,
+        parcela,
         contaPagamentoId
         );
     }
@@ -136,6 +160,8 @@ public class LancamentoCartaoCriteria implements Serializable {
                 (descricao != null ? "descricao=" + descricao + ", " : "") +
                 (valor != null ? "valor=" + valor + ", " : "") +
                 (usuario != null ? "usuario=" + usuario + ", " : "") +
+                (quantidadeParcelas != null ? "quantidadeParcelas=" + quantidadeParcelas + ", " : "") +
+                (parcela != null ? "parcela=" + parcela + ", " : "") +
                 (contaPagamentoId != null ? "contaPagamentoId=" + contaPagamentoId + ", " : "") +
             "}";
     }
