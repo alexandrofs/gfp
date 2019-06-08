@@ -24,9 +24,9 @@ import com.alexandrofs.gfp.repository.ImportaIndiceSerieDiRepository;
  */
 @Service
 @Transactional
-public class ImportaIndiceSerieDiService {
+public class FileImporterIndiceSerieDiService implements FileImporterService {
 
-    private final Logger log = LoggerFactory.getLogger(ImportaIndiceSerieDiService.class);
+    private final Logger log = LoggerFactory.getLogger(FileImporterIndiceSerieDiService.class);
     
     @Autowired
     private ImportaIndiceSerieDiRepository indiceSerieDiRepository;
