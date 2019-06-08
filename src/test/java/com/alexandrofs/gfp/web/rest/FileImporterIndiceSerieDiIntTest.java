@@ -1,7 +1,7 @@
 package com.alexandrofs.gfp.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.InputStream;
@@ -23,7 +23,6 @@ import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,15 +32,16 @@ import com.alexandrofs.gfp.GfpApp;
 import com.alexandrofs.gfp.GfpUtils;
 import com.alexandrofs.gfp.domain.IndiceSerieDi;
 import com.alexandrofs.gfp.repository.IndiceSerieDiRepository;
-import com.alexandrofs.gfp.service.ImportaIndiceSerieDiService;
+import com.alexandrofs.gfp.service.FileImporterServiceFactory;
 
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = GfpApp.class)
-public class ImportaIndiceSerieDiResourceIntTest extends AbstractTest {
+public class FileImporterIndiceSerieDiIntTest extends AbstractTest {
 
 
-    private static final LocalDate DEFAULT_DATA = LocalDate.ofEpochDay(0L);
+    private static final String API_INDICE_SERIE_DIS_IMPORT = "/api/importer/DI";
+	private static final LocalDate DEFAULT_DATA = LocalDate.ofEpochDay(0L);
     private static final BigDecimal DEFAULT_TAXA_MEDIA_ANUAL = new BigDecimal(1);
     private static final BigDecimal DEFAULT_TAXA_SELIC = new BigDecimal(1);
     private static final BigDecimal DEFAULT_FATOR_DIARIO = new BigDecimal(1);
@@ -50,7 +50,7 @@ public class ImportaIndiceSerieDiResourceIntTest extends AbstractTest {
     private IndiceSerieDiRepository indiceSerieDiRepository;
 
     @Autowired
-    private ImportaIndiceSerieDiService indiceSerieDiService;
+    private FileImporterServiceFactory fileImporterServiceFactory;
 
     @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
@@ -65,8 +65,7 @@ public class ImportaIndiceSerieDiResourceIntTest extends AbstractTest {
     @PostConstruct
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        ImportaIndiceSerieDiResource indiceSerieDiResource = new ImportaIndiceSerieDiResource();
-        ReflectionTestUtils.setField(indiceSerieDiResource, "indiceSerieDiService", indiceSerieDiService);
+        FileImporterResource indiceSerieDiResource = new FileImporterResource(fileImporterServiceFactory);
         this.restIndiceSerieDiMockMvc = MockMvcBuilders.standaloneSetup(indiceSerieDiResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
             .setMessageConverters(jacksonMessageConverter).build();
@@ -91,7 +90,7 @@ public class ImportaIndiceSerieDiResourceIntTest extends AbstractTest {
         
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
 
-        restIndiceSerieDiMockMvc.perform(fileUpload("/api/indice-serie-dis/import")
+        restIndiceSerieDiMockMvc.perform(multipart(API_INDICE_SERIE_DIS_IMPORT)
         		.file(file))
                 .andExpect(status().isOk());
 
@@ -121,11 +120,11 @@ public class ImportaIndiceSerieDiResourceIntTest extends AbstractTest {
         
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
 
-        restIndiceSerieDiMockMvc.perform(fileUpload("/api/indice-serie-dis/import")
+        restIndiceSerieDiMockMvc.perform(multipart(API_INDICE_SERIE_DIS_IMPORT)
         		.file(file))
                 .andExpect(status().isOk());
         
-        restIndiceSerieDiMockMvc.perform(fileUpload("/api/indice-serie-dis/import")
+        restIndiceSerieDiMockMvc.perform(multipart(API_INDICE_SERIE_DIS_IMPORT)
         		.file(file))
                 .andExpect(status().isOk());        
 
