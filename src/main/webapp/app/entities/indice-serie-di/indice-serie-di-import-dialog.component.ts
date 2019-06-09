@@ -4,8 +4,7 @@ import { HttpResponse, HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { NgbActiveModal, NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { JhiEventManager } from 'ng-jhipster';
-
-import { IndiceSerieDiService } from './indice-serie-di.service';
+import { FileImporterService } from 'app/shared/services/file-importer.service';
 
 @Component({
     selector: 'jhi-indice-serie-di-import-dialog',
@@ -16,7 +15,7 @@ export class IndiceSerieDiImportDialogComponent implements OnInit {
     isSaving: boolean;
 
     constructor(
-        protected indiceSerieDiService: IndiceSerieDiService,
+        protected fileImporterService: FileImporterService,
         public activeModal: NgbActiveModal,
         protected eventManager: JhiEventManager
     ) {}
@@ -35,7 +34,7 @@ export class IndiceSerieDiImportDialogComponent implements OnInit {
 
     importFile() {
         this.isSaving = true;
-        this.subscribeToSaveResponse(this.indiceSerieDiService.import(this.fileToUpload));
+        this.subscribeToSaveResponse(this.fileImporterService.import(this.fileToUpload, 'DI'));
     }
 
     protected subscribeToSaveResponse(result: Observable<HttpResponse<any>>) {
