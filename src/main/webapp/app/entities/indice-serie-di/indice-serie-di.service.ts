@@ -49,12 +49,6 @@ export class IndiceSerieDiService {
         return this.http.delete<any>(`${this.resourceUrl}/${id}`, { observe: 'response' });
     }
 
-    import(fileToUpload: File): Observable<HttpResponse<any>> {
-        const formData: FormData = new FormData();
-        formData.append('file', fileToUpload, fileToUpload.name);
-        return this.http.post<any>(`${this.resourceUrl}/import`, formData, { observe: 'response' });
-    }
-
     protected convertDateFromClient(indiceSerieDi: IIndiceSerieDi): IIndiceSerieDi {
         const copy: IIndiceSerieDi = Object.assign({}, indiceSerieDi, {
             data: indiceSerieDi.data != null && indiceSerieDi.data.isValid() ? indiceSerieDi.data.format(DATE_FORMAT) : null
