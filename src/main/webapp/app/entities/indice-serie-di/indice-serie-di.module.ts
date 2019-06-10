@@ -10,8 +10,6 @@ import {
     IndiceSerieDiUpdateComponent,
     IndiceSerieDiDeletePopupComponent,
     IndiceSerieDiDeleteDialogComponent,
-    IndiceSerieDiImportPopupComponent,
-    IndiceSerieDiImportDialogComponent,
     indiceSerieDiRoute,
     indiceSerieDiPopupRoute
 } from './';
@@ -25,17 +23,13 @@ const ENTITY_STATES = [...indiceSerieDiRoute, ...indiceSerieDiPopupRoute];
         IndiceSerieDiDetailComponent,
         IndiceSerieDiUpdateComponent,
         IndiceSerieDiDeleteDialogComponent,
-        IndiceSerieDiDeletePopupComponent,
-        IndiceSerieDiImportDialogComponent,
-        IndiceSerieDiImportPopupComponent
+        IndiceSerieDiDeletePopupComponent
     ],
     entryComponents: [
         IndiceSerieDiComponent,
         IndiceSerieDiUpdateComponent,
         IndiceSerieDiDeleteDialogComponent,
-        IndiceSerieDiDeletePopupComponent,
-        IndiceSerieDiImportDialogComponent,
-        IndiceSerieDiImportPopupComponent
+        IndiceSerieDiDeletePopupComponent
     ],
     providers: [{ provide: JhiLanguageService, useClass: JhiLanguageService }],
     schemas: [CUSTOM_ELEMENTS_SCHEMA]

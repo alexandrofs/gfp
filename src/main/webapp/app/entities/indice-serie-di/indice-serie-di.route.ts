@@ -10,7 +10,6 @@ import { IndiceSerieDiComponent } from './indice-serie-di.component';
 import { IndiceSerieDiDetailComponent } from './indice-serie-di-detail.component';
 import { IndiceSerieDiUpdateComponent } from './indice-serie-di-update.component';
 import { IndiceSerieDiDeletePopupComponent } from './indice-serie-di-delete-dialog.component';
-import { IndiceSerieDiImportPopupComponent } from './indice-serie-di-import-dialog.component';
 import { IIndiceSerieDi } from 'app/shared/model/indice-serie-di.model';
 
 @Injectable({ providedIn: 'root' })
@@ -84,16 +83,6 @@ export const indiceSerieDiPopupRoute: Routes = [
         resolve: {
             indiceSerieDi: IndiceSerieDiResolve
         },
-        data: {
-            authorities: ['ROLE_USER'],
-            pageTitle: 'gfpApp.indiceSerieDi.home.title'
-        },
-        canActivate: [UserRouteAccessService],
-        outlet: 'popup'
-    },
-    {
-        path: 'import',
-        component: IndiceSerieDiImportPopupComponent,
         data: {
             authorities: ['ROLE_USER'],
             pageTitle: 'gfpApp.indiceSerieDi.home.title'
